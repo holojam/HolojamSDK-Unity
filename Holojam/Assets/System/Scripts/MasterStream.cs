@@ -10,7 +10,7 @@ using update_protocol_v3;
 
 namespace Holojam {
      public enum LiveObjectTag {
-          HEADSET1, HEADSET2, HEADSET3, HEADSET4, WAND1, WAND2, WAND3, WAND4
+          HEADSET1, HEADSET2, HEADSET3, HEADSET4, WAND1, WAND2, WAND3, WAND4,BOX1,BOX2,SPHERE1
      }
 
      public class MasterStream : Singleton<MasterStream> {
@@ -28,7 +28,8 @@ namespace Holojam {
                { LiveObjectTag.WAND1, "VR1_wand" },
                { LiveObjectTag.WAND2, "VR2_wand" },
                { LiveObjectTag.WAND3, "VR3_wand" },
-               { LiveObjectTag.WAND4, "VR4_wand" }
+               { LiveObjectTag.WAND4, "VR4_wand" },
+               { LiveObjectTag.BOX1, "VR1_box" }
           };
 
           /////Private/////
@@ -37,6 +38,7 @@ namespace Holojam {
           private UnityEngine.Object lockObject = new UnityEngine.Object();
           private PacketBuffer previousPacket = new PacketBuffer(PACKET_SIZE);
           private PacketBuffer currentPacket = new PacketBuffer(PACKET_SIZE);
+          private PacketBuffer tempPacket = new PacketBuffer(PACKET_SIZE);
           private update_protocol_v3.Update update;
           //Primitives
           private int packetCount = 0;
@@ -48,10 +50,10 @@ namespace Holojam {
           //}
 
           private class LiveObjectStorage {
-               public Vector3 position;
-               public Quaternion rotation;
-               public int buttonBits;
-               public List<Vector2> axisButtons;
+               public Vector3 position = Vector3.zero;
+               public Quaternion rotation = Quaternion.identity;
+               public int buttonBits = 0;
+               public List<Vector2> axisButtons = new List<Vector2>();
           }
 
           private class PacketBuffer {
@@ -95,7 +97,7 @@ namespace Holojam {
           private IEnumerator DisplayPacketsPerSecond() {
                while (receivingPackets) {
                     yield return new WaitForSeconds(1f);
-                    Debug.LogWarning(string.Format("Packets per second: {0}", packetCount));
+                    Debug.LogWarning(string.Format("Packets per second: {0} Most recent packet frame: {1}", packetCount,currentPacket.frame));
                     packetCount = 0;
                }
           }
@@ -200,8 +202,11 @@ namespace Holojam {
                     if (currentPacket.frame > previousPacket.frame) {
                          packetCount++;
 
+                         previousPacket.stream.Position = 0;
                          currentPacket.stream.Position = 0;
+                         tempPacket.copyFrom(previousPacket);
                          previousPacket.copyFrom(currentPacket);
+                         currentPacket.copyFrom(tempPacket);
 
                          for (int j = 0; j < update.live_objects.Count; j++) {
                               LiveObject or = update.live_objects[j];
