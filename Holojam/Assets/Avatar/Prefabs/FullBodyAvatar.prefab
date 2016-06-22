@@ -1487,9 +1487,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 162800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 848569475eeba0a42805d531bf998033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connect: 1
+  headTag: 0
+  leftHandTag: 0
+  rightHandTag: 0
+  leftFootTag: 0
+  rightFootTag: 0
+  head: {fileID: 490354}
+  leftHand: {fileID: 420196}
+  rightHand: {fileID: 460964}
+  leftFoot: {fileID: 451412}
+  rightFoot: {fileID: 431216}
+  handOffset: {x: 0, y: 0, z: 0}
+  footOffset: {x: 0, y: 0, z: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}
+  pastel: 0.2
+  detail: 10
 --- !u!114 &11440918
 MonoBehaviour:
   m_ObjectHideFlags: 1
