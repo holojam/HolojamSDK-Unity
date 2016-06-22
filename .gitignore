@@ -12,6 +12,8 @@ obj/
 *.user
 *.unityproj
 *.booproj
+*.sln
+*.csproj
 *.unitypackage
 
 *.pidb.meta

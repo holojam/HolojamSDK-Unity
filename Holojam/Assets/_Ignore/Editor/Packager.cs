@@ -12,9 +12,9 @@ public class Packager : EditorWindow{
 		EditorWindow.GetWindow(typeof(Packager));
 	}
 	
-	string output = "Package";
+	string output = "Holojam";
 	string version = "0.0.0";
-	string ignorePath = "";
+	string ignorePath = "_Ignore";
 	bool clear = true;
 	
 	void OnGUI(){
