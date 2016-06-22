@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cf08f960a62827488e0675775eb2041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liveObjectTag: 0
+  liveObjectTag: 1
 --- !u!81 &2140864917
 AudioListener:
   m_ObjectHideFlags: 0

@@ -24,8 +24,6 @@ namespace Holojam {
           private const int PACKET_SIZE = 65507; // ~65KB buffer sizes
           private const int BLACK_BOX_CLIENT_PORT = 1611;
 
-          
-
           private static readonly Dictionary<LiveObjectTag, string> tagToMotiveName = new Dictionary<LiveObjectTag, string>() {
                { LiveObjectTag.HEADSET1, "VR1" },
                { LiveObjectTag.HEADSET2, "VR2" },
