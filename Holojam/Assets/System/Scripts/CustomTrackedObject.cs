@@ -1,9 +1,10 @@
-﻿using System;
-using UnityEngine;
-namespace Holojam {
-     public class TrackedObject : MonoBehaviour {
+﻿using UnityEngine;
+using System.Collections;
 
-          public LiveObjectTag liveObjectTag;
+namespace Holojam {
+     public class CustomTrackedObject : MonoBehaviour {
+
+          public string customTag;
 
 
           protected MasterStream masterStream;
@@ -33,7 +34,7 @@ namespace Holojam {
                Vector3 position;
                Quaternion rotation;
 
-               if (masterStream.GetPosition(liveObjectTag, out position) && masterStream.GetRotation(liveObjectTag, out rotation)) {
+               if (masterStream.GetPosition(customTag, out position) && masterStream.GetRotation(customTag, out rotation)) {
                     this.isTracked = true;
                     this.trackedPosition = position;
                     this.trackedRotation = rotation;
@@ -44,3 +45,4 @@ namespace Holojam {
           }
      }
 }
+
