@@ -109,8 +109,12 @@
     <Compile Include="Assets\Utility\Scripts\billboard\BillboardComponent.cs" />
     <Compile Include="Assets\Utility\Scripts\billboard\BillboardGraph.cs" />
     <Compile Include="Assets\Utility\Scripts\billboard\BillboardLabel.cs" />
+    <Compile Include="Assets\Utility\Scripts\line-scripts\GizmoAtPivot.cs" />
+    <Compile Include="Assets\Utility\Scripts\line-scripts\LineFactory.cs" />
     <Compile Include="Assets\Utility\Scripts\line-scripts\LineSynchronizer.cs" />
     <Compile Include="Assets\Utility\Scripts\line-scripts\LineUnity.cs" />
+    <Compile Include="Assets\Utility\Scripts\line-scripts\WandController.cs" />
+    <Compile Include="Assets\Utility\Scripts\line-scripts\WiiCrayon.cs" />
     <Compile Include="Assets\Utility\Scripts\line-scripts\makeLine.cs" />
   </ItemGroup>
   <ItemGroup>

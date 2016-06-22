@@ -206,8 +206,6 @@ namespace Holojam {
                          newPacketBufferMS = tempBufferMS;
                          lastLoadedFrame = newPacketFrame;
 
-
-
                          for (int j = 0; j < update.live_objects.Count; j++) {
                               LiveObject or = update.live_objects[j];
                               string label = or.label;
@@ -473,6 +471,7 @@ namespace Holojam {
 
 //                    if (!receivingPackets) {
 //                         socket.Close();
+//                         break;
 //                    }
 //               }
 //          }

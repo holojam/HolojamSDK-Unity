@@ -7,10 +7,10 @@ public class makeLine : MonoBehaviour {
 	LineRenderer lineRen;
 	private Renderer rend;
 	private Vector3 prevPos;
-	private Vector3 prevPrevPos;
-	private float prevAngle;
+	//private Vector3 prevPrevPos;
+	//private float prevAngle;
 	public float detailDistance = .01f;
-	public float detailAngle = 1;
+	//public float detailAngle = 1;
 	public float eraseDistance = .1f;
 	public float eraseSpeed = .97f;
 	public int maxPoints = 100;
@@ -48,7 +48,7 @@ public class makeLine : MonoBehaviour {
 		lineRen.SetWidth (lineWidth, lineWidth);
 		lineRen.sortingOrder = 1000;
 		prevPos = Vector3.zero;
-		prevPrevPos = Vector3.zero;
+		//prevPrevPos = Vector3.zero;
 		texture = new Texture2D (1,1,TextureFormat.RGBAFloat,false);
 		rend.material.SetTexture ("_Detail", texture);
 		hashGrid = new Dictionary<int, List<Point>> ();
