@@ -4,23 +4,23 @@ using System.Collections;
 
 namespace Holojam
 {
-	public class WandController : MonoBehaviour {
-		[HideInInspector]
-		public MasterStream mstream;
-		public string label;
+	public class WandController : TrackedObject {
 
-		private int button_bits;
-
-		void Start () {
-			mstream = MasterStream.Instance;
-		}
+		private int buttonBits;
 		
 		void Update () {
-			button_bits = mstream.getLiveObjectButtonBits (label);
+               base.Update();
+
+               int bits = 0;
+               if (masterStream.GetButtonBits(liveObjectTag, out bits)) {
+                    buttonBits = bits;
+               } else {
+                    buttonBits = bits;
+               }
 		}
 
 		public int getButtonBits() {
-			return button_bits;
+			return buttonBits;
 		}
 	}
 }

@@ -8,7 +8,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 439476}
-  - 114: {fileID: 11491042}
   - 114: {fileID: 11428918}
   - 114: {fileID: 11474304}
   m_Layer: 0
@@ -146,7 +145,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 158356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.15}
+  m_LocalPosition: {x: 0, y: 0, z: -0.15}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.3}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -230,8 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1754270113e374b8716b55f4f90a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mstream: {fileID: 0}
-  label: VR1_wand
+  liveObjectTag: 4
 --- !u!114 &11474304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -243,20 +241,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93097a7496a6f384790541f2857794a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11491042
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 103688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa792a7bf0f466a448c6c6394b669680, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  label: VR1_wand
-  offset: {x: 0, y: 0.06, z: -0.12}
-  mStream: {fileID: 0}
 --- !u!120 &12013350
 LineRenderer:
   m_ObjectHideFlags: 1

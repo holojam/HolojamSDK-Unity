@@ -5,7 +5,7 @@ namespace Holojam {
 
           public LiveObjectTag liveObjectTag;
 
-          private MasterStream masterStream;
+          protected MasterStream masterStream;
           protected bool isTracked;
           protected Vector3 trackedPosition;
           protected Quaternion trackedRotation;

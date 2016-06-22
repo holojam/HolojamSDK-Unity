@@ -6,9 +6,11 @@ using Holojam.Avatar.IK;
 namespace Holojam.Avatar {
 	public class HoloIKSystem : MonoBehaviour {
 
-		public string label;
-
-		public string[] mocapLabels = new string[4] { "_lefthand", "_righthand", "_leftankle", "_rightankle" };
+          public LiveObjectTag headTag;
+          public LiveObjectTag leftHandTag;
+          public LiveObjectTag rightHandTag;
+          public LiveObjectTag leftFootTag;
+          public LiveObjectTag rightFootTag;
 
 		public Transform head;
 		public Transform leftHand;
@@ -16,8 +18,8 @@ namespace Holojam.Avatar {
 		public Transform leftFoot;
 		public Transform rightFoot;
 
-		public Vector3 handOffset;
-		public Vector3 footOffset;
+          //public Vector3 handOffset;
+          //public Vector3 footOffset;
 		public Color color = Color.white;
 		[Range(0f, 1f)]
 		public float pastel = 0.2f;
@@ -36,19 +38,17 @@ namespace Holojam.Avatar {
 		}
 
 		void InitObjectControllers() {
-			ObjectController c;
 			GameObject[] objs = new GameObject[5] {head.gameObject,leftHand.gameObject,rightHand.gameObject,
 										    leftFoot.gameObject, rightFoot.gameObject };
-			string[] labels = new string[5] { label, label + mocapLabels[0], label + mocapLabels[1], label + mocapLabels[2], label + mocapLabels[3] };
-			Vector3[] offsets = new Vector3[5] {Vector3.zero, new Vector3(handOffset.x*-1,handOffset.y,handOffset.z), handOffset,
-													new Vector3(footOffset.x*-1,footOffset.y,footOffset.z), footOffset };
-			for (int i = 0; i < 5; i++) {
-				c = objs[i].GetComponent<ObjectController>();
-				if (c == null)
-					c = objs[i].AddComponent<ObjectController>();
-				c.label = labels[i];
-				c.offset = offsets[i];
-			}
+               LiveObjectTag[] tags = new LiveObjectTag[5] { headTag, leftHandTag, rightHandTag, leftFootTag, rightFootTag };
+
+               for (int i = 0; i < 5; i++) {
+                    GameObject go = objs[i];
+                    TrackedObject trackedObject = go.GetComponent<TrackedObject>();
+                    if (trackedObject == null)
+                         trackedObject = go.AddComponent<TrackedObject>();
+                    trackedObject.liveObjectTag = tags[i];
+               }
 		}
 
 

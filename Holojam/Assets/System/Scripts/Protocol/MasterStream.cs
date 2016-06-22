@@ -14,7 +14,8 @@ using System.Threading;
 
 namespace Holojam {
      public enum LiveObjectTag {
-          HEADSET1, HEADSET2, HEADSET3, HEADSET4, WAND1, WAND2, WAND3, WAND4, BOX1, BOX2, SPHERE1
+          HEADSET1, HEADSET2, HEADSET3, HEADSET4, WAND1, WAND2, WAND3, WAND4, BOX1, BOX2, SPHERE1,
+          LEFTHAND1,RIGHTHAND1,LEFTFOOT1,RIGHTFOOT1
      }
 
      public class MasterStream : Singleton<MasterStream> {
@@ -33,7 +34,11 @@ namespace Holojam {
                { LiveObjectTag.WAND2, "VR2_wand" },
                { LiveObjectTag.WAND3, "VR3_wand" },
                { LiveObjectTag.WAND4, "VR4_wand" },
-               { LiveObjectTag.BOX1, "VR1_box" }
+               { LiveObjectTag.BOX1, "VR1_box" },
+               { LiveObjectTag.LEFTHAND1, "VR1_lefthand"},
+               { LiveObjectTag.RIGHTHAND1, "VR1_righthand"},
+               { LiveObjectTag.LEFTFOOT1, "VR1_leftankle"},
+               { LiveObjectTag.RIGHTFOOT1, "VR1_rightankle"}
           };
 
           /////Private/////
@@ -118,7 +123,11 @@ namespace Holojam {
                          return false;
                     } else {
                          position = storage.position;
-                         return true;
+                         if (position.Equals(DEFAULT_VECTOR_POSITION)) {
+                              return false;
+                         } else {
+                              return true;
+                         }
                     }
                }
           }
@@ -134,6 +143,26 @@ namespace Holojam {
                          return false;
                     } else {
                          rotation = storage.rotation;
+                         if (rotation.Equals(DEFAULT_QUATERNION_ROTATION)) {
+                              return false;
+                         } else {
+                              return true;
+                         }
+                    }
+               }
+          }
+
+          public bool GetButtonBits(LiveObjectTag tag, out int bits) {
+               if (!tagToMotiveName.ContainsKey(tag)) {
+                    throw new System.ArgumentException("Illegal tag.");
+               }
+               LiveObjectStorage storage;
+               lock(lockObject) {
+                    if (!liveObjects.TryGetValue(tagToMotiveName[tag], out storage)) {
+                         bits = 0;
+                         return false;
+                    } else {
+                         bits = storage.buttonBits;
                          return true;
                     }
                }
