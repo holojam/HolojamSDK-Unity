@@ -18,7 +18,9 @@ namespace Holojam{
 		void Start(){Populate();}
 		
 		void Populate(){
+			print("populating");
 			Clean();
+			if(user==null || (actor==null && users>1))return;
 			
 			GameObject u = Instantiate(user.gameObject,Vector3.zero,Quaternion.identity) as GameObject;
 			u.transform.parent=this.transform;
