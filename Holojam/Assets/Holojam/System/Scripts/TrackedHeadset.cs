@@ -5,7 +5,7 @@ namespace Holojam {
 
           protected override void Update() {
                this.UpdateTracking();
-
+               
                Quaternion goalOrientation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.CenterEye);
                if (this.IsTracked) {
                     goalOrientation = trackedRotation * Quaternion.Inverse(goalOrientation);
@@ -16,4 +16,3 @@ namespace Holojam {
           }
      }
 }
-
