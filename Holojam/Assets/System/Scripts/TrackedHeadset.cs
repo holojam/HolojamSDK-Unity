@@ -4,7 +4,7 @@ namespace Holojam {
      public class TrackedHeadset : TrackedObject {
 
           protected override void Update() {
-               base.Update();
+               this.UpdateTracking();
 
                Quaternion goalOrientation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.CenterEye);
                if (this.IsTracked) {

@@ -588,10 +588,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 183562}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000016292068}
   m_LocalPosition: {x: 0.55, y: 0.2, z: 0}
   m_LocalScale: {x: 400, y: 400, z: 400}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_Children: []
   m_Father: {fileID: 451988}
   m_RootOrder: 0
@@ -791,7 +791,7 @@ Transform:
   m_LocalRotation: {x: 0, y: -1, z: 0, w: -0.00000016292068}
   m_LocalPosition: {x: -0.9, y: 1.5, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_Children:
   - {fileID: 420084}
   m_Father: {fileID: 484776}
@@ -1070,17 +1070,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0a38046f954a0d408dc3cabfc5da44f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  label: 
+  label: VR1
   mocapLabels:
   - _lefthand
   - _righthand
   - _leftankle
   - _rightankle
-  head: {fileID: 0}
-  leftHand: {fileID: 0}
-  rightHand: {fileID: 0}
-  leftFoot: {fileID: 0}
-  rightFoot: {fileID: 0}
+  head: {fileID: 421660}
+  leftHand: {fileID: 451988}
+  rightHand: {fileID: 434734}
+  leftFoot: {fileID: 477072}
+  rightFoot: {fileID: 446460}
   handOffset: {x: 0, y: 0, z: 0}
   footOffset: {x: 0, y: 0, z: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
@@ -1116,13 +1116,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0, g: 0, b: 0, a: 0}
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: c3b17c08a8252ab4faa45f1ef58a3ef5, type: 2}
   detail: 10
   startWidth: 0.05
   endWidth: 0.03
-  startEffector: {fileID: 0}
-  midEffector: {fileID: 0}
-  endEffector: {fileID: 0}
+  startEffector: {fileID: 444356}
+  midEffector: {fileID: 450056}
+  endEffector: {fileID: 446460}
 --- !u!114 &11456330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1149,13 +1149,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0, g: 0, b: 0, a: 0}
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: c3b17c08a8252ab4faa45f1ef58a3ef5, type: 2}
   detail: 10
   startWidth: 0.05
   endWidth: 0.03
-  startEffector: {fileID: 0}
-  midEffector: {fileID: 0}
-  endEffector: {fileID: 0}
+  startEffector: {fileID: 426946}
+  midEffector: {fileID: 426316}
+  endEffector: {fileID: 451988}
 --- !u!114 &11470010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1186,13 +1186,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0, g: 0, b: 0, a: 0}
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: c3b17c08a8252ab4faa45f1ef58a3ef5, type: 2}
   detail: 10
   startWidth: 0.05
   endWidth: 0.03
-  startEffector: {fileID: 0}
-  midEffector: {fileID: 0}
-  endEffector: {fileID: 0}
+  startEffector: {fileID: 469108}
+  midEffector: {fileID: 461828}
+  endEffector: {fileID: 477072}
 --- !u!114 &11476732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1223,13 +1223,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 0, g: 0, b: 0, a: 0}
-  material: {fileID: 0}
+  material: {fileID: 2100000, guid: c3b17c08a8252ab4faa45f1ef58a3ef5, type: 2}
   detail: 10
   startWidth: 0.05
   endWidth: 0.03
-  startEffector: {fileID: 0}
-  midEffector: {fileID: 0}
-  endEffector: {fileID: 0}
+  startEffector: {fileID: 461282}
+  midEffector: {fileID: 421606}
+  endEffector: {fileID: 434734}
 --- !u!114 &11485180
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -17,7 +17,6 @@ namespace Holojam
 		
 		void Update () {
 			button_bits = mstream.getLiveObjectButtonBits (label);
-			Debug.Log (button_bits + " " + this.name);
 		}
 
 		public int getButtonBits() {

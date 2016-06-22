@@ -21,6 +21,14 @@ namespace Holojam {
           }
 
           protected virtual void Update() {
+               this.UpdateTracking();
+               if (this.isTracked) {
+                    this.transform.localPosition = trackedPosition;
+                    this.transform.localRotation = trackedRotation;
+               }
+          }
+
+          protected void UpdateTracking() {
                Vector3 position;
                Quaternion rotation;
 
@@ -28,8 +36,7 @@ namespace Holojam {
                     this.isTracked = true;
                     this.trackedPosition = position;
                     this.trackedRotation = rotation;
-                    this.transform.localPosition = trackedPosition;
-                    this.transform.localRotation = trackedRotation;
+
                } else {
                     this.isTracked = false;
                }
