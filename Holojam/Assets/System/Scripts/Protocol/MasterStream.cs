@@ -257,8 +257,8 @@ namespace Holojam {
 
                               LiveObjectStorage ow;
                               lock (lockObject) {
-                                   List<LiveObjectStorage> objectsToRemove = new List<LiveObjectStorage>();
-                                   objectsToRemove.AddRange(liveObjects.Values);
+                                   //List<LiveObjectStorage> objectsToRemove = new List<LiveObjectStorage>();
+                                   //objectsToRemove.AddRange(liveObjects.Values);
 
                                    //Add objects that exist
                                    if (!liveObjects.TryGetValue(label, out ow)) {
@@ -266,7 +266,7 @@ namespace Holojam {
                                         liveObjects[label] = ow;
                                    } else {
                                         ow = liveObjects[label];
-                                        objectsToRemove.Remove(ow);
+                                        //objectsToRemove.Remove(ow);
                                    }
                                    if (update.lhs_frame) {
                                         ow.position = new Vector3(-(float)or.x, (float)or.y, (float)or.z);
@@ -278,9 +278,9 @@ namespace Holojam {
                                    ow.buttonBits = or.button_bits;
 
                                    //Remove objects from pool that aren't there.
-                                   foreach (LiveObjectStorage missingObject in objectsToRemove) {
-                                        liveObjects.Remove(missingObject.key);
-                                   }
+                                   //foreach (LiveObjectStorage missingObject in objectsToRemove) {
+                                   //     liveObjects.Remove(missingObject.key);
+                                   //}
                               }
                          }
                     }

@@ -6,6 +6,8 @@ namespace Holojam {
           protected override void Update() {
                this.UpdateTracking();
 
+               Debug.Log(liveObjectTag + " " + this.isTracked + " " + masterStream.IsLiveObject(liveObjectTag));
+               
                Quaternion goalOrientation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.CenterEye);
                if (this.IsTracked) {
                     goalOrientation = trackedRotation * Quaternion.Inverse(goalOrientation);
