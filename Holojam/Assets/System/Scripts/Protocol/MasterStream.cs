@@ -146,6 +146,23 @@ namespace Holojam {
                }
           }
 
+          public bool GetPosition(string tag, out Vector3 position) {
+               LiveObjectStorage storage;
+               lock (lockObject) {
+                    if (!liveObjects.TryGetValue(tag, out storage)) {
+                         position = DEFAULT_VECTOR_POSITION;
+                         return false;
+                    } else {
+                         position = storage.position;
+                         if (position.Equals(DEFAULT_VECTOR_POSITION)) {
+                              return false;
+                         } else {
+                              return true;
+                         }
+                    }
+               }
+          }
+
           public bool GetRotation(LiveObjectTag tag, out Quaternion rotation) {
                if (!tagToMotiveName.ContainsKey(tag)) {
                     throw new System.ArgumentException("Illegal tag.");
@@ -153,6 +170,24 @@ namespace Holojam {
                LiveObjectStorage storage;
                lock (lockObject) {
                     if (!liveObjects.TryGetValue(tagToMotiveName[tag], out storage)) {
+                         rotation = DEFAULT_QUATERNION_ROTATION;
+                         return false;
+                    } else {
+                         rotation = storage.rotation;
+                         if (rotation.Equals(DEFAULT_QUATERNION_ROTATION)) {
+                              return false;
+                         } else {
+                              return true;
+                         }
+                    }
+               }
+          }
+
+
+          public bool GetRotation(string tag, out Quaternion rotation) {
+               LiveObjectStorage storage;
+               lock (lockObject) {
+                    if (!liveObjects.TryGetValue(tag, out storage)) {
                          rotation = DEFAULT_QUATERNION_ROTATION;
                          return false;
                     } else {
