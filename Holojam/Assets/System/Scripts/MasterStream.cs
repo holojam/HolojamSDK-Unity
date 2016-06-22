@@ -1,48 +1,59 @@
 using UnityEngine;
-using System;
 using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using System.Xml;
 using System.IO;
 using ProtoBuf;
 using update_protocol_v3;
+using System.Threading;
 
 namespace Holojam {
+
      public class MasterStream : Singleton<MasterStream> {
-
-          private readonly Vector3 DEFAULT_VECTOR_POSITION = new Vector3(0, 0, 0);
-          private readonly Quaternion DEFAULT_QUATERNION_ROTATION = new Quaternion(0, 0, 0, 0);
-          private readonly int PACKET_SIZE = 65507;
-
-          private class OtherMarker {
-               public Vector3 pos;
-          }
-          private class LiveObjectStorage {
-               public Vector3 pos;
-               public Quaternion rot;
+          /////Protected Classes/////
+          protected class LiveObjectStorage {
+               public Vector3 position;
+               public Quaternion rotation;
                public int buttonBits;
-               public List<Vector2> axisButtons;
-
+               public List<Vector2> axisButtons = new List<Vector2>();
                // TODO: Handle extra data
           }
 
+          /////Public/////
+          //References
+          //Primitives
+          public bool debug = true;
 
-          private const int BLACK_BOX_CLIENT_PORT = 1611;
+          /////Protected/////
+          //References
+          protected Dictionary<string, LiveObjectStorage> liveObjects = new Dictionary<string, LiveObjectStorage>();
+          protected Thread thread = null;
+          protected IPEndPoint ipEndPoint = null;
+          protected Socket socket = null;
+          //Primitives
+          protected const int BLACK_BOX_CLIENT_PORT = 1611;
+          protected readonly Vector3 DEFAULT_POSITION = Vector3.zero;
+          protected readonly Quaternion DEFAULT_ROTATION = Quaternion.identity;
+
 
           private int nBytesReceived;
           private bool stopReceive;
-          private IPEndPoint ipEndPoint;
-          private System.Threading.Thread thread = null;
-          private Socket socket;
+
+
+
           private byte[] b1;
           private byte[] b2;
           private byte[] b3;
           private MemoryStream b1ms;
           private MemoryStream b2ms;
-          private float accum;
-          private int nPackets;
-          private int nFrames;
+          private float timer = 0;
+          private int packetCount = 0;
+          private int frameCount = 0;
 
           private UnityEngine.Object lock_object;
 
@@ -50,15 +61,13 @@ namespace Holojam {
           private byte[] lastLoadedBuffer;
           private MemoryStream lastLoadedBufferMS;
 
-          private Dictionary<string, LiveObjectStorage> liveObjects = new Dictionary<string, LiveObjectStorage>();
+
 
           public void Start() {
                lock_object = new UnityEngine.Object();
                Application.runInBackground = true;
                Application.targetFrameRate = -1;
-               accum = 0;
-               nPackets = 0;
-               nFrames = 0;
+
                // ~65KB buffer sizes
                b1 = new byte[65507];
                b2 = new byte[65507];
@@ -69,16 +78,21 @@ namespace Holojam {
           }
           // Handle new thread data / invoke Unity routines outside of the socket thread.
           public void Update() {
-               accum += Time.deltaTime;
-               float round_accum = (float)Math.Floor(accum);
+               timer += Time.deltaTime;
+               float round_accum = (float)Math.Floor(timer);
                if (round_accum > 0) {
-                    accum -= round_accum;
+                    timer -= round_accum;
                     // print ("FPS: " + ((float)nFrames / round_accum).ToString());
-                    print("packets per second: " + ((float)nPackets / round_accum).ToString());
-                    nPackets = 0;
-                    nFrames = 0;
+                    if (((float)packetCount / round_accum) == 0) {
+                         print("MasterStream not receiving packets.");
+                    } else {
+                         print("MasterStream receiving packets.");
+                    }
+                    //print ("packets per second: " + ((float)nPackets / round_accum).ToString());
+                    packetCount = 0;
+                    frameCount = 0;
                }
-               nFrames++;
+               frameCount++;
           }
 
           public Vector3 getLiveObjectPosition(string name) {
@@ -86,20 +100,20 @@ namespace Holojam {
                lock (lock_object) {
                     if (!liveObjects.TryGetValue(name, out o)) {
                          //print ("Body not found: " + name);
-                         return DEFAULT_VECTOR_POSITION;
+                         return DEFAULT_POSITION;
                     }
                }
-               return o.pos;
+               return o.position;
           }
           public Quaternion getLiveObjectRotation(string name) {
                LiveObjectStorage o;
                lock (lock_object) {
                     if (!liveObjects.TryGetValue(name, out o)) {
                          //print ("Body not found: " + name);
-                         return DEFAULT_QUATERNION_ROTATION;
+                         return DEFAULT_ROTATION;
                     }
                }
-               return o.rot;
+               return o.rotation;
           }
           public int getLiveObjectButtonBits(string name) {
                LiveObjectStorage o;
@@ -121,6 +135,30 @@ namespace Holojam {
                }
                return o.axisButtons[index];
           }
+
+
+
+          //protected class ServerWorker {
+
+          //    /////Protected/////
+          //    //References
+          //    //Primitives
+          //    protected volatile bool shouldDoWork = true;
+
+
+          //    public void Work() {
+
+          //        while (this.shouldDoWork) {
+
+          //        }
+
+
+          //    }
+
+          //    public void RequestStop() {
+          //        this.shouldDoWork = false;
+          //    }
+          //}
 
           // This thread handles incoming NatNet packets.
           private void ThreadRun() {
@@ -149,7 +187,7 @@ namespace Holojam {
                     //Debug.Log("preRECV");
                     nBytesReceived = socket.Receive(newPacketBuffer);
                     //Debug.Log("RECV");
-                    nPackets++;
+                    packetCount++;
                     newPacketBufferMS.Position = 0;
                     //Debug.Log ("Deserializing data...");
                     update_protocol_v3.Update update = Serializer.Deserialize<update_protocol_v3.Update>(new MemoryStream(newPacketBuffer, 0, nBytesReceived));
@@ -174,7 +212,7 @@ namespace Holojam {
                               LiveObject or = update.live_objects[j];
                               string label = or.label;
                               if (label == "marker") {
-                                   Debug.Log("marker at " + or.x + ", " + or.y + ", " + or.z);
+                                   //Debug.Log ("marker at " + or.x + ", " + or.y + ", " + or.z);
                               }
                               LiveObjectStorage ow;
                               lock (lock_object) {
@@ -185,11 +223,11 @@ namespace Holojam {
                                         ow = liveObjects[label];
                                    }
                                    if (update.lhs_frame) {
-                                        ow.pos = new Vector3(-(float)or.x, (float)or.y, (float)or.z);
-                                        ow.rot = new Quaternion(-(float)or.qx, (float)or.qy, (float)or.qz, -(float)or.qw);
+                                        ow.position = new Vector3(-(float)or.x, (float)or.y, (float)or.z);
+                                        ow.rotation = new Quaternion(-(float)or.qx, (float)or.qy, (float)or.qz, -(float)or.qw);
                                    } else {
-                                        ow.pos = new Vector3((float)or.x, (float)or.y, (float)or.z);
-                                        ow.rot = new Quaternion((float)or.qx, (float)or.qy, (float)or.qz, (float)or.qw);
+                                        ow.position = new Vector3((float)or.x, (float)or.y, (float)or.z);
+                                        ow.rotation = new Quaternion((float)or.qx, (float)or.qy, (float)or.qz, (float)or.qw);
                                    }
                                    ow.buttonBits = or.button_bits;
                               }
@@ -201,7 +239,9 @@ namespace Holojam {
                     }
                }
           }
-          private void OnDestroy() {
+
+
+          protected void OnDestroy() {
                stopReceive = true;
           }
      }

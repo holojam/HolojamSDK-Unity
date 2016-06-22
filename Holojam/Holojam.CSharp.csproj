@@ -56,27 +56,66 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>Assets\System\Plugins\protobuf-net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Avatar\Scripts\HoloIKSystem.cs" />
+    <Compile Include="Assets\Avatar\Scripts\IK\ArmIK.cs" />
+    <Compile Include="Assets\Avatar\Scripts\IK\HipsIK.cs" />
+    <Compile Include="Assets\Avatar\Scripts\IK\LegIK.cs" />
+    <Compile Include="Assets\Avatar\Scripts\IK\TorsoIK.cs" />
+    <Compile Include="Assets\Avatar\Scripts\SplineLimb.cs" />
+    <Compile Include="Assets\Avatar\Scripts\StuttIKSystem.cs" />
+    <Compile Include="Assets\Input\Scripts\GlobalReceiver.cs" />
+    <Compile Include="Assets\Input\Scripts\Hand\HandGlobalReceiver.cs" />
+    <Compile Include="Assets\Input\Scripts\Hand\HandModule.cs" />
+    <Compile Include="Assets\Input\Scripts\Hand\IHandHandler.cs" />
+    <Compile Include="Assets\Input\Scripts\Vive\IViveHandler.cs" />
+    <Compile Include="Assets\Input\Scripts\Vive\ViveControllerModule.cs" />
+    <Compile Include="Assets\Input\Scripts\Vive\ViveGlobalReceiver.cs" />
+    <Compile Include="Assets\Input\Scripts\WiiMote\IWiiMoteHandler.cs" />
+    <Compile Include="Assets\Input\Scripts\WiiMote\TestObjects\WiiMoteGlobalTestObject.cs" />
+    <Compile Include="Assets\Input\Scripts\WiiMote\TestObjects\WiiMotePointerTestObject.cs" />
+    <Compile Include="Assets\Input\Scripts\WiiMote\WiiGlobalReceiver.cs" />
+    <Compile Include="Assets\Input\Scripts\WiiMote\WiiMoteModule.cs" />
     <Compile Include="Assets\System\Scripts\MasterStream.cs" />
     <Compile Include="Assets\System\Scripts\MasterStream2.cs" />
+    <Compile Include="Assets\System\Scripts\ObjectController.cs" />
+    <Compile Include="Assets\System\Scripts\ObjectWithOffsetController.cs" />
+    <Compile Include="Assets\System\Scripts\PlayerController.cs" />
     <Compile Include="Assets\System\Scripts\TrackedHeadset.cs" />
     <Compile Include="Assets\System\Scripts\TrackedObject.cs" />
     <Compile Include="Assets\System\Scripts\UpdateProtocol-Net.cs" />
     <Compile Include="Assets\System\Scripts\UpdateProtocolV3.cs" />
+    <Compile Include="Assets\Utility\Scripts\OneModuleGrabbable.cs" />
+    <Compile Include="Assets\Utility\Scripts\PoseToColorChanger.cs" />
     <Compile Include="Assets\Utility\Scripts\Singleton.cs" />
+    <Compile Include="Assets\Utility\Scripts\TransformUniversal.cs" />
+    <Compile Include="Assets\Utility\Scripts\TwoModuleScalable.cs" />
+    <Compile Include="Assets\Utility\Scripts\ViveTransformable.cs" />
+    <Compile Include="Assets\Utility\Scripts\billboard\Billboard.cs" />
+    <Compile Include="Assets\Utility\Scripts\billboard\BillboardBox.cs" />
+    <Compile Include="Assets\Utility\Scripts\billboard\BillboardComponent.cs" />
+    <Compile Include="Assets\Utility\Scripts\billboard\BillboardGraph.cs" />
+    <Compile Include="Assets\Utility\Scripts\billboard\BillboardLabel.cs" />
+    <Compile Include="Assets\Utility\Scripts\line-scripts\LineSynchronizer.cs" />
+    <Compile Include="Assets\Utility\Scripts\line-scripts\LineUnity.cs" />
+    <Compile Include="Assets\Utility\Scripts\line-scripts\makeLine.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Avatar\Shaders\AvatarShader.shader" />
+    <None Include="Assets\Avatar\Shaders\UnlitColorTexture.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
