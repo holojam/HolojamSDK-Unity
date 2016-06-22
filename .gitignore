@@ -12,6 +12,7 @@ obj/
 *.user
 *.unityproj
 *.booproj
+*.unitypackage
 
 *.pidb.meta
 sysinfo.txt
