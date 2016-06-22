@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace Holojam.Avatar.IK {
-    [ExecuteInEditMode]
+   // [ExecuteInEditMode]
     public class TorsoIK : MonoBehaviour {
 
 
