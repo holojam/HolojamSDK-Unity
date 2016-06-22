@@ -55,6 +55,12 @@ namespace Holojam {
 
 
           private class LiveObjectStorage {
+               public string key;
+
+               public LiveObjectStorage(string key) {
+                    this.key = key;
+               }
+
                public Vector3 position = Vector3.zero;
                public Quaternion rotation = Quaternion.identity;
                public int buttonBits = 0;
@@ -111,6 +117,14 @@ namespace Holojam {
           //
           // API functions
           //
+
+          public bool IsLiveObject(LiveObjectTag tag) {
+               return liveObjects.ContainsKey(tagToMotiveName[tag]);
+          }
+
+          public bool IsLiveObject(string label) {
+               return liveObjects.ContainsKey(label);
+          }
 
           public bool GetPosition(LiveObjectTag tag, out Vector3 position) {
                if (!tagToMotiveName.ContainsKey(tag)) {
@@ -243,11 +257,16 @@ namespace Holojam {
 
                               LiveObjectStorage ow;
                               lock (lockObject) {
+                                   List<LiveObjectStorage> objectsToRemove = new List<LiveObjectStorage>();
+                                   objectsToRemove.AddRange(liveObjects.Values);
+
+                                   //Add objects that exist
                                    if (!liveObjects.TryGetValue(label, out ow)) {
-                                        ow = new LiveObjectStorage();
+                                        ow = new LiveObjectStorage(label);
                                         liveObjects[label] = ow;
                                    } else {
                                         ow = liveObjects[label];
+                                        objectsToRemove.Remove(ow);
                                    }
                                    if (update.lhs_frame) {
                                         ow.position = new Vector3(-(float)or.x, (float)or.y, (float)or.z);
@@ -257,6 +276,11 @@ namespace Holojam {
                                         ow.rotation = new Quaternion((float)or.qx, (float)or.qy, (float)or.qz, (float)or.qw);
                                    }
                                    ow.buttonBits = or.button_bits;
+
+                                   //Remove objects from pool that aren't there.
+                                   foreach (LiveObjectStorage missingObject in objectsToRemove) {
+                                        liveObjects.Remove(missingObject.key);
+                                   }
                               }
                          }
                     }
