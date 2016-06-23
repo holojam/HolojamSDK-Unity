@@ -10,6 +10,17 @@ namespace Holojam{
 		public Vector2[] bounds = new Vector2[4];
 		public float floor;
 		
+		public Vector3 center{get{return Vertex(0.25f*(bounds[0]+bounds[1]+bounds[2]+bounds[3]));}}
+		public Vector2 left{get{return 0.5f*(bounds[0]+bounds[3]);}}
+		public Vector2 right{get{return 0.5f*(bounds[1]+bounds[2]);}}
+		public Vector2 front{get{return 0.5f*(bounds[0]+bounds[1]);}}
+		public Vector2 back{get{return 0.5f*(bounds[2]+bounds[3]);}}
+		public float xRatio{get{
+			return Vector2.Distance(left,right) / Vector2.Distance(front,back);
+		}}
+		public float yRatio{get{
+			return Vector2.Distance(front,back) / Vector2.Distance(left,right);
+		}}
 		const int ceiling = 4;
 		
 		public void Calibrate(int i){

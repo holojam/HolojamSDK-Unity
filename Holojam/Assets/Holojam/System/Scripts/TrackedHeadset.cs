@@ -11,8 +11,7 @@ namespace Holojam {
                     goalOrientation = trackedRotation * Quaternion.Inverse(goalOrientation);
 				this.transform.position = trackedPosition;
                }
-				
-			Debug.Log (trackedPosition);
+			
                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, goalOrientation, Mathf.Clamp(Time.deltaTime, 0, 1));
           }
      }
