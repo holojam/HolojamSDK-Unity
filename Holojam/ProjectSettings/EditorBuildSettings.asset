@@ -8,4 +8,4 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Holojam-Demo.unity
   - enabled: 1
-    path: Assets/Holojam/Demo/Scenes/Demo-acg-tmp.unity
+    path: Assets/Holojam/Demo/Scenes/Demo.unity

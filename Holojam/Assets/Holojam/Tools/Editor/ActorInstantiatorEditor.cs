@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿//ActorInstantiatorEditor.cs
+//Created by Aaron C Gaudette on 22.06.16
+
+using UnityEngine;
 using UnityEditor;
 
 namespace Holojam{
