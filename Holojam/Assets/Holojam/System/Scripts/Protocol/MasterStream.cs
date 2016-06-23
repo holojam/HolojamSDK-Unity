@@ -15,7 +15,7 @@ using System.Threading;
 namespace Holojam {
      public enum LiveObjectTag {
           HEADSET1, HEADSET2, HEADSET3, HEADSET4, WAND1, WAND2, WAND3, WAND4, BOX1, BOX2, SPHERE1,
-          LEFTHAND1,RIGHTHAND1,LEFTFOOT1,RIGHTFOOT1
+		LEFTHAND1,RIGHTHAND1,LEFTFOOT1,RIGHTFOOT1,LEFTHAND2,RIGHTHAND2,LEFTFOOT2,RIGHTFOOT2,LEFTHAND3,RIGHTHAND3,LEFTFOOT3,RIGHTFOOT3
      }
 
      public class MasterStream : Singleton<MasterStream> {
@@ -42,7 +42,15 @@ namespace Holojam {
                { LiveObjectTag.LEFTHAND1, "VR1_lefthand"},
                { LiveObjectTag.RIGHTHAND1, "VR1_righthand"},
                { LiveObjectTag.LEFTFOOT1, "VR1_leftankle"},
-               { LiveObjectTag.RIGHTFOOT1, "VR1_rightankle"}
+               { LiveObjectTag.RIGHTFOOT1, "VR1_rightankle"},
+			{ LiveObjectTag.LEFTHAND2, "VR2_lefthand"},
+			{ LiveObjectTag.RIGHTHAND2, "VR2_righthand"},
+			{ LiveObjectTag.LEFTFOOT2, "VR2_leftankle"},
+			{ LiveObjectTag.RIGHTFOOT2, "VR2_rightankle"},
+			{ LiveObjectTag.LEFTHAND3, "VR3_lefthand"},
+			{ LiveObjectTag.RIGHTHAND3, "VR3_righthand"},
+			{ LiveObjectTag.LEFTFOOT3, "VR3_leftankle"},
+			{ LiveObjectTag.RIGHTFOOT3, "VR3_rightankle"}
           };
 
           /////Private/////

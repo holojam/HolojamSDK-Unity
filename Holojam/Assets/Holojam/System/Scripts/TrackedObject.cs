@@ -24,8 +24,8 @@ namespace Holojam {
           protected virtual void Update() {
                this.UpdateTracking();
                if (this.isTracked) {
-                    this.transform.localPosition = trackedPosition;
-                    this.transform.localRotation = trackedRotation;
+				this.transform.position = trackedPosition;
+				this.transform.rotation = trackedRotation;
                }
           }
 
@@ -37,6 +37,8 @@ namespace Holojam {
                     this.isTracked = true;
                     this.trackedPosition = position;
                     this.trackedRotation = rotation;
+
+					//Debug.Log (liveObjectTag + " " + trackedPosition + " " + trackedRotation);
 
                } else {
                     this.isTracked = false;
