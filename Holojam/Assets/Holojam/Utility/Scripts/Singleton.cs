@@ -46,7 +46,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("[Singleton] Using instance already created: " +
+                        Debug.LogWarning("[Singleton] Using instance already created: " +
                                   _instance.gameObject.name);
                     }
                 }

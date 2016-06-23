@@ -19,6 +19,10 @@ namespace Holojam {
      }
 
      public class MasterStream : Singleton<MasterStream> {
+          
+          public int warningThreshold = 48;
+          public int packetsPerSecond;
+          
           /////Readonly/////
           public static readonly Vector3 DEFAULT_VECTOR_POSITION = new Vector3(0, 0, 0);
           public static readonly Quaternion DEFAULT_QUATERNION_ROTATION = new Quaternion(0, 0, 0, 0);
@@ -108,7 +112,10 @@ namespace Holojam {
           private IEnumerator DisplayPacketsPerSecond() {
                while (receivingPackets) {
                     yield return new WaitForSeconds(1f);
-                    Debug.LogWarning(string.Format("Packets per second: {0} Most recent packet frame: {1}", packetCount, currentPacket.frame));
+                    //Debug.LogWarning(string.Format("Packets per second: {0} Most recent packet frame: {1}", packetCount, currentPacket.frame));
+                    packetsPerSecond=packetCount;
+                    if(packetCount<=warningThreshold && Time.frameCount>0)
+                         Debug.LogWarning("MasterStream: Received "+packetCount+" packets. Most recent packet at frame "+currentPacket.frame);
                     packetCount = 0;
                }
           }
