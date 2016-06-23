@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 439476}
   - 114: {fileID: 11428918}
-  - 114: {fileID: 11474304}
   m_Layer: 0
   m_Name: Pen
   m_TagString: Untagged
@@ -230,17 +229,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   liveObjectTag: 4
---- !u!114 &11474304
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 103688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93097a7496a6f384790541f2857794a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!120 &12013350
 LineRenderer:
   m_ObjectHideFlags: 1

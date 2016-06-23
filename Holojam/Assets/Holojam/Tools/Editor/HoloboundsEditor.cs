@@ -12,7 +12,7 @@ namespace Holojam{
 			Holobounds h = (Holobounds)target;
 			
 			h.calibrator=EditorGUILayout.ObjectField(
-				"Calibrator",h.calibrator,typeof(TrackedObject),false
+				"Calibrator",h.calibrator,typeof(TrackedObject),true
 			) as TrackedObject;
 			
 			fold=EditorGUILayout.Foldout(fold,"Corners");
@@ -28,6 +28,12 @@ namespace Holojam{
 				h.floor=EditorGUILayout.FloatField("Floor",h.floor);
 				if(GUILayout.Button("C"))h.Calibrate(4);
 			EditorGUILayout.EndHorizontal();
+			
+			EditorGUILayout.Space();
+			EditorStyles.label.wordWrap = true;
+			EditorGUILayout.LabelField(
+				"Calibrate in play mode, then copy and paste component when desired values are found."
+			);
 		}
 	}
 }
