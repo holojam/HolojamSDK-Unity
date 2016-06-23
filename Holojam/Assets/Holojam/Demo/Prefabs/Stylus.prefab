@@ -210,7 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1754270113e374b8716b55f4f90a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liveObjectTag: 4
+  liveObjectTag: 5
 --- !u!114 &11495050
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -239,10 +239,10 @@ LineRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 6ded8fc29ed431142b1158d32e3dcfcb, type: 2}
+  - {fileID: 2100000, guid: cf9f12170750046d6aaf263ad61b0484, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
+  m_UseLightProbes: 0
   m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1

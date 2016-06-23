@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Crayon
+  m_Name: CrayonRed
   m_Shader: {fileID: 4800000, guid: 38e3c9f57a28de247be02df0d57033ed, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
@@ -34,6 +34,13 @@ Material:
           name: _DetailNormalMap
         second:
           m_Texture: {fileID: 0}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Detail
+        second:
+          m_Texture: {fileID: 2800000, guid: 47381b3a3d1ed31428bf04513d6ec752, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -76,13 +83,6 @@ Material:
           name: _MetallicGlossMap
         second:
           m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _Detail
-        second:
-          m_Texture: {fileID: 2800000, guid: 47381b3a3d1ed31428bf04513d6ec752, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -142,4 +142,4 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 1, g: 1, b: 1, a: 1}
+        second: {r: 1, g: 0.18382353, b: 0.18382353, a: 1}
