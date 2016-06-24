@@ -1,5 +1,6 @@
 ﻿//BoundsOffset.cs
 //Created by Aaron C Gaudette on 23.06.16
+//Automatically centers object to holobounds and offsets
 
 using UnityEngine;
 

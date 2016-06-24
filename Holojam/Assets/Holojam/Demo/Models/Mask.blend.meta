@@ -1,15 +1,22 @@
 fileFormatVersion: 2
-guid: 10e77501a553f433683ed3b42667db73
-timeCreated: 1466616014
+guid: 3bb1abacce8eb43b9bf25f14d09856a1
+timeCreated: 1466710709
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Mask
+    100000: Inner
+    100002: //RootNode
+    100004: Outer
+    400000: Inner
+    400002: //RootNode
+    400004: Outer
+    2300000: Inner
+    2300002: Outer
+    3300000: Inner
+    3300002: Outer
+    4300000: Inner
+    4300002: Outer
     7400000: Default Take
     9500000: //RootNode
   materials:

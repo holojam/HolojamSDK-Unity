@@ -1,5 +1,6 @@
 ﻿//ActorInstantiator.cs
 //Created by Aaron C Gaudette on 22.06.16
+//Quickly add actors to the manager or destroy them
 
 using UnityEngine;
 
@@ -8,6 +9,13 @@ namespace Holojam{
 	public class ActorInstantiator : MonoBehaviour{
 		public TrackedHeadset actor;
 		public int amount = 4;
+		
+		Color[] colors = {
+			Color.red,
+			Color.green,
+			Color.cyan,
+			Color.yellow
+		};
 		
 		void Update(){
 			amount=Mathf.Max(amount,1);
@@ -20,7 +28,10 @@ namespace Holojam{
 			for(int i=0;i<amount;++i){
 				GameObject a = Instantiate(actor.gameObject,Vector3.zero,Quaternion.identity) as GameObject;
 				a.transform.parent=transform;
-				a.GetComponent<TrackedHeadset>().liveObjectTag=(LiveObjectTag)GetComponent<ActorManager>().actors.Length+i;
+				//Set tag and color automatically
+				a.GetComponent<TrackedHeadset>().liveObjectTag=
+					(LiveObjectTag)GetComponent<ActorManager>().actors.Length+i;
+				if(a.GetComponent<Actor>())a.GetComponent<Actor>().color=colors[i%colors.Length];
 			}
 			GetComponent<ActorManager>().Update();
 		}

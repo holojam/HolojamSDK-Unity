@@ -4,14 +4,16 @@
 using UnityEngine;
 [ExecuteInEditMode]
 
-public class ExampleRoom : MonoBehaviour{
+public class ExampleFloor : MonoBehaviour{
 	public Holojam.Holobounds holobounds;
 	public float scale = 2;
 	public bool square = false;
 	
 	void Update(){
 		if(holobounds!=null){
-			transform.localScale=square?new Vector3(scale,scale,1):new Vector3(scale*holobounds.xRatio,scale,1);
+			transform.localScale=square?
+				new Vector3(scale,scale,1):
+				new Vector3(scale*holobounds.xRatio,scale,1);
 		}
 	}
 }
