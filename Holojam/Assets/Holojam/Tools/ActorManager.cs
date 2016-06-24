@@ -15,13 +15,25 @@ namespace Holojam{
 		LiveObjectTag[] tagCache;
 		LiveObjectTag cachedBuildTag;
 		
+		//Get the current view actor (re-index if necessary)
+		TrackedHeadset va;
+		public Transform viewActor{get{
+			if(va==null){
+				Result r = Index(true);
+				if(r==Result.ERROR || r==Result.NOVIEW)return null;
+				else return viewActor;
+			}
+			else return va.transform;
+		}}
+		
 		public void Update(){
 			if(!Application.isPlaying || runtimeIndexing)
 				//Force index in case prefabs are updated (will increase logging!)
 				Index(Application.isEditor && !Application.isPlaying);
 		}
 		
-		void Index(bool force = false){
+		enum Result{INDEXED,PASSED,ERROR,NOVIEW};
+		Result Index(bool force = false){
 			if(actors.Length!=transform.childCount)actors=new TrackedHeadset[transform.childCount];
 			LiveObjectTag[] tags = new LiveObjectTag[transform.childCount];
 			
@@ -33,17 +45,17 @@ namespace Holojam{
 				equal=equal && tags[i]==tagCache[i];
 			}
 			//If tags differ from last check, perform index
-			if(equal && buildTag==cachedBuildTag && !force)return;
+			if(equal && buildTag==cachedBuildTag && !force)return Result.PASSED;
 			tagCache=tags;
 			cachedBuildTag=buildTag;
 			
 			if(actors.Length==0){
 				if(Application.isPlaying)Debug.LogWarning("ActorManager: No actors in hierarchy!");
-				return;
+				return Result.ERROR;
 			}
-			if(view==null || (shell==null && actors.Length>1)){
+			if(view==null || shell==null){
 				Debug.LogWarning("ActorManager: View/Shell prefab reference is null");
-				return;
+				return Result.ERROR;
 			}
 			
 			//Index each actor
@@ -64,7 +76,7 @@ namespace Holojam{
 				if(isView && setView){
 					Debug.LogWarning("ActorManager: Duplicate build actor!");
 					isView=false;
-				}
+				} else if(isView)va=a;
 				a.gameObject.name="Actor "+((int)a.liveObjectTag+1)+(isView?" (View)":"");
 				
 				//Create view or shell
@@ -76,7 +88,11 @@ namespace Holojam{
 				o.name=isView?"View":"Shell";
 				setView=setView || isView;
 			}
-			if(!setView)Debug.LogWarning("ActorManager: No actor found with matching build tag!");
+			if(!setView){
+				Debug.LogWarning("ActorManager: No actor found with matching build tag!");
+				return Result.NOVIEW;
+			}
+			else return Result.INDEXED;
 		}
 	}
 }

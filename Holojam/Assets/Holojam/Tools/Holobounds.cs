@@ -38,6 +38,25 @@ namespace Holojam{
 			return Mathf.Abs(a);
 		}}
 		
+		//Get distance to edge
+		public float Distance(Vector3 target){
+			Vector2 t = new Vector2(target.x,target.z);
+			
+			float minDistance = -1;
+			for(int i=0;i<4;++i){
+				float d=minDistance+1;
+				
+				float l2 = Vector2.Distance(bounds[i],bounds[(i+1)%4]); l2*=l2;
+				if(l2==0)d=Vector2.Distance(bounds[i],t);
+				float p = Mathf.Max(0,Mathf.Min(1,Vector2.Dot(t-bounds[i],bounds[(i+1)%4]-bounds[i])/l2));
+				Vector2 proj = bounds[i]+p*(bounds[(i+1)%4]-bounds[i]);
+				d=Vector2.Distance(t,proj);
+				
+				if(d<minDistance || minDistance==-1)minDistance=d;
+			}
+			return minDistance;
+		}
+		
 		//Calibrate a specific corner (or floor value)
 		public void Calibrate(int i){
 			if(calibrator==null){

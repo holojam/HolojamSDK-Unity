@@ -1,23 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &117932
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 469658}
-  - 33: {fileID: 3355810}
-  - 23: {fileID: 2301482}
-  - 114: {fileID: 11442912}
-  m_Layer: 0
-  m_Name: Room
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &152078
 GameObject:
   m_ObjectHideFlags: 0
@@ -27,6 +9,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 426192}
   - 114: {fileID: 11401556}
+  - 114: {fileID: 11410362}
+  - 33: {fileID: 3308476}
+  - 23: {fileID: 2304722}
   m_Layer: 0
   m_Name: Holobounds
   m_TagString: Untagged
@@ -76,31 +61,17 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 401340}
-  - {fileID: 469658}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!4 &469658
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 117932}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 426192}
-  m_RootOrder: 1
---- !u!23 &2301482
+--- !u!23 &2304722
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 117932}
+  m_GameObject: {fileID: 152078}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_Materials:
   - {fileID: 0}
   m_SubsetIndices: 
@@ -118,12 +89,12 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3355810
+--- !u!33 &3308476
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 117932}
+  m_GameObject: {fileID: 152078}
   m_Mesh: {fileID: 0}
 --- !u!108 &10889514
 Light:
@@ -177,25 +148,20 @@ MonoBehaviour:
   - {x: 1.5554032, y: -2.6653993}
   floor: 0
   ceiling: 3
---- !u!114 &11442912
+--- !u!114 &11410362
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 117932}
+  m_GameObject: {fileID: 152078}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b7013b17dc3947b59f62e7f407449cc, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c9a9ca5b74bd482ea2ad8beca4fd052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holobounds: {fileID: 11401556}
-  floorMaterial: {fileID: 2100000, guid: 207ada5391e22427f87c6407b6385a06, type: 2}
-  ceilingMaterial: {fileID: 2100000, guid: 207ada5391e22427f87c6407b6385a06, type: 2}
-  wallMaterials:
-  - {fileID: 2100000, guid: 56cc74c3fa9eb4c859ecc662a74c4a9b, type: 2}
-  - {fileID: 2100000, guid: 770e8ececd5f747a8a074924e28a5c0a, type: 2}
-  - {fileID: 2100000, guid: a405cbe757e5044b5b9e2e61970e6269, type: 2}
-  - {fileID: 2100000, guid: b474046cade654ec4aac988a7e8ad991, type: 2}
+  material: {fileID: 2100000, guid: 64c3b41c6645b496ea825bf2cf077392, type: 2}
+  actorManager: {fileID: 0}
+  minRange: 1.5
 --- !u!114 &11444118
 MonoBehaviour:
   m_ObjectHideFlags: 1
