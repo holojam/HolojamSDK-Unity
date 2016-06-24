@@ -14,6 +14,7 @@ namespace Holojam{
 		public ActorManager actorManager;
 		
 		public float minRange = 1.5f;
+		public float maxAlpha = 0.6f;
 		
 		List<Vector3> verts = new List<Vector3>();
 		List<int> tris = new List<int>();
@@ -23,8 +24,12 @@ namespace Holojam{
 			if(actorManager!=null && actorManager.viewActor!=null)
 				material.color=new Color(
 					material.color.r,material.color.g,material.color.b,
-					1-((holobounds.Distance(actorManager.viewActor.position))/minRange)
+					maxAlpha*(1-(holobounds.Distance(actorManager.viewActor.position)/minRange))
 				);
+			else material.color=new Color(
+				material.color.r,material.color.g,material.color.b,
+				maxAlpha
+			);
 		}
 		
 		Holobounds holobounds;
