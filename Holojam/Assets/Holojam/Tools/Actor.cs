@@ -4,16 +4,20 @@
 using UnityEngine;
 
 namespace Holojam{
-	[RequireComponent(typeof(TrackedHeadset))]
+	[ExecuteInEditMode]
+	[RequireComponent(typeof(TrackedObject))]
 	public class Actor : MonoBehaviour{
 		public Color color = Color.red;
+		public int index{get{return (int)(GetComponent<TrackedObject>().liveObjectTag);}}
 		
-		void Start(){
-			//If shell (non-build actor), assign colors with Motif tag
-			Transform shell = transform.Find("Shell");
-			if(shell!=null)
-				foreach(Renderer r in shell.GetComponentsInChildren<Renderer>())
-					if(r.gameObject.tag=="Motif")r.material.color=color;
+		//If shell (non-build actor), assign colors with Motif tag
+		public void ApplyMotif(){
+			if(Application.isPlaying){
+				Transform shell = transform.Find("Shell");
+				if(shell!=null)
+					foreach(Renderer r in shell.GetComponentsInChildren<Renderer>())
+						if(r.gameObject.tag=="Motif")r.material.color=color;
+			}
 		}
 		
 		void OnDrawGizmos(){

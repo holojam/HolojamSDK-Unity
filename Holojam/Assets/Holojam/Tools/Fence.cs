@@ -21,10 +21,10 @@ namespace Holojam{
 		int quadIndex = 0;
 		
 		void Update(){
-			if(actorManager!=null && actorManager.viewActor!=null)
+			if(actorManager!=null && actorManager.buildActor!=null)
 				material.color=new Color(
 					material.color.r,material.color.g,material.color.b,
-					maxAlpha*(1-(holobounds.Distance(actorManager.viewActor.position)/minRange))
+					maxAlpha*(1-(holobounds.Distance(actorManager.buildActor.transform.position)/minRange))
 				);
 			else material.color=new Color(
 				material.color.r,material.color.g,material.color.b,

@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 179484}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
   m_LocalPosition: {x: -0.12933898, y: 0, z: -0.3423273}
-  m_LocalScale: {x: 12, y: 12, z: 1}
+  m_LocalScale: {x: 8, y: 8, z: 1}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holobounds: {fileID: 0}
-  scale: 12
+  scale: 8
   square: 1
 --- !u!1001 &100100000
 Prefab:

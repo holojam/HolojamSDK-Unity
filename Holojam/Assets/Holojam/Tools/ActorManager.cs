@@ -6,25 +6,27 @@ using UnityEngine;
 namespace Holojam{
 	[ExecuteInEditMode]
 	public class ActorManager : MonoBehaviour{
-		public Camera view; //VR camera for target device
+		public TrackedHeadset viewer; //VR camera for target device
 		public GameObject shell; //Visual representation of other actors
 		public LiveObjectTag buildTag = LiveObjectTag.HEADSET1; //Target device
 		public bool runtimeIndexing = false;
 		
-		[HideInInspector] public TrackedHeadset[] actors; //Actor array reference
-		LiveObjectTag[] tagCache;
+		[HideInInspector] public Actor[] actors = new Actor[4]; //Actor array reference
+		int[] indexCache;
 		LiveObjectTag cachedBuildTag;
 		
-		//Get the current view actor (re-index if necessary)
-		TrackedHeadset va;
-		public Transform viewActor{get{
-			if(va==null){
-				Result r = Index(true);
-				if(r==Result.ERROR || r==Result.NOVIEW)return null;
-				else return viewActor;
-			}
-			else return va.transform;
+		//Get the current build actor (re-index if necessary)
+		[HideInInspector] public Actor ba;
+		public Actor buildActor{get{
+			if(ba==null && (!Application.isPlaying || runtimeIndexing))Index(true);
+			return ba;
 		}}
+		[HideInInspector] public TrackedHeadset viewerReference;
+		
+		//Color actors
+		void Start(){
+			foreach(Actor a in actors)a.ApplyMotif();
+		}
 		
 		public void Update(){
 			if(!Application.isPlaying || runtimeIndexing)
@@ -34,65 +36,77 @@ namespace Holojam{
 		
 		enum Result{INDEXED,PASSED,ERROR,NOVIEW};
 		Result Index(bool force = false){
-			if(actors.Length!=transform.childCount)actors=new TrackedHeadset[transform.childCount];
-			LiveObjectTag[] tags = new LiveObjectTag[transform.childCount];
+			if(actors.Length!=transform.childCount)actors=new Actor[transform.childCount];
+			int[] indices = new int[transform.childCount];
 			
-			bool equal = tagCache!=null && tagCache.Length==tags.Length;
+			bool equal = indexCache!=null && indexCache.Length==indices.Length;
 			//Build actor array and cache
 			for(int i=0;i<transform.childCount;++i){
-				if(actors[i]==null)actors[i]=transform.GetChild(i).GetComponent<TrackedHeadset>();
-				tags[i]=actors[i].liveObjectTag;
-				equal=equal && tags[i]==tagCache[i];
+				if(actors[i]==null)actors[i]=transform.GetChild(i).GetComponent<Actor>();
+				indices[i]=actors[i].index;
+				equal=equal && indices[i]==indexCache[i];
 			}
 			//If tags differ from last check, perform index
 			if(equal && buildTag==cachedBuildTag && !force)return Result.PASSED;
-			tagCache=tags;
+			indexCache=indices;
 			cachedBuildTag=buildTag;
 			
 			if(actors.Length==0){
 				if(Application.isPlaying)Debug.LogWarning("ActorManager: No actors in hierarchy!");
 				return Result.ERROR;
 			}
-			if(view==null || shell==null){
-				Debug.LogWarning("ActorManager: View/Shell prefab reference is null");
+			if(viewer==null || shell==null){
+				Debug.LogWarning("ActorManager: Viewer/Shell prefab reference is null");
 				return Result.ERROR;
 			}
 			
 			//Index each actor
-			bool setView = false;
-			foreach(TrackedHeadset a in actors){
+			bool setBuild = false;
+			foreach(Actor a in actors){
 				a.transform.position=Vector3.zero;
 				a.transform.rotation=Quaternion.identity;
 				
-				//Flush view or shell
+				//Flush shell
 				foreach(Transform child in a.transform)
-					if(child.name=="View" || child.name=="Shell")
+					if(child.name=="Shell")
 						if(Application.isEditor && !Application.isPlaying)
 							DestroyImmediate(child.gameObject);
 						else Destroy(child.gameObject);
 				
-				//Is this the view actor?
-				bool isView = a.liveObjectTag==buildTag;
-				if(isView && setView){
+				//Is this the build actor?
+				bool isBuild = a.index==(int)buildTag;
+				if(isBuild && setBuild){
 					Debug.LogWarning("ActorManager: Duplicate build actor!");
-					isView=false;
-				} else if(isView)va=a;
-				a.gameObject.name="Actor "+((int)a.liveObjectTag+1)+(isView?" (View)":"");
+					isBuild=false;
+				} else if(isBuild)ba=a; //Assign reference
+				a.gameObject.name="Actor "+((int)a.index+1)+(isBuild?" (Build)":"");
 				
-				//Create view or shell
-				GameObject o = isView?
-					Instantiate(view.gameObject,Vector3.zero,Quaternion.identity) as GameObject:
-					Instantiate(shell.gameObject,Vector3.zero,Quaternion.identity) as GameObject;
+				//Create shell
+				if(!isBuild){
+					GameObject s = Instantiate(shell,a.transform.position,a.transform.rotation) as GameObject;
+					s.transform.parent=a.transform;
+					s.name="Shell";
+				}
+				setBuild=setBuild || isBuild;
 				
-				o.transform.parent=a.transform;
-				o.name=isView?"View":"Shell";
-				setView=setView || isView;
+				//Color actors (shells)
+				a.ApplyMotif();
 			}
-			if(!setView){
+			if(!setBuild){
 				Debug.LogWarning("ActorManager: No actor found with matching build tag!");
 				return Result.NOVIEW;
 			}
-			else return Result.INDEXED;
+			//Flush viewer
+			if(viewerReference!=null && Application.isEditor && !Application.isPlaying)
+				DestroyImmediate(viewerReference.gameObject);
+			else if(viewerReference!=null)Destroy(viewerReference.gameObject);
+			//Instantiate viewer
+			GameObject v = Instantiate(viewer.gameObject,Vector3.zero,Quaternion.identity) as GameObject;
+			v.name="Viewer";
+			v.GetComponent<TrackedHeadset>().liveObjectTag=buildTag;
+			viewerReference=v.GetComponent<TrackedHeadset>();
+			
+			return Result.INDEXED;
 		}
 	}
 }

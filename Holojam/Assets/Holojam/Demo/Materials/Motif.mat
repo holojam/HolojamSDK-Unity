@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Motif
-  m_Shader: {fileID: 4800000, guid: d12e9d0e1df7448449d1a245f3d6bb8f, type: 3}
+  m_Shader: {fileID: 1, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_CustomRenderQueue: 2000
@@ -135,6 +135,10 @@ Material:
         second: 0.5
       data:
         first:
+          name: _Shininess
+        second: 0.01
+      data:
+        first:
           name: PixelSnap
         second: 0
       data:
@@ -148,7 +152,7 @@ Material:
       data:
         first:
           name: _Glossiness
-        second: 0.5
+        second: 1
       data:
         first:
           name: _BumpScale
@@ -197,4 +201,12 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 1, g: 0, b: 0, a: 1}
+        second: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+      data:
+        first:
+          name: _SpecColor
+        second: {r: 0, g: 0, b: 0, a: 0}
+      data:
+        first:
+          name: _Emission
+        second: {r: 0, g: 0, b: 0, a: 0}

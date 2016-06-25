@@ -42,10 +42,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 159892}
-  m_LocalRotation: {x: 0.40821794, y: -0.23456973, z: 0.109381676, w: 0.87542605}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.12933898, y: 1.5, z: -0.3423273}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 426192}
   m_RootOrder: 0
@@ -105,9 +105,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 6
   m_Type: 2
-  m_Color: {r: 1, g: 0.9902637, b: 0.64705884, a: 1}
-  m_Intensity: 1.4
-  m_Range: 4
+  m_Color: {r: 1, g: 0.993712, b: 0.77205884, a: 1}
+  m_Intensity: 4
+  m_Range: 5
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -125,7 +125,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_Lightmapping: 4
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_AreaSize: {x: 1, y: 1}
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 152078}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c9a9ca5b74bd482ea2ad8beca4fd052, type: 3}
   m_Name: 
@@ -162,6 +162,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 64c3b41c6645b496ea825bf2cf077392, type: 2}
   actorManager: {fileID: 0}
   minRange: 1.5
+  maxAlpha: 0.6
 --- !u!114 &11444118
 MonoBehaviour:
   m_ObjectHideFlags: 1
