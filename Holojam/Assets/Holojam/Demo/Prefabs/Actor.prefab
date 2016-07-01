@@ -8,12 +8,12 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 471370}
-  - 114: {fileID: 11414756}
-  - 114: {fileID: 11477236}
+  - 114: {fileID: 11434642}
+  - 114: {fileID: 11477606}
   m_Layer: 0
   m_Name: Actor
   m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -30,7 +30,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11414756
+--- !u!114 &11434642
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -38,11 +38,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 184224}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cf08f960a62827488e0675775eb2041, type: 3}
+  m_Script: {fileID: 11500000, guid: af3e7d9e892a7dd48b4b238401eb8928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   liveObjectTag: 0
---- !u!114 &11477236
+--- !u!114 &11477606
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -50,14 +50,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 184224}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42fafd9cb8b594c71bf6a3c0c070dd69, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d543e39469e5426880406a00a5e0b2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hatColors:
-  - {fileID: 2100000, guid: 9d9572ba419af47d19090aededdbfbe5, type: 2}
-  - {fileID: 2100000, guid: cc0cae2bd0cb84227bdfdd20705c56fe, type: 2}
-  - {fileID: 2100000, guid: d5add3107d1d54ccbaa651d919842e3a, type: 2}
-  - {fileID: 2100000, guid: 6c52a340a0883448fbc67e6322be57be, type: 2}
+  color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

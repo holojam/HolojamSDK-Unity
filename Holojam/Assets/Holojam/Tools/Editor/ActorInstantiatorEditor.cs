@@ -10,7 +10,7 @@ namespace Holojam{
 		public override void OnInspectorGUI(){
 			ActorInstantiator ai = (ActorInstantiator)target;
 			
-			ai.actor=EditorGUILayout.ObjectField("Actor",ai.actor,typeof(TrackedHeadset),false) as TrackedHeadset;
+			ai.actor=EditorGUILayout.ObjectField("Actor",ai.actor,typeof(Actor),false) as Actor;
 			ai.amount=EditorGUILayout.IntField("Amount",ai.amount);
 			
 			if(GUILayout.Button("Add Actors"))ai.Add();

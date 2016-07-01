@@ -5,9 +5,5 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/Holojam-Demo.unity
-  - enabled: 0
-    path: Assets/Holojam/Demo/Scenes/Demo.unity
   - enabled: 1
-    path: Assets/_Ignore/Config/Config.unity
+    path: Assets/Holojam/Demo/Scenes/Demo.unity
