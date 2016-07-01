@@ -8,7 +8,7 @@ namespace Holojam
 
 		private int buttonBits;
 		
-		void Update () {
+		new void Update () {
                base.Update();
 
                int bits = 0;
