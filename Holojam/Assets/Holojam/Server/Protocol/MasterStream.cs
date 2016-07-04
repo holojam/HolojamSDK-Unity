@@ -165,6 +165,19 @@ namespace Holojam.Server {
                }
           }
 
+          public bool GetButtonBits(string label, out int bits) {
+               LiveObjectStorage storage;
+               lock (lockObject) {
+                    if (!liveObjects.TryGetValue(label, out storage)) {
+                         bits = 0;
+                         return false;
+                    } else {
+                         bits = storage.bits;
+                         return true;
+                    }
+               }
+          }
+
           public Vector3 getLiveObjectPosition(string name) {
                LiveObjectStorage storage;
                lock (lockObject) {

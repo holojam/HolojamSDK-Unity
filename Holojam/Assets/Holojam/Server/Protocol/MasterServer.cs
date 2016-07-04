@@ -11,6 +11,7 @@ using System.IO;
 namespace Holojam.Server {
      public class MasterServer : Singleton<MasterServer> {
 
+          public bool isMaster;
           public List<SynchronizedObject> synchronizedObjects = new List<SynchronizedObject>();
 
           /////Read-only/////
