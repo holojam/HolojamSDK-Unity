@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Holojam {
+namespace Holojam.IO {
     public class WiiGlobalReceiver : MonoBehaviour {
 
         public WiiMoteModule module;

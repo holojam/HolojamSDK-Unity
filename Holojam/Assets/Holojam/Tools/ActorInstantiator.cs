@@ -3,6 +3,7 @@
 //Quickly add actors to the manager or destroy them
 
 using UnityEngine;
+using Holojam.Server;
 
 namespace Holojam{
 	[ExecuteInEditMode]

@@ -12,94 +12,33 @@ using ProtoBuf;
 using update_protocol_v3;
 using System.Threading;
 
-namespace Holojam {
+namespace Holojam.Server {
      public enum LiveObjectTag {
           HEADSET1, HEADSET2, HEADSET3, HEADSET4, WAND1, WAND2, WAND3, WAND4, BOX1, BOX2, SPHERE1,
-		LEFTHAND1,RIGHTHAND1,LEFTFOOT1,RIGHTFOOT1,LEFTHAND2,RIGHTHAND2,LEFTFOOT2,RIGHTFOOT2,LEFTHAND3,RIGHTHAND3,LEFTFOOT3,RIGHTFOOT3,
-          LAPTOP,TABLE
+          LEFTHAND1, RIGHTHAND1, LEFTFOOT1, RIGHTFOOT1, LEFTHAND2, RIGHTHAND2, LEFTFOOT2, RIGHTFOOT2, LEFTHAND3, RIGHTHAND3, LEFTFOOT3, RIGHTFOOT3,
+          LAPTOP, TABLE
      }
 
      public class MasterStream : Singleton<MasterStream> {
-          
+
           public int warningThreshold = 48;
           public int packetsPerSecond;
-          
-          /////Readonly/////
-          public static readonly Vector3 DEFAULT_VECTOR_POSITION = new Vector3(0, 0, 0);
-          public static readonly Quaternion DEFAULT_QUATERNION_ROTATION = new Quaternion(0, 0, 0, 0);
-          private const int PACKET_SIZE = 65507; // ~65KB buffer sizes
+
+          /////Read-only/////
           private const int BLACK_BOX_CLIENT_PORT = 1611;
 
-          private static readonly Dictionary<LiveObjectTag, string> tagToMotiveName = new Dictionary<LiveObjectTag, string>() {
-               { LiveObjectTag.HEADSET1, "VR1" },
-               { LiveObjectTag.HEADSET2, "VR2" },
-               { LiveObjectTag.HEADSET3, "VR3" },
-               { LiveObjectTag.HEADSET4, "VR4" },
-               { LiveObjectTag.WAND1, "VR1_wand" },
-               { LiveObjectTag.WAND2, "VR2_wand" },
-               { LiveObjectTag.WAND3, "VR3_wand" },
-               { LiveObjectTag.WAND4, "VR4_wand" },
-               { LiveObjectTag.BOX1, "VR1_box" },
-               { LiveObjectTag.LEFTHAND1, "VR1_lefthand"},
-               { LiveObjectTag.RIGHTHAND1, "VR1_righthand"},
-               { LiveObjectTag.LEFTFOOT1, "VR1_leftankle"},
-               { LiveObjectTag.RIGHTFOOT1, "VR1_rightankle"},
-			{ LiveObjectTag.LEFTHAND2, "VR2_lefthand"},
-			{ LiveObjectTag.RIGHTHAND2, "VR2_righthand"},
-			{ LiveObjectTag.LEFTFOOT2, "VR2_leftankle"},
-			{ LiveObjectTag.RIGHTFOOT2, "VR2_rightankle"},
-			{ LiveObjectTag.LEFTHAND3, "VR3_lefthand"},
-			{ LiveObjectTag.RIGHTHAND3, "VR3_righthand"},
-			{ LiveObjectTag.LEFTFOOT3, "VR3_leftankle"},
-			{ LiveObjectTag.RIGHTFOOT3, "VR3_rightankle"},
-               { LiveObjectTag.LAPTOP, "VR1_laptop"},
-               { LiveObjectTag.TABLE, "VR1_table"}
-          };
 
           /////Private/////
           //References
           private Dictionary<string, LiveObjectStorage> liveObjects = new Dictionary<string, LiveObjectStorage>();
           private UnityEngine.Object lockObject = new UnityEngine.Object();
-          private PacketBuffer previousPacket = new PacketBuffer(PACKET_SIZE);
-          private PacketBuffer currentPacket = new PacketBuffer(PACKET_SIZE);
-          private PacketBuffer tempPacket = new PacketBuffer(PACKET_SIZE);
+          private PacketBuffer previousPacket = new PacketBuffer(PacketBuffer.PACKET_SIZE);
+          private PacketBuffer currentPacket = new PacketBuffer(PacketBuffer.PACKET_SIZE);
+          private PacketBuffer tempPacket = new PacketBuffer(PacketBuffer.PACKET_SIZE);
           private update_protocol_v3.Update update;
           //Primitives
           private int packetCount = 0;
           private bool receivingPackets = true;
-
-
-          private class LiveObjectStorage {
-               public string key;
-
-               public LiveObjectStorage(string key) {
-                    this.key = key;
-               }
-
-               public Vector3 position = Vector3.zero;
-               public Quaternion rotation = Quaternion.identity;
-               public int buttonBits = 0;
-               public List<Vector2> axisButtons = new List<Vector2>();
-          }
-
-          private class PacketBuffer {
-
-               public byte[] bytes;
-               public MemoryStream stream;
-               public long frame;
-
-               public PacketBuffer(int packetSize) {
-                    bytes = new byte[packetSize];
-                    stream = new MemoryStream(bytes);
-                    frame = 0;
-               }
-
-               public void copyFrom(PacketBuffer other) {
-                    this.bytes = other.bytes;
-                    this.stream = other.stream;
-                    this.frame = other.frame;
-               }
-          }
 
           ///////////////////////////////////////////////////////////////////////////
           //
@@ -124,9 +63,9 @@ namespace Holojam {
                while (receivingPackets) {
                     yield return new WaitForSeconds(1f);
                     //Debug.LogWarning(string.Format("Packets per second: {0} Most recent packet frame: {1}", packetCount, currentPacket.frame));
-                    packetsPerSecond=packetCount;
-                    if(packetCount<=warningThreshold && Time.frameCount>0)
-                         Debug.LogWarning("MasterStream: Received "+packetCount+" packets. Most recent packet at frame "+currentPacket.frame);
+                    packetsPerSecond = packetCount;
+                    if (packetCount <= warningThreshold && Time.frameCount > 0)
+                         Debug.LogWarning("MasterStream: Received " + packetCount + " packets. Most recent packet received at frame " + currentPacket.frame);
                     packetCount = 0;
                }
           }
@@ -137,7 +76,7 @@ namespace Holojam {
           //
 
           public bool IsLiveObject(LiveObjectTag tag) {
-               return liveObjects.ContainsKey(tagToMotiveName[tag]);
+               return liveObjects.ContainsKey(Motive.GetName(tag));
           }
 
           public bool IsLiveObject(string label) {
@@ -145,17 +84,14 @@ namespace Holojam {
           }
 
           public bool GetPosition(LiveObjectTag tag, out Vector3 position) {
-               if (!tagToMotiveName.ContainsKey(tag)) {
-                    throw new System.ArgumentException("Illegal tag.");
-               }
                LiveObjectStorage storage;
                lock (lockObject) {
-                    if (!liveObjects.TryGetValue(tagToMotiveName[tag], out storage)) {
-                         position = DEFAULT_VECTOR_POSITION;
+                    if (!liveObjects.TryGetValue(Motive.GetName(tag), out storage)) {
+                         position = LiveObjectStorage.DEFAULT_VECTOR_POSITION;
                          return false;
                     } else {
                          position = storage.position;
-                         if (position.Equals(DEFAULT_VECTOR_POSITION)) {
+                         if (position.Equals(LiveObjectStorage.DEFAULT_VECTOR_POSITION)) {
                               return false;
                          } else {
                               return true;
@@ -168,11 +104,11 @@ namespace Holojam {
                LiveObjectStorage storage;
                lock (lockObject) {
                     if (!liveObjects.TryGetValue(tag, out storage)) {
-                         position = DEFAULT_VECTOR_POSITION;
+                         position = LiveObjectStorage.DEFAULT_VECTOR_POSITION;
                          return false;
                     } else {
                          position = storage.position;
-                         if (position.Equals(DEFAULT_VECTOR_POSITION)) {
+                         if (position.Equals(LiveObjectStorage.DEFAULT_VECTOR_POSITION)) {
                               return false;
                          } else {
                               return true;
@@ -182,17 +118,14 @@ namespace Holojam {
           }
 
           public bool GetRotation(LiveObjectTag tag, out Quaternion rotation) {
-               if (!tagToMotiveName.ContainsKey(tag)) {
-                    throw new System.ArgumentException("Illegal tag.");
-               }
                LiveObjectStorage storage;
                lock (lockObject) {
-                    if (!liveObjects.TryGetValue(tagToMotiveName[tag], out storage)) {
-                         rotation = DEFAULT_QUATERNION_ROTATION;
+                    if (!liveObjects.TryGetValue(Motive.GetName(tag), out storage)) {
+                         rotation = LiveObjectStorage.DEFAULT_QUATERNION_ROTATION;
                          return false;
                     } else {
                          rotation = storage.rotation;
-                         if (rotation.Equals(DEFAULT_QUATERNION_ROTATION)) {
+                         if (rotation.Equals(LiveObjectStorage.DEFAULT_QUATERNION_ROTATION)) {
                               return false;
                          } else {
                               return true;
@@ -206,11 +139,11 @@ namespace Holojam {
                LiveObjectStorage storage;
                lock (lockObject) {
                     if (!liveObjects.TryGetValue(tag, out storage)) {
-                         rotation = DEFAULT_QUATERNION_ROTATION;
+                         rotation = LiveObjectStorage.DEFAULT_QUATERNION_ROTATION;
                          return false;
                     } else {
                          rotation = storage.rotation;
-                         if (rotation.Equals(DEFAULT_QUATERNION_ROTATION)) {
+                         if (rotation.Equals(LiveObjectStorage.DEFAULT_QUATERNION_ROTATION)) {
                               return false;
                          } else {
                               return true;
@@ -220,16 +153,13 @@ namespace Holojam {
           }
 
           public bool GetButtonBits(LiveObjectTag tag, out int bits) {
-               if (!tagToMotiveName.ContainsKey(tag)) {
-                    throw new System.ArgumentException("Illegal tag.");
-               }
                LiveObjectStorage storage;
-               lock(lockObject) {
-                    if (!liveObjects.TryGetValue(tagToMotiveName[tag], out storage)) {
+               lock (lockObject) {
+                    if (!liveObjects.TryGetValue(Motive.GetName(tag), out storage)) {
                          bits = 0;
                          return false;
                     } else {
-                         bits = storage.buttonBits;
+                         bits = storage.bits;
                          return true;
                     }
                }
@@ -239,7 +169,7 @@ namespace Holojam {
                LiveObjectStorage storage;
                lock (lockObject) {
                     if (!liveObjects.TryGetValue(name, out storage)) {
-                         return DEFAULT_VECTOR_POSITION;
+                         return LiveObjectStorage.DEFAULT_VECTOR_POSITION;
                     }
                }
                return storage.position;
@@ -249,7 +179,7 @@ namespace Holojam {
                LiveObjectStorage storage;
                lock (lockObject) {
                     if (!liveObjects.TryGetValue(name, out storage)) {
-                         return DEFAULT_QUATERNION_ROTATION;
+                         return LiveObjectStorage.DEFAULT_QUATERNION_ROTATION;
                     }
                }
                return storage.rotation;
@@ -262,19 +192,19 @@ namespace Holojam {
                          return 0;
                     }
                }
-               return storage.buttonBits;
+               return storage.bits;
           }
 
-          public Vector2 getLiveObjectAxisButton(string name, int index) {
-               LiveObjectStorage storage;
-               lock (lockObject) {
-                    if (!liveObjects.TryGetValue(name, out storage)) {
-                         //print ("Body not found: " + name);
-                         return Vector2.zero;
-                    }
-               }
-               return storage.axisButtons[index];
-          }
+          //public Vector2 getLiveObjectAxisButton(string name, int index) {
+          //     LiveObjectStorage storage;
+          //     lock (lockObject) {
+          //          if (!liveObjects.TryGetValue(name, out storage)) {
+          //               //print ("Body not found: " + name);
+          //               return Vector2.zero;
+          //          }
+          //     }
+          //     return storage.axisButtons[index];
+          //}
 
           ///////////////////////////////////////////////////////////////////////////
           //
@@ -328,7 +258,7 @@ namespace Holojam {
                                         ow.position = new Vector3((float)or.x, (float)or.y, (float)or.z);
                                         ow.rotation = new Quaternion((float)or.qx, (float)or.qy, (float)or.qz, (float)or.qw);
                                    }
-                                   ow.buttonBits = or.button_bits;
+                                   ow.bits = or.button_bits;
 
                                    //Remove objects from pool that aren't there.
                                    //foreach (LiveObjectStorage missingObject in objectsToRemove) {

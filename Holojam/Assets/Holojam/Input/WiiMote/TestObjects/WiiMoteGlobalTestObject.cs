@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using Holojam.IO;
 namespace Holojam {
     public class WiiMoteGlobalTestObject : WiiGlobalReceiver, IGlobalWiiMoteHandler {
 

@@ -3,8 +3,9 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using Holojam.Server;
 
-namespace Holojam {
+namespace Holojam.IO {
 
      public class HandEventData : PointerEventData {
           public HandModule module;

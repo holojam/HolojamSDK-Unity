@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Holojam {
+namespace Holojam.IO {
 	public interface IHandHandler : IPointerHandHandler, IGlobalHandHandler { };
 
 	public interface IGlobalHandHandler : IGlobalHandOnePoseHandler, IGlobalHandTwoPoseHandler, IGlobalHandThreePoseHandler, IGlobalHandFourPoseHandler,

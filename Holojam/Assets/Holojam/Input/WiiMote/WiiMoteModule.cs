@@ -2,8 +2,9 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using Holojam.Server;
 
-namespace Holojam {
+namespace Holojam.IO {
 
     public class WiiMoteEventData : PointerEventData {
         public WiiMoteModule module;

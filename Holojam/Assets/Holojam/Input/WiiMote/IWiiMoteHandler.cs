@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
-namespace Holojam {
+
+namespace Holojam.IO {
     public interface IWiiMoteHandler : IPointerWiiMoteHandler, IGlobalWiiMoteHandler { };
 
     public interface IPointerWiiMoteHandler : IWiiMoteAHandler, IWiiMoteBHandler, IWiiMoteLeftHandler, IWiiMoteRightHandler,

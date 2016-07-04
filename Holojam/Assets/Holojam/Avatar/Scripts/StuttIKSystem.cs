@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Holojam.Avatar.IK;
+using Holojam.Server;
 
 namespace Holojam.Avatar {
 

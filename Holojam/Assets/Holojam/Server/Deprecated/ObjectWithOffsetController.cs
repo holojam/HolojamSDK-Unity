@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using Holojam.Server;
+
 namespace Holojam {
 	public class ObjectWithOffsetController : MonoBehaviour {
 		public string label;
