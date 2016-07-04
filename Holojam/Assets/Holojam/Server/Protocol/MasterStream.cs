@@ -223,7 +223,7 @@ namespace Holojam.Server {
                     currentPacket.stream.Position = 0;
 
                     update = Serializer.Deserialize<update_protocol_v3.Update>(new MemoryStream(currentPacket.bytes, 0, nBytesReceived));
-
+                    
                     currentPacket.frame = update.mod_version;
                     if (currentPacket.frame > previousPacket.frame) {
                          packetCount++;
@@ -233,7 +233,6 @@ namespace Holojam.Server {
                          tempPacket.copyFrom(previousPacket);
                          previousPacket.copyFrom(currentPacket);
                          currentPacket.copyFrom(tempPacket);
-
                          for (int j = 0; j < update.live_objects.Count; j++) {
                               LiveObject or = update.live_objects[j];
                               string label = or.label;
