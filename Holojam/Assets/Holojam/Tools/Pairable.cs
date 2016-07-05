@@ -49,7 +49,7 @@ namespace Holojam{
 			Gizmos.DrawLine(transform.position-0.02f*Vector3.left,transform.position+0.02f*Vector3.left);
 			Gizmos.DrawLine(transform.position-0.02f*Vector3.forward,transform.position+0.02f*Vector3.forward);
 			//Offset
-			Gizmos.color=paired?pairedActor.color:Color.gray;
+			Gizmos.color=paired?pairedActor.motif:Color.gray;
 			Gizmos.DrawWireSphere(center,0.06f);
 		}
 	}

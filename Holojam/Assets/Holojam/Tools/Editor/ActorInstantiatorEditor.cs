@@ -10,11 +10,15 @@ namespace Holojam{
 		public override void OnInspectorGUI(){
 			ActorInstantiator ai = (ActorInstantiator)target;
 			
+			GUILayout.BeginHorizontal();
+			EditorGUIUtility.labelWidth=38;
 			ai.actor=EditorGUILayout.ObjectField("Actor",ai.actor,typeof(Actor),false) as Actor;
-			ai.amount=EditorGUILayout.IntField("Amount",ai.amount);
+			EditorGUIUtility.labelWidth=52;
+			ai.amount=EditorGUILayout.IntField("Amount",Mathf.Max(ai.amount,0));
+			GUILayout.EndHorizontal();
 			
-			if(GUILayout.Button("Add Actors"))ai.Add();
-			if(GUILayout.Button("Clear Actors"))ai.Clear();
+			if(GUILayout.Button("Add"))ai.Add();
+			if(GUILayout.Button("Clear All"))ai.Clear();
 		}
 	}
 }

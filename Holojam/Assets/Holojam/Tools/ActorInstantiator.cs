@@ -1,6 +1,6 @@
 ﻿//ActorInstantiator.cs
 //Created by Aaron C Gaudette on 22.06.16
-//Quickly add actors to the manager or destroy them
+//Optional tool for easy setup and rapid prototyping
 
 using UnityEngine;
 using Holojam.Server;
@@ -12,6 +12,12 @@ namespace Holojam{
 		public Actor actor;
 		public int amount = 4;
 		
+		string[] names = {
+			"Red One",
+			"Green Two",
+			"Blue Three",
+			"Yellow Four"
+		};
 		Color[] colors = {
 			Color.red,
 			Color.green,
@@ -28,12 +34,12 @@ namespace Holojam{
 				return;
 			}
 			for(int i=0;i<amount;++i){
-				GameObject a = Instantiate(actor.gameObject,Vector3.zero,Quaternion.identity) as GameObject;
+				Actor a = (Instantiate(actor.gameObject,Vector3.zero,Quaternion.identity) as GameObject).GetComponent<Actor>();
 				a.transform.parent=transform;
 				//Set tag and color automatically
-				a.GetComponent<TrackedObject>().liveObjectTag=
-					(LiveObjectTag)GetComponent<ActorManager>().actors.Length+i;
-				if(a.GetComponent<Actor>())a.GetComponent<Actor>().color=colors[i%colors.Length];
+				a.liveObjectTag=(LiveObjectTag)GetComponent<ActorManager>().actors.Length+i;
+				a.name=names[i%names.Length];
+				a.motif=colors[i%colors.Length];
 			}
 			GetComponent<ActorManager>().Update();
 		}

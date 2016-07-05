@@ -1,33 +1,56 @@
 ﻿//Actor.cs
 //Created by Aaron C Gaudette on 23.06.16
+//Umbrella class for accessing player (headset user) data in a generic manner
 
 using UnityEngine;
+using Holojam.Server;
 
 namespace Holojam{
-	[ExecuteInEditMode]
-	[RequireComponent(typeof(TrackedObject))]
-	public class Actor : MonoBehaviour{
-		public Color color = Color.red;
-		public int index{get{return (int)(GetComponent<TrackedObject>().liveObjectTag);}}
+	public class Actor : TrackedObject{
+		public string name = "Actor";
+		public Color motif = Color.white; //Useful color identifier, optional for rendering
+		public GameObject mask; //This object is disabled for build actors by the manager
 		
-		//If shell (non-build actor), assign colors with Motif tag
-		public void ApplyMotif(){
-			if(Application.isPlaying){
-				Transform shell = transform.Find("Shell");
-				if(shell!=null)
-					foreach(Renderer r in shell.GetComponentsInChildren<Renderer>())
-						if(r.gameObject.tag=="Motif")r.material.color=color;
-			}
+		//Override these in derived classes for specific implementation
+		public virtual Vector3 eyes{
+			get{return trackedPosition;}
+		}
+		public virtual Quaternion orientation{
+			get{return trackedRotation;}
 		}
 		
+		public bool tracking{get{return isTracked;}}
+		public bool managed{get{
+			return transform.parent!=null && transform.parent.GetComponent<ActorManager>()!=null;
+		}}
+		
+		public int index{get{return (int)liveObjectTag;}}
+		public Vector3 look{get{return orientation*Vector3.forward;}}
+		public Vector3 up{get{return orientation*Vector3.up;}}
+		public Vector3 left{get{return orientation*Vector3.left;}}
+		
+		protected override void Update(){
+			UpdateTracking();
+			ApplyTracking();
+		}
+		
+		//Override these in derived classes for specific implementation
+		public virtual void ApplyTracking(){ //Assign tracking data
+			if(tracking){
+				transform.position=eyes;
+				transform.rotation=orientation;
+			}
+		}
+		public virtual void ApplyMotif(){} //Do something with the motif (color)
+		
 		void OnDrawGizmos(){
-			Gizmos.color=color;
+			Gizmos.color=motif;
 			//Useful visualization for edge of GearVR headset
-			Vector3 offset = transform.position+transform.forward*0.015f;
-			DrawCircle(offset-transform.right*0.035f,transform.forward,transform.up,0.03f);
-			DrawCircle(offset+transform.right*0.035f,transform.forward,transform.up,0.03f);
+			Vector3 offset = eyes+look*0.015f;
+			DrawCircle(offset+left*0.035f,look,up,0.03f);
+			DrawCircle(offset-left*0.035f,look,up,0.03f);
 			//Reference forward vector
-			Gizmos.DrawRay(offset,transform.forward);
+			Gizmos.DrawRay(offset,look);
 		}
 		
 		private const int circleResFactor = 128; //Quality factor for drawing circles
