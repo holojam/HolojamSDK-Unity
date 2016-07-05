@@ -11,41 +11,40 @@ namespace Holojam{
 		public Color motif = Color.white; //Useful color identifier, optional for rendering
 		public GameObject mask; //This object is disabled for build actors by the manager
 		
-		//Override these in derived classes for specific implementation
-		public virtual Vector3 eyes{
-			get{return trackedPosition;}
-		}
-		public virtual Quaternion orientation{
-			get{return trackedRotation;}
-		}
-		
-		public bool tracking{get{return isTracked;}}
-		public bool managed{get{
-			return transform.parent!=null && transform.parent.GetComponent<ActorManager>()!=null;
-		}}
-		
-		public int index{get{return (int)liveObjectTag;}}
-		public Vector3 look{get{return orientation*Vector3.forward;}}
-		public Vector3 up{get{return orientation*Vector3.up;}}
-		public Vector3 left{get{return orientation*Vector3.left;}}
-		
 		protected override void Update(){
 			UpdateTracking();
 			ApplyTracking();
 		}
 		
-		//Override these in derived classes for specific implementation
+		//Override these in derived classes for custom unique implementation
+		public virtual Vector3 eyes{
+			get{return transform.position;}
+		}
+		public virtual Quaternion orientation{
+			get{return transform.rotation;}
+		}
 		public virtual void ApplyTracking(){ //Assign tracking data
 			if(tracking){
-				transform.position=eyes;
-				transform.rotation=orientation;
+				transform.position=trackedPosition;
+				transform.rotation=trackedRotation;
 			}
 		}
 		public virtual void ApplyMotif(){} //Do something with the motif (color)
 		
+		//Useful derived accessors
+		public Vector3 look{get{return orientation*Vector3.forward;}}
+		public Vector3 up{get{return orientation*Vector3.up;}}
+		public Vector3 left{get{return orientation*Vector3.left;}}
+		
+		public int index{get{return (int)liveObjectTag;}}
+		public bool tracking{get{return isTracked;}}
+		public bool managed{get{
+			return transform.parent!=null && transform.parent.GetComponent<ActorManager>()!=null;
+		}}
+		
+		//Useful (goggles) visualization for edge of GearVR headset
 		void OnDrawGizmos(){
 			Gizmos.color=motif;
-			//Useful visualization for edge of GearVR headset
 			Vector3 offset = eyes+look*0.015f;
 			DrawCircle(offset+left*0.035f,look,up,0.03f);
 			DrawCircle(offset-left*0.035f,look,up,0.03f);

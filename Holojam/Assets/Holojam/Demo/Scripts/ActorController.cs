@@ -16,10 +16,10 @@ public class ActorController : Holojam.Actor{
 	
 	public override void ApplyTracking(){
 		if(tracking){
-			transform.position=eyes;
+			transform.position=trackedPosition;
 			if(head!=null){
 				head.localPosition=Vector3.zero;
-				head.rotation=orientation;
+				head.rotation=trackedRotation;
 			}
 			else Debug.LogWarning("ActorController: No head found for "+name+" ("+(index+1)+")");
 		}
@@ -27,7 +27,8 @@ public class ActorController : Holojam.Actor{
 	
 	//Assign color of geometry with Motif tag
 	public override void ApplyMotif(){
-		foreach(Renderer r in GetComponentsInChildren<Renderer>())
-			if(r.gameObject.tag=="Motif")r.material.color=motif;
+		if(Application.isPlaying)
+			foreach(Renderer r in GetComponentsInChildren<Renderer>())
+				if(r.gameObject.tag=="Motif")r.material.color=motif;
 	}
 }

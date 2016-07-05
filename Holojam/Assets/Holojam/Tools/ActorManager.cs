@@ -21,10 +21,17 @@ namespace Holojam{
 			if(ba==null && (!Application.isPlaying || runtimeIndexing))Index(true);
 			return ba;
 		}}
-		[HideInInspector] public TrackedHeadset viewerRef;
 		
-		//Color actors
-		void Start(){foreach(Actor a in actors)a.ApplyMotif();}
+		void Start(){
+			Index(true); //Force index because the TrackedObject class is not currently serializable
+			//foreach(Actor a in actors)a.ApplyMotif();
+			//Instantiate viewer
+			if(Application.isPlaying){
+				GameObject v = Instantiate(viewer.gameObject,Vector3.zero,Quaternion.identity) as GameObject;
+				v.name="Viewer";
+				v.GetComponent<TrackedHeadset>().liveObjectTag=buildTag;
+			}
+		}
 		
 		public void Update(){
 			//Force index in case prefabs are updated (will increase logging!)
@@ -85,15 +92,6 @@ namespace Holojam{
 				Debug.LogWarning("ActorManager: No actor found with matching build tag!");
 				return Result.NOVIEW;
 			}
-			//Flush viewer
-			if(viewerRef!=null && Application.isEditor && !Application.isPlaying)
-				DestroyImmediate(viewerRef.gameObject);
-			else if(viewerRef!=null)Destroy(viewerRef.gameObject);
-			//Instantiate viewer
-			GameObject v = Instantiate(viewer.gameObject,Vector3.zero,Quaternion.identity) as GameObject;
-			v.name="Viewer";
-			v.GetComponent<TrackedHeadset>().liveObjectTag=buildTag;
-			viewerRef=v.GetComponent<TrackedHeadset>();
 			
 			return Result.INDEXED;
 		}
