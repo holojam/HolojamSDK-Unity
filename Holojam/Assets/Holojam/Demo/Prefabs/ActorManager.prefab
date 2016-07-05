@@ -46,7 +46,6 @@ MonoBehaviour:
   runtimeIndexing: 0
   actors: []
   ba: {fileID: 0}
-  viewerRef: {fileID: 0}
 --- !u!114 &11478342
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -58,7 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a904300eaa9e64c36aa623c020585cc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 11477606, guid: 9982aedd5b3b943a6a39c53e7b2b945a, type: 2}
+  actor: {fileID: 11494644, guid: 22e08f06fa7a14fb8b9709b8dda83228, type: 2}
   amount: 4
 --- !u!1001 &100100000
 Prefab:
