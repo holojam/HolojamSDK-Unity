@@ -22,15 +22,15 @@ namespace Holojam{
 		public virtual void Update () {
 			toggleDisplay ();
 			//println (Time.time.ToString());
-			var centerEye = UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.CenterEye);
+			//var centerEye = UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.CenterEye);
 			//var head = UnityEngine.VR.InputTracking.GetLocalPosition (UnityEngine.VR.VRNode.Head);
 			//var leftEye = UnityEngine.VR.InputTracking.GetLocalPosition (UnityEngine.VR.VRNode.LeftEye);
 			//var rightEye = UnityEngine.VR.InputTracking.GetLocalPosition (UnityEngine.VR.VRNode.RightEye);
-			VRConsoleDebug.println("CenterEye: (" + centerEye.x.ToString("F8") + "," + centerEye.y.ToString("F8") + "," + centerEye.z.ToString("F8") + ")");
+			//VRConsoleDebug.println("CenterEye: (" + centerEye.x.ToString("F8") + "," + centerEye.y.ToString("F8") + "," + centerEye.z.ToString("F8") + ")");
 			//print ("Head: " + head);
 			//print ("LeftEye: " + leftEye);
 			//print ("RightEye: " + rightEye);
-			VRConsoleDebug.println("CenterEye: " + Vector3.Distance(centerEye, Vector3.zero).ToString("F8"));
+			//VRConsoleDebug.println("CenterEye: " + Vector3.Distance(centerEye, Vector3.zero).ToString("F8"));
 			//print ("Head: " + Vector3.Distance(head, Vector3.zero));
 			//print ("LeftEye: " + Vector3.Distance(leftEye, Vector3.zero));
 			//print ("HeadToCenter: " + Vector3.Distance(centerEye, head));
