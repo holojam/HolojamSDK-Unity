@@ -20,12 +20,12 @@ namespace Holojam{
 			}
 		}
 
-		public static void print(string s) {
-			instance.print ("DEBUG: " + s);
+		public static void print(string s, bool printToDebug = false) {
+			instance.print ("DEBUG: " + s, printToDebug);
 		}
 
-		public static void println(string s) {
-			instance.println ("DEBUG: " + s);
+		public static void println(string s, bool printToDebug = false) {
+			instance.println ("DEBUG: " + s, printToDebug);
 
 		}
 	}

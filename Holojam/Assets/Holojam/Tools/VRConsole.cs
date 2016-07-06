@@ -60,16 +60,22 @@ namespace Holojam{
 			setText ("");
 		}
 
-		public void print(string s) {
+		public void print(string s, bool printToDebugger = false) {
 			setText(getText() + s);
+			if (printToDebugger) {
+				Debug.Log (s);
+			}
 		}
 
 		public void println() {
 			print ("\n");
 		}
 
-		public void println(string s) {
+		public void println(string s, bool printToDebugger = false) {
 			print(s + "\n");
+			if (printToDebugger) {
+				Debug.Log (s);
+			}
 		}
 
 		void replaceAllInstancesOfChar(char c) {
