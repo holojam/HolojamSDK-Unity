@@ -27,8 +27,7 @@ namespace Holojam{
 			else Debug.LogWarning("PairableManager: ActorManager not set!");
 			if(pairables.Length!=transform.childCount)pairables=new Pairable[transform.childCount];
 			
-			if(pairingSphere!=null){
-				if(!Application.isPlaying)return;
+			if(pairingSphere!=null && Application.isPlaying){
 				if(sphere==null)
 					sphere=(Instantiate(pairingSphere,Vector3.zero,Quaternion.identity) as GameObject).transform;
 				sphere.GetComponent<Renderer>().enabled=false; //Assume the sphere will not be activated
