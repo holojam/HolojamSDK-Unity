@@ -39,9 +39,6 @@ namespace Holojam {
                     this.isTracked = true;
                     this.trackedPosition = position;
                     this.trackedRotation = rotation;
-
-					//Debug.Log (liveObjectTag + " " + trackedPosition + " " + trackedRotation);
-
                } else {
                     this.isTracked = false;
                }

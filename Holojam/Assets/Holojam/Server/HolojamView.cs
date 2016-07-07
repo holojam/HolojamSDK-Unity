@@ -10,16 +10,47 @@ namespace Holojam.Network {
 
 		public string label;
 
-		[HideInInspector]
-		public Vector3 rawPosition;
-		[HideInInspector]
-		public Quaternion rawRotation;
-		[HideInInspector]
-		public int bits = 0;
-		[HideInInspector]
-		public string blob = "";
-
+		private Vector3 rawPosition;
+		private Quaternion rawRotation;
+		private int bits;
+		private string blob;
 		private bool isTracked = false;
+
+		public Vector3 RawPosition {
+			get {
+				return rawPosition;
+			}
+			set {
+				rawPosition = value;
+			}
+		}
+
+		public Quaternion RawRotation {
+			get {
+				return rawRotation;
+			}
+			set {
+				rawRotation = value;
+			}
+		}
+
+		public int Bits {
+			get {
+				return bits;
+			}
+			set {
+				bits = value;
+			}
+		}
+
+		public string Blob {
+			get {
+				return blob;
+			}
+			set {
+				blob = value;
+			}
+		}
 
 		public bool IsTracked {
 			get {

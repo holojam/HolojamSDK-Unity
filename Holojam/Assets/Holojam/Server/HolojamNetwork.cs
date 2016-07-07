@@ -1,12 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Xml;
 using System.IO;
 using ProtoBuf;
 using update_protocol_v3;
@@ -35,7 +30,7 @@ namespace Holojam.Network {
                receiveThread.Start();
           }
 
-          void Update() {
+          void FixedUpdate() {
                List<HolojamView> viewsToSend = new List<HolojamView>();
 
                foreach (HolojamView view in HolojamView.instances) {
@@ -277,7 +272,7 @@ namespace Holojam.Network {
                     lock(lockObject) {
 
                          update = new update_protocol_v3.Update();
-                         update.label = "neuron";
+                         update.label = "SendThread - " + SystemInfo.deviceUniqueIdentifier;
                          update.mod_version = lastLoadedFrame;
                          update.lhs_frame = false;
                          lastLoadedFrame++;
@@ -315,7 +310,7 @@ namespace Holojam.Network {
 
      internal class HolojamObject {
           public static readonly Vector3 DEFAULT_POSITION = Vector3.zero;
-          public static readonly Quaternion DEFAULT_ROTATION = Quaternion.identity;
+		public static readonly Quaternion DEFAULT_ROTATION = Quaternion.identity;
 
           public string label;
           public Vector3 position = DEFAULT_POSITION;
