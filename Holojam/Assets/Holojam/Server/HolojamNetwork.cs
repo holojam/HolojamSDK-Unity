@@ -13,7 +13,7 @@ namespace Holojam.Network {
           [System.NonSerialized]
           public int sentPacketsPerSecond;
           [System.NonSerialized]
-          public int recievedPacketsPerSecond;         
+          public int receivedPacketsPerSecond;         
 
           //Constant and Read-only
           public const int BLACK_BOX_CLIENT_PORT = 1611; //Port for receiving information
@@ -28,6 +28,8 @@ namespace Holojam.Network {
 
                sendThread.Start();
                receiveThread.Start();
+
+			StartCoroutine (DisplayPacketsPerSecond());
           }
 
           void FixedUpdate() {
@@ -52,6 +54,18 @@ namespace Holojam.Network {
 
                sendThread.UpdateManagedObjects(viewsToSend.ToArray());
           }
+
+		private IEnumerator DisplayPacketsPerSecond() {
+			while (receiveThread.IsRunning) {
+				yield return new WaitForSeconds(1f);
+				//Debug.LogWarning(string.Format("Packets per second: {0} Most recent packet frame: {1}", packetCount, currentPacket.frame));
+				sentPacketsPerSecond = sendThread.PacketCount;
+				sendThread.PacketCount = 0;
+				receivedPacketsPerSecond = receiveThread.PacketCount;
+				receiveThread.PacketCount = 0;
+				Debug.LogWarning ("HolojamNetwork: Sent Packets - " + sentPacketsPerSecond + " Received Packets - " + receivedPacketsPerSecond);
+			}
+		}
 
           public bool IsTracked(string label) {
                HolojamObject o;
@@ -108,7 +122,7 @@ namespace Holojam.Network {
 
      internal abstract class HolojamThread {
 
-          private Thread thread;
+		protected Thread thread;
 
           protected int port;
           protected Dictionary<string, HolojamObject> managedObjects = new Dictionary<string, HolojamObject>();
@@ -120,11 +134,12 @@ namespace Holojam.Network {
                get;
           }
 
-          protected int PacketCount {
+		public int PacketCount {
                get { return packetCount; }
+			set { packetCount = value; }
           }
 
-          protected bool IsRunning {
+		public bool IsRunning {
                get { return isRunning; }
           }
 
@@ -268,7 +283,11 @@ namespace Holojam.Network {
                     isRunning = false;
                }
 
-               while (isRunning) {
+			while (isRunning) {
+				System.Threading.Thread.Sleep (100);
+				if (managedObjects.Values.Count == 0)
+					continue;
+
                     lock(lockObject) {
 
                          update = new update_protocol_v3.Update();
@@ -283,6 +302,7 @@ namespace Holojam.Network {
                          }
 
                          using (MemoryStream stream = new MemoryStream()) {
+						packetCount++;
                               Serializer.Serialize<Update>(stream, update);
                               packetBytes = stream.GetBuffer();
                               socket.SendTo(packetBytes, send_ipEndPoint);
