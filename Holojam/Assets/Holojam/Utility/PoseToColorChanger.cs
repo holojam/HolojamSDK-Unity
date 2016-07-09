@@ -7,7 +7,7 @@ namespace Holojam {
 
 		public HandModule module;
 
-		protected Renderer renderer;
+		new protected Renderer renderer;
 
 		void Awake() {
 			renderer = this.GetComponent<Renderer>();

@@ -35,7 +35,7 @@ public class BillboardGraph : BillboardComponent
 	}
 
 	private BillboardLabel label;
-	private float secondTock = 0f;
+	//private float secondTock = 0f;
 
 	void Start ()
 	{

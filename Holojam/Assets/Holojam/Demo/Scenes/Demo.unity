@@ -226,7 +226,7 @@ GameObject:
   - 114: {fileID: 58830628}
   - 114: {fileID: 58830627}
   m_Layer: 0
-  m_Name: Green Two
+  m_Name: Actor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c2c2d21c7614b688aced0e3482aed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Green Two
+  handle: Actor
   motif: {r: 0, g: 1, b: 0, a: 1}
   mask: {fileID: 2145291976}
   head: {fileID: 852179211}
@@ -285,7 +285,7 @@ GameObject:
   - 114: {fileID: 70082617}
   - 114: {fileID: 70082616}
   m_Layer: 0
-  m_Name: Yellow Four
+  m_Name: Actor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -316,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c2c2d21c7614b688aced0e3482aed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Yellow Four
+  handle: Actor
   motif: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   mask: {fileID: 1468901675}
   head: {fileID: 828957805}
@@ -543,7 +543,7 @@ GameObject:
   - 114: {fileID: 234362514}
   - 114: {fileID: 234362512}
   m_Layer: 0
-  m_Name: Red One (Build)
+  m_Name: Actor (Build)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -560,7 +560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c2c2d21c7614b688aced0e3482aed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Red One
+  handle: Actor
   motif: {r: 1, g: 0, b: 0, a: 1}
   mask: {fileID: 1145992356}
   head: {fileID: 495453616}
@@ -2541,7 +2541,7 @@ GameObject:
   - 114: {fileID: 1489732629}
   - 114: {fileID: 1489732628}
   m_Layer: 0
-  m_Name: Blue Three
+  m_Name: Actor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2572,7 +2572,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c2c2d21c7614b688aced0e3482aed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Blue Three
+  handle: Actor
   motif: {r: 0, g: 1, b: 1, a: 1}
   mask: {fileID: 333472162}
   head: {fileID: 550402533}

@@ -24,7 +24,7 @@ public class makeLine : MonoBehaviour {
      public bool isDestroyed = false;
      public float lineWidth = .02f;
 
-     private float texOffset = 0;
+     //private float texOffset = 0;
 
      private const int h1 = 12178051;
      private const int h2 = 12481319;

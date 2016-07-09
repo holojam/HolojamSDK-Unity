@@ -65,7 +65,7 @@ namespace Holojam{
 					Debug.LogWarning("ActorManager: Duplicate build actor!");
 					isBuild=false;
 				} else if(isBuild)ba=a; //Assign reference
-				a.gameObject.name=a.name+(isBuild?" (Build)":"");
+				a.gameObject.name=a.handle+(isBuild?" (Build)":"");
 				
 				//Activate mask
 				if(a.mask!=null)a.mask.SetActive(!isBuild);

@@ -8,7 +8,7 @@ using Holojam.Network;
 namespace Holojam{
 	[RequireComponent(typeof(HolojamView))]
 	public class Actor : MonoBehaviour{
-		public string name = "Actor";
+		public string handle = "Actor";
 		public Color motif = Color.white; //Useful color identifier, optional for rendering
 		public GameObject mask; //This object is disabled for build actors by the manager
 		

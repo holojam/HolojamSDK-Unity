@@ -12,7 +12,7 @@ namespace Holojam{
 			p.type=EditorGUILayout.TextField("Pairable Type",p.type);
 			p.offset=EditorGUILayout.Vector3Field("Offset",p.offset);
 			EditorGUILayout.LabelField("Status:",
-				(p.paired && !p.unpairing)?"Paired with "+p.pairedActor.name+" ("+(p.pairedActor.index+1)+")":
+				(p.paired && !p.unpairing)?"Paired with "+p.pairedActor.handle+" ("+(p.pairedActor.index+1)+")":
 				(!p.paired && !p.pairing)?"Unpaired":
 				p.pairing?"Pairing...":"Unpairing..."
 			);

@@ -11,10 +11,9 @@ namespace Holojam{
 		protected virtual void EnableDerived(){}
 		protected virtual void DrawDerived(){}
 		
-		new SerializedProperty name;
-		SerializedProperty motif, mask;
+		SerializedProperty handle, motif, mask;
 		void OnEnable(){
-			name=serializedObject.FindProperty("name");
+			handle=serializedObject.FindProperty("handle");
 			motif=serializedObject.FindProperty("motif");
 			mask=serializedObject.FindProperty("mask");
 			
@@ -24,7 +23,7 @@ namespace Holojam{
 			serializedObject.Update();
 			
 			EditorGUILayout.BeginHorizontal();
-				name.stringValue=EditorGUILayout.TextField(name.stringValue);
+				handle.stringValue=EditorGUILayout.TextField(handle.stringValue);
 				motif.colorValue=EditorGUILayout.ColorField(motif.colorValue);
 			EditorGUILayout.EndHorizontal();
 			

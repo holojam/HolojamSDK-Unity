@@ -9,7 +9,7 @@ class BillboardBox : BillboardComponent
 		bottomLeft = new Vector3 (),
 		bottomRight = new Vector3 ();
 
-	public Material material;
+	public Material material = null;
 
 	void Start ()
 	{	

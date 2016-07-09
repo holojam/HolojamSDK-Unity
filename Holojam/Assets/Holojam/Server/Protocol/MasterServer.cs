@@ -22,7 +22,7 @@ namespace Holojam.Server {
           private Dictionary<string, LiveObjectStorage> liveObjects = new Dictionary<string, LiveObjectStorage>();
           private update_protocol_v3.Update update;
           //Primitives
-          private int packetCount = 0;
+          //private int packetCount = 0;
           private bool sendingPackets = true;
 
           private int lastLoadedFrame;
@@ -99,7 +99,8 @@ namespace Holojam.Server {
                }
           }
 
-          private void OnDestroy() {
+          protected override void OnDestroy() {
+               base.OnDestroy();
                sendingPackets = false;
           }
      }

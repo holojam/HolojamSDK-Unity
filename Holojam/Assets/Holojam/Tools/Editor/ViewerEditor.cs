@@ -7,7 +7,7 @@ using UnityEditor;
 namespace Holojam{
 	[CustomEditor(typeof(Viewer)), CanEditMultipleObjects]
 	public class ViewerEditor : Editor{
-		new SerializedProperty trackingType, actor;
+		SerializedProperty trackingType, actor;
 		void OnEnable(){
 			trackingType=serializedObject.FindProperty("trackingType");
 			actor=serializedObject.FindProperty("actor");
@@ -27,7 +27,7 @@ namespace Holojam{
 				EditorStyles.label.wordWrap = true;
 				EditorGUILayout.LabelField(
 					v.actor!=null?"Tracking data is being routed through "+
-					v.actor.name+" ("+(v.actor.index+1)+"). Remove reference to unlink.":
+					v.actor.handle+" ("+(v.actor.index+1)+"). Remove reference to unlink.":
 					"No actor linked. Tracking data is being sourced directly from the view"+
 					(v.view!=null && v.view.label!=""?" ("+v.view.label+").":".")
 				);

@@ -1,6 +1,6 @@
 ﻿//Holobounds.cs
 //Created by Aaron C Gaudette on 22.06.16
-//Access point and manager for playspace
+//Playspace manager and access point
 
 using UnityEngine;
 
@@ -8,24 +8,19 @@ namespace Holojam{
 	[ExecuteInEditMode]
 	public class Holobounds : MonoBehaviour{
 		public TrackedObject calibrator; //Tool for setting values
-		public Vector2[] bounds = new Vector2[4]; //Corners
+		public Vector2[] bounds = new Vector2[4]; //Corners (TL,TR,BR,BL)
 		public float floor = 0; //Floor Y
-		public float ceiling = 3; //Ceiling Y -- only used for visualization
+		public float ceiling = 3; //Ceiling Y -- not used for tracking
 		
-		//Reference values
+		//Additional reference values & functions
 		
 		public Vector3 center{get{return Vertex(0.25f*(bounds[0]+bounds[1]+bounds[2]+bounds[3]));}}
-		public Vector3 v0{get{return Vertex(bounds[0]);}}
-		public Vector3 v1{get{return Vertex(bounds[1]);}}
-		public Vector3 v2{get{return Vertex(bounds[2]);}}
-		public Vector3 v3{get{return Vertex(bounds[3]);}}
+		public Vector3 Corner(int i){return Vertex(bounds[i]);}
+		public Vector3 Upper(int i){return Corner(i)+Vector3.up*ceiling;}
+		public Vector2 Side(int i){return 0.5f*(bounds[i++]+bounds[i%4]);} //Front, right, back, left
 		
-		public Vector2 left{get{return 0.5f*(bounds[0]+bounds[3]);}}
-		public Vector2 right{get{return 0.5f*(bounds[1]+bounds[2]);}}
-		public Vector2 front{get{return 0.5f*(bounds[0]+bounds[1]);}}
-		public Vector2 back{get{return 0.5f*(bounds[2]+bounds[3]);}}
 		public float xRatio{get{
-			return Vector2.Distance(left,right) / Vector2.Distance(front,back);
+			return Vector2.Distance(Side(3),Side(1)) / Vector2.Distance(Side(0),Side(2));
 		}}
 		public float area{get{
 			float a = 0;
@@ -35,7 +30,7 @@ namespace Holojam{
 			return Mathf.Abs(a);
 		}}
 		
-		//Get distance to edge
+		//Get distance from point to edge of boundary
 		public float Distance(Vector3 target){
 			Vector2 t = new Vector2(target.x,target.z);
 			
@@ -53,6 +48,8 @@ namespace Holojam{
 			}
 			return minDistance;
 		}
+		
+		Vector3 Vertex(Vector2 v){return new Vector3(v.x,floor,v.y);}
 		
 		//Calibrate a specific corner (or floor value)
 		public void Calibrate(int i){
@@ -74,17 +71,19 @@ namespace Holojam{
 				Gizmos.DrawRay(Vertex(bounds[i]),Vector3.up*ceiling);
 			}
 		}
-		Vector3 Vertex(Vector2 v){return new Vector3(v.x,floor,v.y);}
 		
 		//Save and load calibration data
+		static bool hasPlayed = false;
 		void Start(){
-			if(!Application.isPlaying)
+			if(!Application.isPlaying && hasPlayed){
 				for(int i=0;i<4;++i){
 					bounds[i].x=PlayerPrefs.GetFloat("Holobounds_Corner"+i+"_x");
 					bounds[i].y=PlayerPrefs.GetFloat("Holobounds_Corner"+i+"_y");
 				}
+			} else if(Application.isPlaying)hasPlayed=true;
 		}
-		void OnApplicationQuit(){
+		void OnApplicationQuit(){Save();}
+		void Save(){
 			for(int i=0;i<4;++i){
 				PlayerPrefs.SetFloat("Holobounds_Corner"+i+"_x",bounds[i].x);
 				PlayerPrefs.SetFloat("Holobounds_Corner"+i+"_y",bounds[i].y);

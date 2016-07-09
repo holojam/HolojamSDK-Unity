@@ -14,7 +14,7 @@ public class ActorController : Holojam.Actor{
 				head.localPosition=Vector3.zero;
 				head.rotation=view.RawRotation;
 			}
-			else Debug.LogWarning("ActorController: No head found for "+name+" ("+(index+1)+")");
+			else Debug.LogWarning("ActorController: No head found for "+handle+" ("+(index+1)+")");
 		}
 	}
 	public override Vector3 eyes{

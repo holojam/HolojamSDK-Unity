@@ -12,7 +12,7 @@ namespace Holojam {
           public WandController wand;
 
           public int maxVertexCount = 100;
-          private int vertexCount = 0;
+          //private int vertexCount = 0;
 
           public GameObject line;
           public List<GameObject> lines = new List<GameObject>();
@@ -129,8 +129,8 @@ namespace Holojam {
 
                if (lines.Count > 0) {
 
-                    makeLine other = (makeLine)lines[0].GetComponent(typeof(makeLine));
-                    vertexCount = other.getPointCount();
+                    //makeLine other = (makeLine)lines[0].GetComponent(typeof(makeLine));
+                    //vertexCount = other.getPointCount();
 
                     //			if(vertexCount>maxVertexCount){
                     //				other.dequeueLine(0,1);
@@ -142,7 +142,7 @@ namespace Holojam {
                     //			else
                     //				other.isBeingDestroyed = false;
 
-                    vertexCount = 0;
+                    //vertexCount = 0;
 
                     //			for(int i = 0 ; i < lines.Count ; i++){
                     //				other = (makeLine)lines [i].GetComponent (typeof(makeLine));

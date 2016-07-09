@@ -12,7 +12,7 @@ namespace Holojam{
 		public Actor actor;
 		public int amount = 4;
 		
-		string[] names = {
+		string[] handles = {
 			"Red One",
 			"Green Two",
 			"Blue Three",
@@ -46,7 +46,7 @@ namespace Holojam{
 				a.transform.parent=transform;
 				//Set tag and color automatically
 				a.view.label=labels[i%labels.Length];
-				a.name=names[i%names.Length];
+				a.handle=handles[i%handles.Length];
 				a.motif=colors[i%colors.Length];
 			}
 			GetComponent<ActorManager>().Update();

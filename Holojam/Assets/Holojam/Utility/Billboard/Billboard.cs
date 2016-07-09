@@ -4,7 +4,7 @@ using System;
 
 public class Billboard : MonoBehaviour
 {
-	private float secondTock = 0f;
+	//private float secondTock = 0f;
 	private float y = 1;
 	private float xStart = 0;
 	private float xEnd = 0;

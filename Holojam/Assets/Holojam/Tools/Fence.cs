@@ -43,15 +43,10 @@ namespace Holojam{
 		}
 		
 		void GenerateMesh(){
-			Vector3 c0 = holobounds.v0+Vector3.up*holobounds.ceiling;
-			Vector3 c1 = holobounds.v1+Vector3.up*holobounds.ceiling;
-			Vector3 c2 = holobounds.v2+Vector3.up*holobounds.ceiling;
-			Vector3 c3 = holobounds.v3+Vector3.up*holobounds.ceiling;
-			//Build walls
-			Quad(holobounds.v0,c0,c1,holobounds.v1);
-			Quad(holobounds.v1,c1,c2,holobounds.v2);
-			Quad(holobounds.v2,c2,c3,holobounds.v3);
-			Quad(holobounds.v3,c3,c0,holobounds.v0);
+			Quad(holobounds.Corner(0),holobounds.Upper(0),holobounds.Upper(1),holobounds.Corner(1));
+			Quad(holobounds.Corner(1),holobounds.Upper(1),holobounds.Upper(2),holobounds.Corner(2));
+			Quad(holobounds.Corner(2),holobounds.Upper(2),holobounds.Upper(3),holobounds.Corner(3));
+			Quad(holobounds.Corner(3),holobounds.Upper(3),holobounds.Upper(0),holobounds.Corner(0));
 		}
 		void Quad(Vector3 bl, Vector3 tl, Vector3 tr, Vector3 br){
 			//Set vertices (duplicates added for flat shading)
