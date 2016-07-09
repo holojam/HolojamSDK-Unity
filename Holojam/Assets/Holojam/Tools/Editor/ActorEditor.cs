@@ -5,22 +5,43 @@ using UnityEngine;
 using UnityEditor;
 
 namespace Holojam{
-	[CustomEditor(typeof(Actor))]
+	[CustomEditor(typeof(Actor)), CanEditMultipleObjects]
 	public class ActorEditor : Editor{
+		//Override these functions if you desire a custom inspector
+		protected virtual void EnableDerived(){}
+		protected virtual void DrawDerived(){}
+		
+		new SerializedProperty name;
+		SerializedProperty motif, mask;
+		void OnEnable(){
+			name=serializedObject.FindProperty("name");
+			motif=serializedObject.FindProperty("motif");
+			mask=serializedObject.FindProperty("mask");
+			
+			EnableDerived();
+		}
 		public override void OnInspectorGUI(){
-			Actor a = (Actor)target;
+			serializedObject.Update();
 			
 			EditorGUILayout.BeginHorizontal();
-				a.name=EditorGUILayout.TextField(a.name);
-				a.motif=EditorGUILayout.ColorField(a.motif);
+				name.stringValue=EditorGUILayout.TextField(name.stringValue);
+				motif.colorValue=EditorGUILayout.ColorField(motif.colorValue);
 			EditorGUILayout.EndHorizontal();
 			
-			a.mask=EditorGUILayout.ObjectField("Mask",a.mask,typeof(GameObject),true) as GameObject;
+			mask.objectReferenceValue=
+				EditorGUILayout.ObjectField("Mask",mask.objectReferenceValue,typeof(GameObject),true);
 			
-			EditorStyles.label.wordWrap = true;
-			EditorGUILayout.LabelField(
-				"Actor "+(a.index+1)+" ("+(a.managed?"Managed/":"Unmanaged/")+(a.view.IsTracked?"Tracked)":"Untracked)")
-			);
+			DrawDerived();
+			
+			if(!serializedObject.isEditingMultipleObjects){
+				Actor a = serializedObject.targetObject as Actor;
+				EditorStyles.label.wordWrap = true;
+				EditorGUILayout.LabelField(
+					"Actor "+(a.index+1)+" ("+(a.managed?"Managed/":"Unmanaged/")+(a.view.IsTracked?"Tracked)":"Untracked)")
+				);
+			}
+			
+			serializedObject.ApplyModifiedProperties();
 		}
 	}
 }

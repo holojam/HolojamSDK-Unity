@@ -22,7 +22,7 @@ namespace Holojam{
 		}}
 		
 		void Start(){
-			foreach(Actor a in actors)a.ApplyMotif();
+			if(actors!=null)foreach(Actor a in actors)a.ApplyMotif();
 		}
 		
 		public void Update(){

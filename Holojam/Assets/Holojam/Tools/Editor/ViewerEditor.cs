@@ -5,24 +5,38 @@ using UnityEngine;
 using UnityEditor;
 
 namespace Holojam{
-	[CustomEditor(typeof(Viewer))]
+	[CustomEditor(typeof(Viewer)), CanEditMultipleObjects]
 	public class ViewerEditor : Editor{
+		new SerializedProperty trackingType, actor;
+		void OnEnable(){
+			trackingType=serializedObject.FindProperty("trackingType");
+			actor=serializedObject.FindProperty("actor");
+		}
+		
 		public override void OnInspectorGUI(){
-			Viewer v = (Viewer)target;
+			serializedObject.Update();
 			
-			v.trackingType=(Viewer.TrackingType)EditorGUILayout.EnumPopup("Tracking Type",v.trackingType);
+			trackingType.enumValueIndex=(int)(Viewer.TrackingType)
+				EditorGUILayout.EnumPopup("Tracking Type",(Viewer.TrackingType)trackingType.enumValueIndex);
 			
-			v.actor=EditorGUILayout.ObjectField("Actor",v.actor,typeof(Actor),true) as Actor;
+			actor.objectReferenceValue=
+				EditorGUILayout.ObjectField("Actor",actor.objectReferenceValue,typeof(Actor),true);
 			
-			EditorStyles.label.wordWrap = true;
-			EditorGUILayout.LabelField(
-				v.actor!=null?"Tracking data is being routed through "+
-				v.actor.name+" ("+(v.actor.index+1)+"). Remove reference to unlink.":
-				"No actor linked. Tracking data is being sourced directly from the view"+
-				(v.view!=null && v.view.label!=""?" ("+v.view.label+").":".")
-			);
+			if(!serializedObject.isEditingMultipleObjects){
+				Viewer v = serializedObject.targetObject as Viewer;
+				EditorStyles.label.wordWrap = true;
+				EditorGUILayout.LabelField(
+					v.actor!=null?"Tracking data is being routed through "+
+					v.actor.name+" ("+(v.actor.index+1)+"). Remove reference to unlink.":
+					"No actor linked. Tracking data is being sourced directly from the view"+
+					(v.view!=null && v.view.label!=""?" ("+v.view.label+").":".")
+				);
+			}
 			
-			EditorUtility.SetDirty(v); //Make sure changes from other scripts will stick around
+			//Make sure changes from other scripts will stick around
+			EditorUtility.SetDirty(serializedObject.targetObject);
+			
+			serializedObject.ApplyModifiedProperties();
 		}
 	}
 }

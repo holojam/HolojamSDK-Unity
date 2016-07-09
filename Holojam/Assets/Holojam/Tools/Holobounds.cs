@@ -27,9 +27,6 @@ namespace Holojam{
 		public float xRatio{get{
 			return Vector2.Distance(left,right) / Vector2.Distance(front,back);
 		}}
-		public float yRatio{get{
-			return Vector2.Distance(front,back) / Vector2.Distance(left,right);
-		}}
 		public float area{get{
 			float a = 0;
 			for(int i=0;i<4;++i)
@@ -78,5 +75,20 @@ namespace Holojam{
 			}
 		}
 		Vector3 Vertex(Vector2 v){return new Vector3(v.x,floor,v.y);}
+		
+		//Save and load calibration data
+		void Start(){
+			if(!Application.isPlaying)
+				for(int i=0;i<4;++i){
+					bounds[i].x=PlayerPrefs.GetFloat("Holobounds_Corner"+i+"_x");
+					bounds[i].y=PlayerPrefs.GetFloat("Holobounds_Corner"+i+"_y");
+				}
+		}
+		void OnApplicationQuit(){
+			for(int i=0;i<4;++i){
+				PlayerPrefs.SetFloat("Holobounds_Corner"+i+"_x",bounds[i].x);
+				PlayerPrefs.SetFloat("Holobounds_Corner"+i+"_y",bounds[i].y);
+			}
+		}
 	}
 }
