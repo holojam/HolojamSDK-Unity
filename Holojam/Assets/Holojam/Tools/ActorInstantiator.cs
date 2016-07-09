@@ -25,6 +25,14 @@ namespace Holojam{
 			Color.yellow
 		};
 		
+		//Temporary fix until new labeling system is implemented
+		string[] labels = {
+			"VR1",
+			"VR2",
+			"VR3",
+			"VR4"
+		};
+		
 		void Update(){
 			amount=Mathf.Max(amount,1);
 		}
@@ -37,7 +45,7 @@ namespace Holojam{
 				Actor a = (Instantiate(actor.gameObject,Vector3.zero,Quaternion.identity) as GameObject).GetComponent<Actor>();
 				a.transform.parent=transform;
 				//Set tag and color automatically
-				a.liveObjectTag=(LiveObjectTag)GetComponent<ActorManager>().actors.Length+i;
+				a.view.label=labels[i%labels.Length];
 				a.name=names[i%names.Length];
 				a.motif=colors[i%colors.Length];
 			}
@@ -49,9 +57,6 @@ namespace Holojam{
 				if(Application.isEditor && !Application.isPlaying)
 					DestroyImmediate(a.gameObject);
 				else Destroy(a.gameObject);
-			GameObject v = GameObject.Find("Viewer");
-			if(v!=null && Application.isEditor && !Application.isPlaying)
-				DestroyImmediate(v); else if(v!=null)Destroy(v);
 		}
 	}
 }

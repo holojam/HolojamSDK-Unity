@@ -57,7 +57,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 471370}
-  - 114: {fileID: 11477606}
+  - 114: {fileID: 11471904}
+  - 114: {fileID: 11485700}
   m_Layer: 0
   m_Name: Actor
   m_TagString: Untagged
@@ -251,7 +252,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 140410}
   m_Mesh: {fileID: 4300000, guid: aecb332132105451e8b7625cca2b8893, type: 3}
---- !u!114 &11477606
+--- !u!114 &11471904
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 184224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMine: 0
+  label: 
+--- !u!114 &11485700
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -262,9 +276,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d543e39469e5426880406a00a5e0b2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liveObjectTag: 0
   name: Actor
-  motif: {r: 1, g: 0, b: 0, a: 1}
+  motif: {r: 1, g: 1, b: 1, a: 1}
   mask: {fileID: 162842}
 --- !u!1001 &100100000
 Prefab:

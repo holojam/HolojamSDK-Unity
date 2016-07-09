@@ -11,7 +11,7 @@ GameObject:
   - 20: {fileID: 2054892}
   - 81: {fileID: 8143770}
   m_Layer: 0
-  m_Name: VR
+  m_Name: VRCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,6 +26,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 481712}
   - 114: {fileID: 11460270}
+  - 114: {fileID: 11418568}
   m_Layer: 0
   m_Name: Viewer
   m_TagString: Untagged
@@ -101,6 +102,19 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 144370}
   m_Enabled: 1
+--- !u!114 &11418568
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 181064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMine: 0
+  label: 
 --- !u!114 &11460270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -109,12 +123,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 181064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cf08f960a62827488e0675775eb2041, type: 3}
+  m_Script: {fileID: 11500000, guid: f4a5623dca10240da9fd1060d48b7048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liveObjectTag: 0
   trackingType: 2
-  correctionThreshold: 0.96
+  actor: {fileID: 0}
+  view: {fileID: 11418568}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

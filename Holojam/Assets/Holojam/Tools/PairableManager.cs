@@ -32,7 +32,7 @@ namespace Holojam{
 					sphere=(Instantiate(pairingSphere,Vector3.zero,Quaternion.identity) as GameObject).transform;
 				sphere.GetComponent<Renderer>().enabled=false; //Assume the sphere will not be activated
 			}
-			else{
+			else if(pairingSphere==null){
 				Debug.LogWarning("PairableManager: Pairing sphere not set!");
 				return;
 			}

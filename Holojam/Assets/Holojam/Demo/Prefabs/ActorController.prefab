@@ -57,6 +57,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 481238}
+  - 114: {fileID: 11433440}
   - 114: {fileID: 11494644}
   m_Layer: 0
   m_Name: ActorController
@@ -280,6 +281,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 123018}
   m_Mesh: {fileID: 4300002, guid: 3bb1abacce8eb43b9bf25f14d09856a1, type: 3}
+--- !u!114 &11433440
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 143530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMine: 0
+  label: 
 --- !u!114 &11494644
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -291,7 +305,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c2c2d21c7614b688aced0e3482aed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liveObjectTag: 0
   name: Actor
   motif: {r: 1, g: 1, b: 1, a: 1}
   mask: {fileID: 107978}

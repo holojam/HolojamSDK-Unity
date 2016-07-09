@@ -2,18 +2,17 @@
 //Created by Aaron C Gaudette on 22.06.16
 
 using UnityEngine;
-using Holojam.Server;
 
 namespace Holojam{
 	[ExecuteInEditMode]
 	public class ActorManager : MonoBehaviour{
-		public TrackedHeadset viewer; //VR camera for target device
-		public LiveObjectTag buildTag = LiveObjectTag.HEADSET1; //Target device
+		public string buildLabel = "VR1"; //Target device  //Temporary fix until new labeling system is implemented
+		public Viewer viewer; //Viewer (headset tracker, VR camera)
 		public bool runtimeIndexing = false;
 		
 		[HideInInspector] public Actor[] actors = new Actor[4]; //Actor array reference
 		int[] indexCache;
-		LiveObjectTag cachedBuildTag;
+		string cachedBuildLabel;
 		
 		//Get the current build actor (re-index if necessary)
 		[HideInInspector] public Actor ba;
@@ -23,14 +22,7 @@ namespace Holojam{
 		}}
 		
 		void Start(){
-			Index(true); //Force index because the TrackedObject class is not currently serializable
-			//foreach(Actor a in actors)a.ApplyMotif();
-			//Instantiate viewer
-			if(Application.isPlaying){
-				GameObject v = Instantiate(viewer.gameObject,Vector3.zero,Quaternion.identity) as GameObject;
-				v.name="Viewer";
-				v.GetComponent<TrackedHeadset>().liveObjectTag=buildTag;
-			}
+			foreach(Actor a in actors)a.ApplyMotif();
 		}
 		
 		public void Update(){
@@ -52,16 +44,12 @@ namespace Holojam{
 				equal=equal && indices[i]==indexCache[i];
 			}
 			//If tags differ from last check, perform index
-			if(equal && buildTag==cachedBuildTag && !force)return Result.PASSED;
+			if(equal && buildLabel==cachedBuildLabel && !force)return Result.PASSED;
 			indexCache=indices;
-			cachedBuildTag=buildTag;
+			cachedBuildLabel=buildLabel;
 			
 			if(actors.Length==0){
 				if(Application.isPlaying)Debug.LogWarning("ActorManager: No actors in hierarchy!");
-				return Result.ERROR;
-			}
-			if(viewer==null){
-				Debug.LogWarning("ActorManager: Viewer prefab reference is null");
 				return Result.ERROR;
 			}
 			
@@ -72,7 +60,7 @@ namespace Holojam{
 				a.transform.rotation=Quaternion.identity;
 				
 				//Is this the build actor?
-				bool isBuild = a.index==(int)buildTag;
+				bool isBuild = a.view.label==buildLabel; //Temporary fix until new labeling system is implemented
 				if(isBuild && setBuild){
 					Debug.LogWarning("ActorManager: Duplicate build actor!");
 					isBuild=false;
@@ -92,6 +80,12 @@ namespace Holojam{
 				Debug.LogWarning("ActorManager: No actor found with matching build tag!");
 				return Result.NOVIEW;
 			}
+			//Update viewer
+			if(viewer==null){
+				Debug.LogWarning("ActorManager: Viewer prefab reference is null");
+				return Result.ERROR;
+			}
+			else viewer.actor=buildActor;
 			
 			return Result.INDEXED;
 		}

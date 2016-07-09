@@ -41,8 +41,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 651fd50bd57ed4f44be4d3dc3b8e1e95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewer: {fileID: 11460270, guid: 4d7489321ae6b4a5ba5cac29df5f2f6c, type: 2}
-  buildTag: 0
+  buildLabel: VR1
+  viewer: {fileID: 0}
   runtimeIndexing: 0
   actors: []
   ba: {fileID: 0}

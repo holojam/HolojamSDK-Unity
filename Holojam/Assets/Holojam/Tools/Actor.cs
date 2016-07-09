@@ -3,44 +3,56 @@
 //Umbrella class for accessing player (headset user) data in a generic manner
 
 using UnityEngine;
-using Holojam.Server;
+using Holojam.Network;
 
 namespace Holojam{
-	public class Actor : TrackedObject{
+	[RequireComponent(typeof(HolojamView))]
+	public class Actor : MonoBehaviour {
 		public string name = "Actor";
 		public Color motif = Color.white; //Useful color identifier, optional for rendering
 		public GameObject mask; //This object is disabled for build actors by the manager
 		
-		protected override void Update(){
-			UpdateTracking();
-			ApplyTracking();
-		}
+		HolojamView holojamView = null;
+		public HolojamView view{get{
+			if(holojamView==null)holojamView=GetComponent<HolojamView>();
+			return holojamView;
+		}}
+		public int index{get{ //Temporary fix until new labeling system is implemented
+			switch(view.label){
+				case "VR1": return 0;
+				case "VR2": return 1;
+				case "VR3": return 2;
+				case "VR4": return 3;
+			}
+			return -1;
+		}}
+		public bool managed{get{
+			return transform.parent!=null && transform.parent.GetComponent<ActorManager>()!=null;
+		}}
 		
 		//Override these in derived classes for custom unique implementation
+		protected virtual void Update(){ //Update tracking data (position, rotation) and manage the untracked state here
+			if(view.IsTracked){
+				transform.position=view.RawPosition;
+				transform.rotation=view.RawRotation;
+			}
+		}
+		public virtual void ApplyMotif(){} //Do something with the motif (color)
+		//These accessors should always reference assigned data (e.g. transform.position), not source (raw) data
 		public virtual Vector3 eyes{
 			get{return transform.position;}
 		}
 		public virtual Quaternion orientation{
+			//Be careful not to map rotation to anything other than the user's actual head movement
+			//unless you absolutely know what you're doing. The Viewer (headset) uses a custom
+			//tracking algorithm and relies on this accessor to provide absolute truth.
 			get{return transform.rotation;}
 		}
-		public virtual void ApplyTracking(){ //Assign tracking data
-			if(tracking){
-				transform.position=trackedPosition;
-				transform.rotation=trackedRotation;
-			}
-		}
-		public virtual void ApplyMotif(){} //Do something with the motif (color)
 		
 		//Useful derived accessors
 		public Vector3 look{get{return orientation*Vector3.forward;}}
 		public Vector3 up{get{return orientation*Vector3.up;}}
 		public Vector3 left{get{return orientation*Vector3.left;}}
-		
-		public int index{get{return (int)liveObjectTag;}}
-		public bool tracking{get{return isTracked;}}
-		public bool managed{get{
-			return transform.parent!=null && transform.parent.GetComponent<ActorManager>()!=null;
-		}}
 		
 		//Useful (goggles) visualization for edge of GearVR headset
 		void OnDrawGizmos(){
