@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Holojam.Server {
+namespace Holojam.Network {
      public class SynchronizedObject : MonoBehaviour {
 
           public string label;

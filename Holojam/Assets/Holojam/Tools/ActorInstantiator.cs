@@ -3,7 +3,7 @@
 //Optional tool for easy setup and rapid prototyping
 
 using UnityEngine;
-using Holojam.Server;
+using Holojam.Network;
 
 namespace Holojam{
 	[ExecuteInEditMode]
@@ -45,7 +45,7 @@ namespace Holojam{
 				Actor a = (Instantiate(actor.gameObject,Vector3.zero,Quaternion.identity) as GameObject).GetComponent<Actor>();
 				a.transform.parent=transform;
 				//Set tag and color automatically
-				a.view.label=labels[i%labels.Length];
+				a.view.Label=labels[i%labels.Length];
 				a.handle=handles[i%handles.Length];
 				a.motif=colors[i%colors.Length];
 			}

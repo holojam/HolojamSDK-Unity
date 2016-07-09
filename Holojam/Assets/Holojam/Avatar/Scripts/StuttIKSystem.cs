@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Holojam.Avatar.IK;
-using Holojam.Server;
+using Holojam.Network;
 
 namespace Holojam.Avatar {
 
@@ -16,11 +16,11 @@ namespace Holojam.Avatar {
         [Header("Connect to Motive")]
         public bool connect = true;
         [Header("Tracked Object Tags")]
-        public LiveObjectTag headTag;
-        public LiveObjectTag leftHandTag;
-        public LiveObjectTag rightHandTag;
-        public LiveObjectTag leftFootTag;
-        public LiveObjectTag rightFootTag;
+        public Motive.Tag headTag;
+        public Motive.Tag leftHandTag;
+        public Motive.Tag rightHandTag;
+        public Motive.Tag leftFootTag;
+        public Motive.Tag rightFootTag;
        
         /////Protected/////
         //References
@@ -74,7 +74,7 @@ namespace Holojam.Avatar {
         void InitObjectControllers() {
              GameObject[] objs = new GameObject[5] {head.gameObject,leftHand.gameObject,rightHand.gameObject,
 										    leftFoot.gameObject, rightFoot.gameObject };
-             LiveObjectTag[] tags = new LiveObjectTag[5] { headTag, leftHandTag, rightHandTag, leftFootTag, rightFootTag };
+			Motive.Tag[] tags = new Motive.Tag[5] { headTag, leftHandTag, rightHandTag, leftFootTag, rightFootTag };
 
              for (int i = 0; i < 5; i++) {
                   GameObject go = objs[i];

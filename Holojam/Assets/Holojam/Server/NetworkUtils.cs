@@ -12,11 +12,9 @@ using ProtoBuf;
 using update_protocol_v3;
 using System.Threading;
 
-namespace Holojam.Server {
+namespace Holojam.Network {
      class PacketBuffer {
-
           public const int PACKET_SIZE = 65507; // ~65KB buffer sizes
-
 
           public byte[] bytes;
           public MemoryStream stream;
@@ -35,6 +33,7 @@ namespace Holojam.Server {
           }
      }
 
+	[Obsolete("This is used by MasterStream/MasterServer. Please use HolojamNetwork.")]
      class LiveObjectStorage {
           public static readonly Vector3 DEFAULT_VECTOR_POSITION = Vector3.zero;
           public static readonly Quaternion DEFAULT_QUATERNION_ROTATION = Quaternion.identity;
@@ -77,35 +76,41 @@ namespace Holojam.Server {
           }
      }
 
-     class Motive {
+     public class Motive {
 
-          private static readonly Dictionary<LiveObjectTag, string> tagNames = new Dictionary<LiveObjectTag, string>() {
-               { LiveObjectTag.HEADSET1, "VR1" },
-               { LiveObjectTag.HEADSET2, "VR2" },
-               { LiveObjectTag.HEADSET3, "VR3" },
-               { LiveObjectTag.HEADSET4, "VR4" },
-               { LiveObjectTag.WAND1, "VR1_wand" },
-               { LiveObjectTag.WAND2, "VR2_wand" },
-               { LiveObjectTag.WAND3, "VR3_wand" },
-               { LiveObjectTag.WAND4, "VR4_wand" },
-               { LiveObjectTag.BOX1, "VR1_box" },
-               { LiveObjectTag.LEFTHAND1, "VR1_lefthand"},
-               { LiveObjectTag.RIGHTHAND1, "VR1_righthand"},
-               { LiveObjectTag.LEFTFOOT1, "VR1_leftankle"},
-               { LiveObjectTag.RIGHTFOOT1, "VR1_rightankle"},
-               { LiveObjectTag.LEFTHAND2, "VR2_lefthand"},
-               { LiveObjectTag.RIGHTHAND2, "VR2_righthand"},
-               { LiveObjectTag.LEFTFOOT2, "VR2_leftankle"},
-               { LiveObjectTag.RIGHTFOOT2, "VR2_rightankle"},
-               { LiveObjectTag.LEFTHAND3, "VR3_lefthand"},
-               { LiveObjectTag.RIGHTHAND3, "VR3_righthand"},
-               { LiveObjectTag.LEFTFOOT3, "VR3_leftankle"},
-               { LiveObjectTag.RIGHTFOOT3, "VR3_rightankle"},
-               { LiveObjectTag.LAPTOP, "VR1_laptop"},
-               { LiveObjectTag.TABLE, "VR1_table"}
+		public enum Tag {
+			HEADSET1, HEADSET2, HEADSET3, HEADSET4, WAND1, WAND2, WAND3, WAND4, BOX1, BOX2, SPHERE1,
+			LEFTHAND1, RIGHTHAND1, LEFTFOOT1, RIGHTFOOT1, LEFTHAND2, RIGHTHAND2, LEFTFOOT2, RIGHTFOOT2, LEFTHAND3, RIGHTHAND3, LEFTFOOT3, RIGHTFOOT3,
+			LAPTOP, TABLE
+		}
+
+		private static readonly Dictionary<Tag, string> tagNames = new Dictionary<Tag, string>() {
+               { Tag.HEADSET1, "VR1" },
+               { Tag.HEADSET2, "VR2" },
+               { Tag.HEADSET3, "VR3" },
+               { Tag.HEADSET4, "VR4" },
+               { Tag.WAND1, "VR1_wand" },
+               { Tag.WAND2, "VR2_wand" },
+               { Tag.WAND3, "VR3_wand" },
+               { Tag.WAND4, "VR4_wand" },
+               { Tag.BOX1, "VR1_box" },
+               { Tag.LEFTHAND1, "VR1_lefthand"},
+               { Tag.RIGHTHAND1, "VR1_righthand"},
+               { Tag.LEFTFOOT1, "VR1_leftankle"},
+               { Tag.RIGHTFOOT1, "VR1_rightankle"},
+               { Tag.LEFTHAND2, "VR2_lefthand"},
+               { Tag.RIGHTHAND2, "VR2_righthand"},
+               { Tag.LEFTFOOT2, "VR2_leftankle"},
+               { Tag.RIGHTFOOT2, "VR2_rightankle"},
+               { Tag.LEFTHAND3, "VR3_lefthand"},
+               { Tag.RIGHTHAND3, "VR3_righthand"},
+               { Tag.LEFTFOOT3, "VR3_leftankle"},
+               { Tag.RIGHTFOOT3, "VR3_rightankle"},
+               { Tag.LAPTOP, "VR1_laptop"},
+               { Tag.TABLE, "VR1_table"}
           };
 
-          public static string GetName(LiveObjectTag tag) {
+          public static string GetName(Tag tag) {
                if (tagNames.ContainsKey(tag)) {
                     return tagNames[tag];
                } else {

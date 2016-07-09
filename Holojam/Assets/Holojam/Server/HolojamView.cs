@@ -6,15 +6,32 @@ namespace Holojam.Network {
 
 		public static List<HolojamView> instances = new List<HolojamView>();
 
-		public bool isMine;
-
-		public string label;
+		private string label;
+		private bool isMine;
 
 		private Vector3 rawPosition;
 		private Quaternion rawRotation;
 		private int bits;
 		private string blob;
 		private bool isTracked = false;
+
+		public string Label {
+			get {
+				return label;
+			}
+			set {
+				label = value;
+			}
+		}
+
+		public bool IsMine {
+			get {
+				return isMine;
+			}
+			set {
+				isMine = value;
+			}
+		}
 
 		public Vector3 RawPosition {
 			get {

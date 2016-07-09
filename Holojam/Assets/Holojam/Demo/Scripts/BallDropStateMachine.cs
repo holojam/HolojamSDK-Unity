@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Holojam.Server;
+using Holojam.Network;
 
 namespace Holojam.Demo {
      public class BallDropStateMachine : MonoBehaviour {
@@ -17,11 +17,11 @@ namespace Holojam.Demo {
           public SynchronizedObject state;
 
           private MasterStream masterStream;
-          private Holojam.Server.MasterServer masterServer;
+          private Holojam.Network.MasterServer masterServer;
 
           void Awake() {
                masterStream = MasterStream.Instance;
-               masterServer = Holojam.Server.MasterServer.Instance;
+               masterServer = Holojam.Network.MasterServer.Instance;
           }
 
           // Update is called once per frame

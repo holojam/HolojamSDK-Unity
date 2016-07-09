@@ -18,7 +18,7 @@ namespace Holojam{
 			return holojamView;
 		}}
 		public int index{get{ //Temporary fix until new labeling system is implemented
-			switch(view.label){
+			switch(view.Label){
 				case "VR1": return 0;
 				case "VR2": return 1;
 				case "VR3": return 2;

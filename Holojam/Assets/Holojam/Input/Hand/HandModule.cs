@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using Holojam.Server;
+using Holojam.Network;
 
 namespace Holojam.IO {
 
@@ -26,7 +26,7 @@ namespace Holojam.IO {
           public static List<HandGlobalReceiver> receivers = new List<HandGlobalReceiver>();
           //References
           //Primitives
-          public LiveObjectTag handTag;
+          public Motive.Tag handTag;
           public string hand_label;
           public string root_label;
           public string thumb_label;

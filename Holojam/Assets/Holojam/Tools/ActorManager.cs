@@ -60,7 +60,7 @@ namespace Holojam{
 				a.transform.rotation=Quaternion.identity;
 				
 				//Is this the build actor?
-				bool isBuild = a.view.label==buildLabel; //Temporary fix until new labeling system is implemented
+				bool isBuild = a.view.Label==buildLabel; //Temporary fix until new labeling system is implemented
 				if(isBuild && setBuild){
 					Debug.LogWarning("ActorManager: Duplicate build actor!");
 					isBuild=false;

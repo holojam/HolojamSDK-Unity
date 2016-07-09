@@ -29,7 +29,7 @@ namespace Holojam{
 					v.actor!=null?"Tracking data is being routed through "+
 					v.actor.handle+" ("+(v.actor.index+1)+"). Remove reference to unlink.":
 					"No actor linked. Tracking data is being sourced directly from the view"+
-					(v.view!=null && v.view.label!=""?" ("+v.view.label+").":".")
+					(v.view!=null && v.view.Label!=""?" ("+v.view.Label+").":".")
 				);
 			}
 			

@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 
-namespace Holojam.Server {
+namespace Holojam.Network {
      public class MasterServer : Singleton<MasterServer> {
 
           public bool isMaster;

@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using Holojam.Server;
+using Holojam.Network;
 
 namespace Holojam {
 	public class ObjectWithOffsetController : MonoBehaviour {

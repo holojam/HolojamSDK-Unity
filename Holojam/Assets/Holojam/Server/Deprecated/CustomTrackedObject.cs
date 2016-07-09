@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Holojam.Server;
+using Holojam.Network;
 
 namespace Holojam {
      public class CustomTrackedObject : MonoBehaviour {

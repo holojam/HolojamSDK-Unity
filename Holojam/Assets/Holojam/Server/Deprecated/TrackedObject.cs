@@ -1,17 +1,20 @@
 ﻿using System;
 using UnityEngine;
-using Holojam.Server;
+using Holojam.Network;
 
 namespace Holojam {
+	[Obsolete("This uses MasterStream. Please use HolojamNetwork.")]
 	public class TrackedObject : MonoBehaviour {
 
-          public LiveObjectTag liveObjectTag;
+          public Motive.Tag liveObjectTag;
 
 
           protected MasterStream masterStream;
           protected bool isTracked;
           protected Vector3 trackedPosition;
           protected Quaternion trackedRotation;
+
+
 
           public bool IsTracked {
                get {

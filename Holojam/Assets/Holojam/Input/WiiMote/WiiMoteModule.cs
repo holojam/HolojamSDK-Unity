@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using Holojam.Server;
+using Holojam.Network;
 
 namespace Holojam.IO {
 
