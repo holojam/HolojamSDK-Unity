@@ -3,7 +3,7 @@ using UnityEngine;
 using Holojam.Network;
 
 namespace Holojam {
-	[Obsolete("This uses MasterStream. Please use HolojamNetwork.")]
+	[Obsolete("MasterStream is deprecated. Please use HolojamNetwork.")]
 	public class TrackedObject : MonoBehaviour {
 
           public Motive.Tag liveObjectTag;

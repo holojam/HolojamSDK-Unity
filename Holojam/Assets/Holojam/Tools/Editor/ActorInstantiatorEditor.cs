@@ -25,8 +25,8 @@ namespace Holojam{
 			
 			ActorInstantiator ai = (ActorInstantiator)serializedObject.targetObject;
 			
-			if(GUILayout.Button("Add"))ai.Add();
-			if(GUILayout.Button("Clear All"))ai.Clear();
+			if(GUILayout.Button("Add",GUILayout.Height(20)))ai.Add();
+			if(GUILayout.Button("Clear All",GUILayout.Height(20)))ai.Clear();
 			
 			serializedObject.ApplyModifiedProperties();
 		}

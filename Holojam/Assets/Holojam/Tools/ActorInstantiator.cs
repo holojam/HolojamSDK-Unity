@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using Holojam.Network;
+using System;
 
 namespace Holojam{
 	[ExecuteInEditMode]
@@ -13,10 +14,10 @@ namespace Holojam{
 		public int amount = 4;
 		
 		string[] handles = {
-			"Red One",
-			"Green Two",
-			"Blue Three",
-			"Yellow Four"
+			"Red",
+			"Green",
+			"Blue",
+			"Yellow"
 		};
 		Color[] colors = {
 			Color.red,
@@ -25,17 +26,6 @@ namespace Holojam{
 			Color.yellow
 		};
 		
-		//Temporary fix until new labeling system is implemented
-		string[] labels = {
-			"VR1",
-			"VR2",
-			"VR3",
-			"VR4"
-		};
-		
-		void Update(){
-			amount=Mathf.Max(amount,1);
-		}
 		public void Add(){
 			if(actor==null){
 				Debug.LogWarning("ActorInstantiator: Actor reference is null!");
@@ -45,7 +35,9 @@ namespace Holojam{
 				Actor a = (Instantiate(actor.gameObject,Vector3.zero,Quaternion.identity) as GameObject).GetComponent<Actor>();
 				a.transform.parent=transform;
 				//Set tag and color automatically
-				a.view.Label=labels[i%labels.Length];
+				int index = (i+GetComponent<ActorManager>().actors.Length)%
+					(Enum.GetNames(typeof(Actor.HeadsetTag)).Length);
+				a.trackingTag=(Actor.HeadsetTag)index;
 				a.handle=handles[i%handles.Length];
 				a.motif=colors[i%colors.Length];
 			}

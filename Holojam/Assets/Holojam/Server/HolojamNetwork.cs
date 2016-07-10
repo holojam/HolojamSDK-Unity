@@ -11,6 +11,10 @@ using System.Threading;
 namespace Holojam.Network {
 	public class HolojamNetwork : Singleton<HolojamNetwork> {
 
+		//Editor debugging
+		public int sentWarning = -1, receivedWarning = 48;
+		public int sentPPS, receivedPPS;
+		
 		[System.NonSerialized]
 		public int sentPacketsPerSecond;
 		[System.NonSerialized]
@@ -68,7 +72,14 @@ namespace Holojam.Network {
 				sendThread.PacketCount = 0;
 				receivedPacketsPerSecond = receiveThread.PacketCount;
 				receiveThread.PacketCount = 0;
-				Debug.LogWarning("HolojamNetwork: Sent Packets - " + sentPacketsPerSecond + " Received Packets - " + receivedPacketsPerSecond);
+				
+				sentPPS=sentPacketsPerSecond; receivedPPS=receivedPacketsPerSecond;
+				if(Time.frameCount>0 && (sentPPS<=sentWarning || receivedPPS<=receivedWarning)){
+					Debug.LogWarning(
+						"HolojamNetwork: Sent Packets - "+sentPacketsPerSecond+
+						" Received Packets - "+receivedPacketsPerSecond
+					);
+				}
 			}
 		}
 

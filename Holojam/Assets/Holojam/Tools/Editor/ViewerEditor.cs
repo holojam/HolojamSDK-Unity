@@ -7,10 +7,11 @@ using UnityEditor;
 namespace Holojam{
 	[CustomEditor(typeof(Viewer)), CanEditMultipleObjects]
 	public class ViewerEditor : Editor{
-		SerializedProperty trackingType, actor;
+		SerializedProperty trackingType, actor, trackingTag;
 		void OnEnable(){
 			trackingType=serializedObject.FindProperty("trackingType");
 			actor=serializedObject.FindProperty("actor");
+			trackingTag=serializedObject.FindProperty("trackingTag");
 		}
 		
 		public override void OnInspectorGUI(){
@@ -22,14 +23,20 @@ namespace Holojam{
 			actor.objectReferenceValue=
 				EditorGUILayout.ObjectField("Actor",actor.objectReferenceValue,typeof(Actor),true);
 			
+			Viewer v = serializedObject.targetObject as Viewer;
+			
+			EditorGUI.BeginDisabledGroup(v.view==null);
+				trackingTag.enumValueIndex=(int)(Actor.HeadsetTag)
+					EditorGUILayout.EnumPopup("Tracking Tag",(Actor.HeadsetTag)trackingTag.enumValueIndex);
+			EditorGUI.EndDisabledGroup();
+			
 			if(!serializedObject.isEditingMultipleObjects){
-				Viewer v = serializedObject.targetObject as Viewer;
-				EditorStyles.label.wordWrap = true;
 				EditorGUILayout.LabelField(
-					v.actor!=null?"Tracking data is being routed through "+
-					v.actor.handle+" ("+(v.actor.index+1)+"). Remove reference to unlink.":
+					v.actor!=null?"Tracking data is being routed through \""+
+					v.actor.gameObject.name+".\" Remove reference to unlink.":
 					"No actor linked. Tracking data is being sourced directly from the view"+
-					(v.view!=null && v.view.Label!=""?" ("+v.view.Label+").":".")
+					(v.view!=null && v.view.Label!=""?" ("+v.view.Label+").":"."),
+					new GUIStyle(EditorStyles.wordWrappedMiniLabel)
 				);
 			}
 			

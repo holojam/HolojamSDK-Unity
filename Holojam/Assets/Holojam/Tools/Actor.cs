@@ -10,6 +10,13 @@ namespace Holojam{
 	public class Actor : MonoBehaviour{
 		public string handle = "Actor";
 		public Color motif = Color.white; //Useful color identifier, optional for rendering
+		public enum HeadsetTag{
+			HEADSET1 = Motive.Tag.HEADSET1,
+			HEADSET2 = Motive.Tag.HEADSET2,
+			HEADSET3 = Motive.Tag.HEADSET3,
+			HEADSET4 = Motive.Tag.HEADSET4
+		};
+		public HeadsetTag trackingTag;
 		public GameObject mask; //This object is disabled for build actors by the manager
 		
 		HolojamView holojamView = null;
@@ -17,18 +24,13 @@ namespace Holojam{
 			if(holojamView==null)holojamView=GetComponent<HolojamView>();
 			return holojamView;
 		}}
-		public int index{get{ //Temporary fix until new labeling system is implemented
-			switch(view.Label){
-				case "VR1": return 0;
-				case "VR2": return 1;
-				case "VR3": return 2;
-				case "VR4": return 3;
-			}
-			return -1;
-		}}
+		public int index{get{return (int)trackingTag;}}
 		public bool managed{get{
 			return transform.parent!=null && transform.parent.GetComponent<ActorManager>()!=null;
 		}}
+		public ActorManager manager{get{return managed?transform.parent.GetComponent<ActorManager>():null;}}
+		
+		void Awake(){view.Label=Motive.GetName((Motive.Tag)trackingTag);}
 		
 		//Override these in derived classes for custom unique implementation
 		protected virtual void Update(){ //Update tracking data (position, rotation) and manage the untracked state here
@@ -37,7 +39,6 @@ namespace Holojam{
 				transform.rotation=view.RawRotation;
 			}
 		}
-		public virtual void ApplyMotif(){} //Do something with the motif (color)
 		//These accessors should always reference assigned data (e.g. transform.position), not source (raw) data
 		public virtual Vector3 eyes{
 			get{return transform.position;}

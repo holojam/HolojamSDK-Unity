@@ -14,7 +14,7 @@ public class ActorController : Holojam.Actor{
 				head.localPosition=Vector3.zero;
 				head.rotation=view.RawRotation;
 			}
-			else Debug.LogWarning("ActorController: No head found for "+handle+" ("+(index+1)+")");
+			else Debug.LogWarning("ActorController: No head found for "+gameObject.name);
 		}
 	}
 	public override Vector3 eyes{
@@ -25,7 +25,7 @@ public class ActorController : Holojam.Actor{
 	}
 	
 	//Assign color of geometry with Motif tag
-	public override void ApplyMotif(){
+	void ApplyMotif(){
 		if(Application.isPlaying)
 			foreach(Renderer r in GetComponentsInChildren<Renderer>())
 				if(r.gameObject.tag=="Motif")r.material.color=motif;

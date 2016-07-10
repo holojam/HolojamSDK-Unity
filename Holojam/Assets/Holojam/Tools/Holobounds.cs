@@ -3,12 +3,13 @@
 //Playspace manager and access point
 
 using UnityEngine;
+using Holojam.Network;
 
 namespace Holojam{
 	[ExecuteInEditMode]
 	public class Holobounds : MonoBehaviour{
-		public TrackedObject calibrator; //Tool for setting values
-		public Vector2[] bounds = new Vector2[4]; //Corners (TL,TR,BR,BL)
+		public HolojamView calibrator; //Tool for setting values
+		public Vector2[] bounds = new Vector2[4]; //Corners (FL,FR,BR,BL)
 		public float floor = 0; //Floor Y
 		public float ceiling = 3; //Ceiling Y -- not used for tracking
 		
@@ -57,7 +58,7 @@ namespace Holojam{
 				Debug.LogWarning("Holobounds: Calibrator not set");
 				return;
 			}
-			Vector3 position = calibrator.transform.position;
+			Vector3 position = calibrator.RawPosition;
 			if(i<4)bounds[i]=new Vector2(position.x,position.z);
 			else if(i==4)floor=position.y;
 			else ceiling=position.y;

@@ -6,13 +6,13 @@ using UnityEngine;
 namespace Holojam{
 	[ExecuteInEditMode]
 	public class ActorManager : MonoBehaviour{
-		public string buildLabel = "VR1"; //Target device  //Temporary fix until new labeling system is implemented
+		public Actor.HeadsetTag buildTag = Actor.HeadsetTag.HEADSET1;
 		public Viewer viewer; //Viewer (headset tracker, VR camera)
 		public bool runtimeIndexing = false;
 		
 		[HideInInspector] public Actor[] actors = new Actor[4]; //Actor array reference
 		int[] indexCache;
-		string cachedBuildLabel;
+		Actor.HeadsetTag cachedBuildTag;
 		
 		//Get the current build actor (re-index if necessary)
 		[HideInInspector] public Actor ba;
@@ -20,10 +20,6 @@ namespace Holojam{
 			if(ba==null && (!Application.isPlaying || runtimeIndexing))Index(true);
 			return ba;
 		}}
-		
-		void Start(){
-			if(actors!=null)foreach(Actor a in actors)a.ApplyMotif();
-		}
 		
 		public void Update(){
 			//Force index in case prefabs are updated (will increase logging!)
@@ -44,9 +40,9 @@ namespace Holojam{
 				equal=equal && indices[i]==indexCache[i];
 			}
 			//If tags differ from last check, perform index
-			if(equal && buildLabel==cachedBuildLabel && !force)return Result.PASSED;
+			if(equal && buildTag==cachedBuildTag && !force)return Result.PASSED;
 			indexCache=indices;
-			cachedBuildLabel=buildLabel;
+			cachedBuildTag=buildTag;
 			
 			if(actors.Length==0){
 				if(Application.isPlaying)Debug.LogWarning("ActorManager: No actors in hierarchy!");
@@ -60,21 +56,18 @@ namespace Holojam{
 				a.transform.rotation=Quaternion.identity;
 				
 				//Is this the build actor?
-				bool isBuild = a.view.Label==buildLabel; //Temporary fix until new labeling system is implemented
+				bool isBuild = a.trackingTag==buildTag; //Temporary fix until new labeling system is implemented
 				if(isBuild && setBuild){
 					Debug.LogWarning("ActorManager: Duplicate build actor!");
 					isBuild=false;
 				} else if(isBuild)ba=a; //Assign reference
-				a.gameObject.name=a.handle+(isBuild?" (Build)":"");
+				a.gameObject.name="["+(a.index+1)+"] "+a.handle+(isBuild?" (Build)":"");
 				
 				//Activate mask
 				if(a.mask!=null)a.mask.SetActive(!isBuild);
 				else Debug.Log("ActorManager: No mask found for Actor "+(a.index+1)); //No warning
 				
 				setBuild=setBuild || isBuild;
-				
-				//Color actors (geometry)
-				a.ApplyMotif();
 			}
 			if(!setBuild){
 				Debug.LogWarning("ActorManager: No actor found with matching build tag!");

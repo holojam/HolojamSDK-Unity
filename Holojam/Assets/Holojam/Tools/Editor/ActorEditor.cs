@@ -11,10 +11,11 @@ namespace Holojam{
 		protected virtual void EnableDerived(){}
 		protected virtual void DrawDerived(){}
 		
-		SerializedProperty handle, motif, mask;
+		SerializedProperty handle, motif, trackingTag, mask;
 		void OnEnable(){
 			handle=serializedObject.FindProperty("handle");
 			motif=serializedObject.FindProperty("motif");
+			trackingTag=serializedObject.FindProperty("trackingTag");
 			mask=serializedObject.FindProperty("mask");
 			
 			EnableDerived();
@@ -23,8 +24,12 @@ namespace Holojam{
 			serializedObject.Update();
 			
 			EditorGUILayout.BeginHorizontal();
-				handle.stringValue=EditorGUILayout.TextField(handle.stringValue);
-				motif.colorValue=EditorGUILayout.ColorField(motif.colorValue);
+				//Unity has no proper window width accessor, so this will offset marginally when scrolling
+				handle.stringValue=
+					EditorGUILayout.TextField(handle.stringValue,GUILayout.Width(EditorGUIUtility.labelWidth-4));
+				trackingTag.enumValueIndex=(int)(Actor.HeadsetTag)
+					EditorGUILayout.EnumPopup((Actor.HeadsetTag)trackingTag.enumValueIndex);
+				motif.colorValue=EditorGUILayout.ColorField(motif.colorValue,GUILayout.Width(48));
 			EditorGUILayout.EndHorizontal();
 			
 			mask.objectReferenceValue=
@@ -34,10 +39,24 @@ namespace Holojam{
 			
 			if(!serializedObject.isEditingMultipleObjects){
 				Actor a = serializedObject.targetObject as Actor;
-				EditorStyles.label.wordWrap = true;
-				EditorGUILayout.LabelField(
-					"Actor "+(a.index+1)+" ("+(a.managed?"Managed/":"Unmanaged/")+(a.view.IsTracked?"Tracked)":"Untracked)")
+				
+				GUIStyle style = new GUIStyle(EditorStyles.boldLabel);
+				if(Application.isPlaying)
+					style.normal.textColor=
+						a.managed && a.view.IsTracked?new Color(0.5f,1,0.5f):
+						!a.managed && !a.view.IsTracked?new Color(1,0.5f,0.5f):
+						new Color(1,1,0.5f);
+				
+				EditorGUILayout.LabelField("Status",
+					(a.managed?"Managed/":"Unmanaged/")+(a.view.IsTracked?"Tracked":"Untracked"),
+					style
 				);
+				
+				if(a.managed && !a.manager.runtimeIndexing && Application.isPlaying)
+					EditorGUILayout.LabelField(
+						"Runtime indexing is OFF. Actor will not reflect changes under manager during playmode.",
+						new GUIStyle(EditorStyles.wordWrappedMiniLabel)
+					);
 			}
 			
 			serializedObject.ApplyModifiedProperties();
