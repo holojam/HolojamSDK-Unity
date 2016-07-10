@@ -35,9 +35,8 @@ namespace Holojam{
 				Actor a = (Instantiate(actor.gameObject,Vector3.zero,Quaternion.identity) as GameObject).GetComponent<Actor>();
 				a.transform.parent=transform;
 				//Set tag and color automatically
-				int index = (i+GetComponent<ActorManager>().actors.Length)%
-					(Enum.GetNames(typeof(Actor.HeadsetTag)).Length);
-				a.trackingTag=(Actor.HeadsetTag)index;
+				int index = (i+GetComponent<ActorManager>().actors.Length)%Motive.tagCount;
+				a.trackingTag=(Motive.Tag)index;
 				a.handle=handles[i%handles.Length];
 				a.motif=colors[i%colors.Length];
 			}

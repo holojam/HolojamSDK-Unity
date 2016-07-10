@@ -94,9 +94,9 @@ namespace Holojam{
 			g.ClearTargets();
 			g.lastPaired=Time.time;
 			Debug.Log(a!=null?
-				"PairableManager: Pairable "+g.GetComponent<TrackedObject>().liveObjectTag+
-					" paired with "+a.handle+" ("+(a.index+1)+")":
-				"PairableManager: Pairable "+g.GetComponent<TrackedObject>().liveObjectTag+" unpaired"
+				"PairableManager: Pairable "+g.trackingTag+
+					" paired with \""+a.gameObject.name+"\"":
+				"PairableManager: Pairable "+g.trackingTag+" unpaired"
 			);
 		}
 		

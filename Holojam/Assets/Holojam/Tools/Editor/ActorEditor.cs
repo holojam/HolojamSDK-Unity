@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using UnityEditor;
+using Holojam.Network;
 
 namespace Holojam{
 	[CustomEditor(typeof(Actor)), CanEditMultipleObjects]
@@ -27,8 +28,8 @@ namespace Holojam{
 				//Unity has no proper window width accessor, so this will offset marginally when scrolling
 				handle.stringValue=
 					EditorGUILayout.TextField(handle.stringValue,GUILayout.Width(EditorGUIUtility.labelWidth-4));
-				trackingTag.enumValueIndex=(int)(Actor.HeadsetTag)
-					EditorGUILayout.EnumPopup((Actor.HeadsetTag)trackingTag.enumValueIndex);
+				trackingTag.enumValueIndex=(int)(Motive.Tag)
+					EditorGUILayout.EnumPopup((Motive.Tag)trackingTag.enumValueIndex);
 				motif.colorValue=EditorGUILayout.ColorField(motif.colorValue,GUILayout.Width(48));
 			EditorGUILayout.EndHorizontal();
 			
@@ -42,13 +43,10 @@ namespace Holojam{
 				
 				GUIStyle style = new GUIStyle(EditorStyles.boldLabel);
 				if(Application.isPlaying)
-					style.normal.textColor=
-						a.managed && a.view.IsTracked?new Color(0.5f,1,0.5f):
-						!a.managed && !a.view.IsTracked?new Color(1,0.5f,0.5f):
-						new Color(1,1,0.5f);
+					style.normal.textColor=a.managed?new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
 				
 				EditorGUILayout.LabelField("Status",
-					(a.managed?"Managed/":"Unmanaged/")+(a.view.IsTracked?"Tracked":"Untracked"),
+					(a.managed?"Managed":"Unmanaged"),
 					style
 				);
 				

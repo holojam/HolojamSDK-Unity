@@ -2,17 +2,18 @@
 //Created by Aaron C Gaudette on 22.06.16
 
 using UnityEngine;
+using Holojam.Network;
 
 namespace Holojam{
 	[ExecuteInEditMode]
 	public class ActorManager : MonoBehaviour{
-		public Actor.HeadsetTag buildTag = Actor.HeadsetTag.HEADSET1;
+		public Motive.Tag buildTag = Motive.Tag.HEADSET1;
 		public Viewer viewer; //Viewer (headset tracker, VR camera)
 		public bool runtimeIndexing = false;
 		
 		[HideInInspector] public Actor[] actors = new Actor[4]; //Actor array reference
 		int[] indexCache;
-		Actor.HeadsetTag cachedBuildTag;
+		Motive.Tag cachedBuildTag;
 		
 		//Get the current build actor (re-index if necessary)
 		[HideInInspector] public Actor ba;
@@ -52,8 +53,8 @@ namespace Holojam{
 			//Index each actor
 			bool setBuild = false;
 			foreach(Actor a in actors){
-				a.transform.position=Vector3.zero;
-				a.transform.rotation=Quaternion.identity;
+				//a.transform.position=Vector3.zero;
+				//a.transform.rotation=Quaternion.identity;
 				
 				//Is this the build actor?
 				bool isBuild = a.trackingTag==buildTag; //Temporary fix until new labeling system is implemented

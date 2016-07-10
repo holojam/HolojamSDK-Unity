@@ -7,9 +7,15 @@ using UnityEngine;
 public class ActorController : Holojam.Actor{
 	public Transform head;
 	
-	protected override void Update(){
+	void Start(){ApplyMotif();}
+	
+	protected override void UpdateTracking(){
+		if(!Application.isPlaying)return;
+		
 		if(view.IsTracked){
 			transform.position=view.RawPosition;
+			
+			//This example uses a separate transform for rotation instead of itself
 			if(head!=null){
 				head.localPosition=Vector3.zero;
 				head.rotation=view.RawRotation;

@@ -14,7 +14,7 @@ namespace Holojam{
 		//Get tracking data from actor (recommended coupling), or directly from the view?
 		public Actor actor = null;
 		[HideInInspector] public HolojamView view = null;
-		public Actor.HeadsetTag trackingTag = Actor.HeadsetTag.HEADSET1;
+		public Motive.Tag trackingTag = Motive.Tag.HEADSET1;
 		
 		const float correctionThreshold = 0.98f; //Lower values allow greater deviation without correction
 		Quaternion correction = Quaternion.identity;
@@ -31,7 +31,7 @@ namespace Holojam{
 			if(actor==view)view=gameObject.AddComponent<HolojamView>() as HolojamView;
 			else if(actor!=null && view!=null)DestroyImmediate(view);
 			
-			if(view!=null)view.Label=Motive.GetName((Motive.Tag)trackingTag);
+			if(view!=null)view.Label=Motive.GetName(trackingTag);
 			if(!Application.isPlaying)return;
 			
 			Vector3 sourcePosition = GetPosition();

@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using UnityEditor;
+using Holojam.Network;
 
 namespace Holojam{
 	[CustomEditor(typeof(Viewer)), CanEditMultipleObjects]
@@ -26,8 +27,8 @@ namespace Holojam{
 			Viewer v = serializedObject.targetObject as Viewer;
 			
 			EditorGUI.BeginDisabledGroup(v.view==null);
-				trackingTag.enumValueIndex=(int)(Actor.HeadsetTag)
-					EditorGUILayout.EnumPopup("Tracking Tag",(Actor.HeadsetTag)trackingTag.enumValueIndex);
+				trackingTag.enumValueIndex=(int)(Motive.Tag)
+					EditorGUILayout.EnumPopup("Tracking Tag",(Motive.Tag)trackingTag.enumValueIndex);
 			EditorGUI.EndDisabledGroup();
 			
 			if(!serializedObject.isEditingMultipleObjects){

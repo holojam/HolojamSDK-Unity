@@ -6,34 +6,27 @@ using UnityEngine;
 using Holojam.Network;
 
 namespace Holojam{
-	[RequireComponent(typeof(HolojamView))]
-	public class Actor : MonoBehaviour{
+	public class Actor : Trackable{
 		public string handle = "Actor";
 		public Color motif = Color.white; //Useful color identifier, optional for rendering
-		public enum HeadsetTag{
-			HEADSET1 = Motive.Tag.HEADSET1,
-			HEADSET2 = Motive.Tag.HEADSET2,
-			HEADSET3 = Motive.Tag.HEADSET3,
-			HEADSET4 = Motive.Tag.HEADSET4
-		};
-		public HeadsetTag trackingTag;
+		void Reset(){trackingTag=Motive.Tag.HEADSET1;}
 		public GameObject mask; //This object is disabled for build actors by the manager
 		
-		HolojamView holojamView = null;
-		public HolojamView view{get{
-			if(holojamView==null)holojamView=GetComponent<HolojamView>();
-			return holojamView;
-		}}
 		public int index{get{return (int)trackingTag;}}
 		public bool managed{get{
 			return transform.parent!=null && transform.parent.GetComponent<ActorManager>()!=null;
 		}}
 		public ActorManager manager{get{return managed?transform.parent.GetComponent<ActorManager>():null;}}
 		
-		void Awake(){view.Label=Motive.GetName((Motive.Tag)trackingTag);}
-		
 		//Override these in derived classes for custom unique implementation
-		protected virtual void Update(){ //Update tracking data (position, rotation) and manage the untracked state here
+		
+		protected override void Update(){
+			UpdateTracking(); //Call this or the actor won't be tracked
+		}
+		//Update tracking data (position, rotation) and manage the untracked state here
+		protected override void UpdateTracking(){
+			if(!Application.isPlaying)return; //Safety check
+			
 			if(view.IsTracked){
 				transform.position=view.RawPosition;
 				transform.rotation=view.RawRotation;
@@ -59,28 +52,11 @@ namespace Holojam{
 		void OnDrawGizmos(){
 			Gizmos.color=motif;
 			Vector3 offset = eyes+look*0.015f;
-			DrawCircle(offset+left*0.035f,look,up,0.03f);
-			DrawCircle(offset-left*0.035f,look,up,0.03f);
+			Drawer.Circle(offset+left*0.035f,look,up,0.03f);
+			Drawer.Circle(offset-left*0.035f,look,up,0.03f);
 			//Reference forward vector
 			Gizmos.DrawRay(offset,look);
 		}
-		
-		private const int circleResFactor = 128; //Quality factor for drawing circles
-		//Gizmo circle-drawing tool
-		void DrawCircle(Vector3 position, Vector3 direction, Vector3 up, float radius = 0.1f){
-			Vector3.Normalize(direction); Vector3.Normalize(up);
-			int res = (int)(circleResFactor*Mathf.Sqrt(radius)); //Approximate resolution based on radius
-			
-			float theta = 2*Mathf.PI/res;
-			Vector3 cache = Vector3.zero;
-			for(int i=0;i<=res;++i){
-				Vector3 point=
-					up*radius*Mathf.Sin(theta*i)+
-					Vector3.Cross(direction,up)*radius*Mathf.Cos(theta*i)+ 
-					position;
-				if(i>0)Gizmos.DrawLine(cache,point);
-				cache=point;
-			}
-		}
+		void OnDrawGizmosSelected(){}
 	}
 }

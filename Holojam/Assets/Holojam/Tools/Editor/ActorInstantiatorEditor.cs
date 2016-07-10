@@ -28,6 +28,8 @@ namespace Holojam{
 			if(GUILayout.Button("Add",GUILayout.Height(20)))ai.Add();
 			if(GUILayout.Button("Clear All",GUILayout.Height(20)))ai.Clear();
 			
+			EditorUtility.SetDirty(ai.GetComponent<ActorManager>());
+			
 			serializedObject.ApplyModifiedProperties();
 		}
 	}
