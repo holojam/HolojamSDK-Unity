@@ -21,6 +21,8 @@ namespace Holojam{
 				label?"":hv.IsTracked?"Tracked":"Untracked",
 				style
 			);
+			
+			EditorUtility.SetDirty(serializedObject.targetObject);
 		}
 	}
 }

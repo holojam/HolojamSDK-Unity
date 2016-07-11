@@ -29,8 +29,10 @@ namespace Holojam{
 		void Update(){
 			//Flush extra components if necessary
 			HolojamView[] views = GetComponents<HolojamView>();
-			if((view==null && views!=null) || (view!=null && views.Length>1))
+			if((view==null && views.Length>0) || (view!=null && (views.Length>1 || views.Length==0))){
 				foreach(HolojamView hv in views)DestroyImmediate(hv);
+				view=null; //In case the view has been set to a prefab value
+			}
 			
 			//Automatically add a HolojamView component if not using a reference actor
 			if(actor==view)view=gameObject.AddComponent<HolojamView>() as HolojamView;

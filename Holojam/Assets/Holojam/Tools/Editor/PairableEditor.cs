@@ -17,10 +17,9 @@ namespace Holojam{
 		public override void OnInspectorGUI(){
 			serializedObject.Update();
 			
-			type.stringValue=EditorGUILayout.TextField("Pairable Type",type.stringValue);
-			trackingTag.enumValueIndex=(int)(Motive.Tag)
-				EditorGUILayout.EnumPopup("Tracking Tag",(Motive.Tag)trackingTag.enumValueIndex);
-			centerOffset.vector3Value=EditorGUILayout.Vector3Field("Center",centerOffset.vector3Value);
+			EditorGUILayout.PropertyField(type,new GUIContent("Pairable Type"));
+			EditorGUILayout.PropertyField(trackingTag);
+			EditorGUILayout.PropertyField(centerOffset,new GUIContent("Center Offset"));
 			
 			if(!serializedObject.isEditingMultipleObjects){
 				EditorGUILayout.Space();
@@ -48,6 +47,7 @@ namespace Holojam{
 				);
 			}
 			
+			EditorUtility.SetDirty(serializedObject.targetObject);
 			serializedObject.ApplyModifiedProperties();
 		}
 	}

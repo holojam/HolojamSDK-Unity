@@ -4,14 +4,13 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(ActorController))]
+[CustomEditor(typeof(ActorController)), CanEditMultipleObjects]
 public class ActorControllerEditor : Holojam.ActorEditor{
 	SerializedProperty head;
 	protected override void EnableDerived(){
 		head=serializedObject.FindProperty("head");
 	}
 	protected override void DrawDerived(){
-		head.objectReferenceValue=
-			EditorGUILayout.ObjectField("Head",head.objectReferenceValue,typeof(Transform),true);
+		EditorGUILayout.PropertyField(head);
 	}
 }

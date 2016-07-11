@@ -26,16 +26,12 @@ namespace Holojam{
 			
 			EditorGUILayout.BeginHorizontal();
 				//Unity has no proper window width accessor, so this will offset marginally when scrolling
-				handle.stringValue=
-					EditorGUILayout.TextField(handle.stringValue,GUILayout.Width(EditorGUIUtility.labelWidth-4));
-				trackingTag.enumValueIndex=(int)(Motive.Tag)
-					EditorGUILayout.EnumPopup((Motive.Tag)trackingTag.enumValueIndex);
-				motif.colorValue=EditorGUILayout.ColorField(motif.colorValue,GUILayout.Width(48));
+				EditorGUILayout.PropertyField(handle,new GUIContent(""),GUILayout.Width(EditorGUIUtility.labelWidth-4));
+				EditorGUILayout.PropertyField(trackingTag,new GUIContent(""));
+				EditorGUILayout.PropertyField(motif,new GUIContent(""),GUILayout.Width(48));
 			EditorGUILayout.EndHorizontal();
 			
-			mask.objectReferenceValue=
-				EditorGUILayout.ObjectField("Mask",mask.objectReferenceValue,typeof(GameObject),true);
-			
+			EditorGUILayout.PropertyField(mask);
 			DrawDerived();
 			
 			if(!serializedObject.isEditingMultipleObjects){

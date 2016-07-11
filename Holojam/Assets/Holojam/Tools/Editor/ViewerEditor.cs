@@ -18,17 +18,13 @@ namespace Holojam{
 		public override void OnInspectorGUI(){
 			serializedObject.Update();
 			
-			trackingType.enumValueIndex=(int)(Viewer.TrackingType)
-				EditorGUILayout.EnumPopup("Tracking Type",(Viewer.TrackingType)trackingType.enumValueIndex);
-			
-			actor.objectReferenceValue=
-				EditorGUILayout.ObjectField("Actor",actor.objectReferenceValue,typeof(Actor),true);
+			EditorGUILayout.PropertyField(trackingType);
+			EditorGUILayout.PropertyField(actor);
 			
 			Viewer v = serializedObject.targetObject as Viewer;
 			
 			EditorGUI.BeginDisabledGroup(v.view==null);
-				trackingTag.enumValueIndex=(int)(Motive.Tag)
-					EditorGUILayout.EnumPopup("Tracking Tag",(Motive.Tag)trackingTag.enumValueIndex);
+				EditorGUILayout.PropertyField(trackingTag);
 			EditorGUI.EndDisabledGroup();
 			
 			if(!serializedObject.isEditingMultipleObjects){
@@ -41,9 +37,7 @@ namespace Holojam{
 				);
 			}
 			
-			//Make sure changes from other scripts will stick around
 			EditorUtility.SetDirty(serializedObject.targetObject);
-			
 			serializedObject.ApplyModifiedProperties();
 		}
 	}

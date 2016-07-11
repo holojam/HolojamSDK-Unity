@@ -25,7 +25,6 @@ namespace Holojam{
 			view.Label=Motive.GetName(trackingTag);
 			view.IsMine=false;
 		}
-		void Awake(){UpdateView();}
 		
 		//Override these in derived classes
 		protected virtual void Update(){

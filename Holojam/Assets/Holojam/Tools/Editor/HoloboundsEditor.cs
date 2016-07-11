@@ -21,9 +21,7 @@ namespace Holojam{
 		public override void OnInspectorGUI(){
 			serializedObject.Update();
 			
-			calibrator.objectReferenceValue=EditorGUILayout.ObjectField(
-				"Calibrator",calibrator.objectReferenceValue,typeof(HolojamView),true
-			);
+			EditorGUILayout.PropertyField(calibrator);
 			
 			Holobounds h = (Holobounds)serializedObject.targetObject;
 			
@@ -33,8 +31,9 @@ namespace Holojam{
 					string title = i==0?"Front-Left":i==1?"Front-Right":i==2?"Back-Right":"Back-Left";
 					EditorGUILayout.LabelField(title);
 					EditorGUILayout.BeginHorizontal();
-						bounds.GetArrayElementAtIndex(i).vector2Value=EditorGUILayout.Vector2Field(
-							"",bounds.GetArrayElementAtIndex(i).vector2Value,GUILayout.Height(16)
+						EditorGUILayout.PropertyField(
+							bounds.GetArrayElementAtIndex(i),
+							new GUIContent(""),GUILayout.Height(16)
 						);
 						if(GUILayout.Button("C"))h.Calibrate(i);
 					EditorGUILayout.EndHorizontal();
@@ -43,12 +42,12 @@ namespace Holojam{
 			}
 			
 			EditorGUILayout.BeginHorizontal();
-				floor.floatValue=EditorGUILayout.FloatField("Floor",floor.floatValue);
+				EditorGUILayout.PropertyField(floor);
 				if(GUILayout.Button("C"))h.Calibrate(4);
 			EditorGUILayout.EndHorizontal();
 			
 			EditorGUILayout.BeginHorizontal();
-				ceiling.floatValue=EditorGUILayout.FloatField("Ceiling",ceiling.floatValue);
+				EditorGUILayout.PropertyField(ceiling);
 				if(GUILayout.Button("C"))h.Calibrate(5);
 			EditorGUILayout.EndHorizontal();
 			
@@ -56,6 +55,7 @@ namespace Holojam{
 				"Tracked Space",0.01f*Mathf.Round(100*h.area)+" m²",new GUIStyle(EditorStyles.boldLabel)
 			);
 			
+			EditorUtility.SetDirty(serializedObject.targetObject);
 			serializedObject.ApplyModifiedProperties();
 		}
 	}

@@ -17,10 +17,9 @@ namespace Holojam{
 			
 			GUILayout.BeginHorizontal();
 				EditorGUIUtility.labelWidth=38;
-				actor.objectReferenceValue=
-					EditorGUILayout.ObjectField("Actor",actor.objectReferenceValue,typeof(Actor),false);
+				EditorGUILayout.PropertyField(actor);
 				EditorGUIUtility.labelWidth=52;
-				amount.intValue=EditorGUILayout.IntField("Amount",Mathf.Max(amount.intValue,1));
+				EditorGUILayout.PropertyField(amount);
 			GUILayout.EndHorizontal();
 			
 			ActorInstantiator ai = (ActorInstantiator)serializedObject.targetObject;
@@ -28,8 +27,8 @@ namespace Holojam{
 			if(GUILayout.Button("Add",GUILayout.Height(20)))ai.Add();
 			if(GUILayout.Button("Clear All",GUILayout.Height(20)))ai.Clear();
 			
+			EditorUtility.SetDirty(serializedObject.targetObject);
 			EditorUtility.SetDirty(ai.GetComponent<ActorManager>());
-			
 			serializedObject.ApplyModifiedProperties();
 		}
 	}
