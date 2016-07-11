@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#pragma warning disable 0618 //Deprecated
+
+using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;

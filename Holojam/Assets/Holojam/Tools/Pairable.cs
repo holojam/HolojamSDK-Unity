@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Holojam.Network;
 
 namespace Holojam{
-	[ExecuteInEditMode]
 	public class Pairable : Trackable{
 		public string type = "Grip";
 		void Reset(){trackingTag=Motive.Tag.LEFTHAND1;}
@@ -42,7 +41,7 @@ namespace Holojam{
 		}
 		
 		protected override void Update(){
-			UpdateTracking();
+			base.Update();
 			
 			//Pairing blink effect
 			foreach(Renderer r in GetComponentsInChildren<Renderer>())

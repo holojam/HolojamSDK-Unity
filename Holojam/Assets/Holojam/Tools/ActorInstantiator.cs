@@ -14,15 +14,15 @@ namespace Holojam{
 		public int amount = 4;
 		
 		string[] handles = {
-			"Red",
-			"Green",
 			"Blue",
+			"Green",
+			"Red",
 			"Yellow"
 		};
 		Color[] colors = {
-			Color.red,
-			Color.green,
 			Color.cyan,
+			Color.green,
+			Color.red,
 			Color.yellow
 		};
 		

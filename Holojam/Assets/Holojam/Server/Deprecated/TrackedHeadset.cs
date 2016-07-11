@@ -1,20 +1,11 @@
-﻿//Viewer.cs
-//Created by Aaron C Gaudette on 07.07.16
-//Rewrite of TrackedHeadset.cs, completed on 02.07.16
+﻿#pragma warning disable 0618 //Deprecated
 
 using UnityEngine;
-using Holojam.Network;
 
 namespace Holojam{
-	[ExecuteInEditMode]
-	public class Viewer : MonoBehaviour{
+	public class TrackedHeadset : TrackedObject{
 		public enum TrackingType{LEGACY,OPTICAL,IMU};
 		public TrackingType trackingType = TrackingType.IMU;
-		
-		//Get tracking data from actor (recommended coupling), or directly from the view?
-		public Actor actor = null;
-		[HideInInspector] public HolojamView view = null;
-		public Motive.Tag trackingTag = Motive.Tag.HEADSET1;
 		
 		const float correctionThreshold = 0.98f; //Lower values allow greater deviation without correction
 		Quaternion correction = Quaternion.identity;
@@ -26,29 +17,14 @@ namespace Holojam{
 		float lastTime = 0;
 		Quaternion lastRotation = Quaternion.identity;
 		
-		void Update(){
-			//Flush extra components if necessary
-			HolojamView[] views = GetComponents<HolojamView>();
-			if((view==null && views!=null) || (view!=null && views.Length>1))
-				foreach(HolojamView hv in views)DestroyImmediate(hv);
-			
-			//Automatically add a HolojamView component if not using a reference actor
-			if(actor==view)view=gameObject.AddComponent<HolojamView>() as HolojamView;
-			else if(actor!=null && view!=null)DestroyImmediate(view);
-			
-			if(view!=null)view.Label=Motive.GetName(trackingTag);
-			if(!Application.isPlaying)return;
-			
-			Vector3 sourcePosition = GetPosition();
-			Quaternion sourceRotation = GetRotation();
-			bool sourceTracked = GetTracked();
-			
+		protected override void Update(){
+			UpdateTracking();
 			//Negate Oculus' automatic head offset (variable reliant on orientation) independent of recenters
-			transform.position+=sourcePosition-Camera.main.transform.position;
+			transform.position+=trackedPosition-Camera.main.transform.position;
 			
-			if(sourceTracked){
+			if(IsTracked){
 				Quaternion imu = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.CenterEye);
-				Quaternion optical = sourceRotation*Quaternion.Inverse(imu);
+				Quaternion optical = trackedRotation*Quaternion.Inverse(imu);
 				
 				//Calculate rotation difference since last timestep
 				if(Time.time>lastTime+timestep){
@@ -57,7 +33,7 @@ namespace Holojam{
 				}
 				
 				//Recalculate IMU correction if stale (generally on init/recenter)
-				if(Quaternion.Dot(transform.rotation*imu,sourceRotation)<=correctionThreshold
+				if(Quaternion.Dot(transform.rotation*imu,trackedRotation)<=correctionThreshold
 					&& difference>=differenceThreshold) //But not if the headset is moving quickly
 					correction=optical;
 				
@@ -75,9 +51,5 @@ namespace Holojam{
 				}
 			} else transform.rotation=correction; //Transition seamlessly to IMU when untracked
 		}
-		//Get tracking data from desired source
-		Vector3 GetPosition(){return actor!=null?actor.eyes:view.RawPosition;}
-		Quaternion GetRotation(){return actor!=null?actor.rawOrientation:view.RawRotation;}
-		bool GetTracked(){return actor!=null?actor.view.IsTracked:view.IsTracked;}
 	}
 }

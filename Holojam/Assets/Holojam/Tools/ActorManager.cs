@@ -28,7 +28,7 @@ namespace Holojam{
 				Index(Application.isEditor && !Application.isPlaying);
 		}
 		
-		enum Result{INDEXED,PASSED,ERROR,NOVIEW};
+		enum Result{INDEXED,PASSED,EMPTY,NOBUILD,NOVIEW};
 		Result Index(bool force = false){
 			if(actors.Length!=transform.childCount)actors=new Actor[transform.childCount];
 			int[] indices = new int[transform.childCount];
@@ -47,7 +47,7 @@ namespace Holojam{
 			
 			if(actors.Length==0){
 				if(Application.isPlaying)Debug.LogWarning("ActorManager: No actors in hierarchy!");
-				return Result.ERROR;
+				return Result.EMPTY;
 			}
 			
 			//Index each actor
@@ -72,12 +72,12 @@ namespace Holojam{
 			}
 			if(!setBuild){
 				Debug.LogWarning("ActorManager: No actor found with matching build tag!");
-				return Result.NOVIEW;
+				return Result.NOBUILD;
 			}
 			//Update viewer
 			if(viewer==null){
 				Debug.LogWarning("ActorManager: Viewer prefab reference is null");
-				return Result.ERROR;
+				return Result.NOVIEW;
 			}
 			else viewer.actor=buildActor;
 			

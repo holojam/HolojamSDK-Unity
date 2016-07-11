@@ -1,6 +1,9 @@
 ﻿//Actor.cs
 //Created by Aaron C Gaudette on 23.06.16
-//Umbrella class for accessing player (headset user) data in a generic manner
+//Umbrella class for accessing player (headset user) data in a generic manner,
+//decoupled from the build process and VR camera setup.
+//This barebones base-class implementation is sufficient for tracking a head--
+//extend for more complex use-cases.
 
 using UnityEngine;
 using Holojam.Network;
@@ -21,26 +24,30 @@ namespace Holojam{
 		//Override these in derived classes for custom unique implementation
 		
 		protected override void Update(){
-			UpdateTracking(); //Call this or the actor won't be tracked
+			base.Update(); //See Trackable.cs for details
 		}
-		//Update tracking data (position, rotation) and manage the untracked state here
 		protected override void UpdateTracking(){
-			if(!Application.isPlaying)return; //Safety check
-			
-			if(view.IsTracked){
-				transform.position=view.RawPosition;
-				transform.rotation=view.RawRotation;
-			}
+			base.UpdateTracking(); //See Trackable.cs for details
 		}
-		//These accessors should always reference assigned data (e.g. transform.position), not source (raw) data
+		//These generic accessors enable reliable Actor information to be obtained from outside the class.
+		//They should always reference assigned data (e.g. transform.position), not source (raw) data
 		public virtual Vector3 eyes{
 			get{return transform.position;}
 		}
 		public virtual Quaternion orientation{
-			//Be careful not to map rotation to anything other than the user's actual head movement
-			//unless you absolutely know what you're doing. The Viewer (headset) uses a custom
-			//tracking algorithm and relies on this accessor to provide absolute truth.
 			get{return transform.rotation;}
+		}
+		//This accessor dictates where each user is looking in their headset. Override for unique
+		//edge cases--when you are manually augmenting the actor rotation or when you want
+		//the user's look direction to differ from what the actor is broadcasting (not recommended)
+		public virtual Quaternion rawOrientation{
+			//Be careful not to map rotation to anything other than the raw data
+			//(the user's actual head movement) unless you absolutely know what you're doing.
+			//The Viewer (VR camera) uses a custom tracking algorithm and relies on the
+			//orientation accessor below to provide absolute truth.
+			//Alternatively, use the Viewer's OPTICAL tracking type if you want the headset's
+			//rotation to match this value exactly
+			get{return view.RawRotation;}
 		}
 		
 		//Useful derived accessors

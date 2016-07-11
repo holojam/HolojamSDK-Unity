@@ -71,7 +71,9 @@ namespace Holojam.Network {
 
 		public bool IsTracked {
 			get {
-				return isMine || isTracked;
+				//Temporary fix until server is updated
+				return Application.isPlaying && (RawPosition!=Vector3.zero || isMine);
+				//return Application.isPlaying && (isMine || isTracked);
 			}
 			set {
 				isTracked = value;
