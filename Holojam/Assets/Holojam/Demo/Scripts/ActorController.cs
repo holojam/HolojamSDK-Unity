@@ -19,9 +19,6 @@ public class ActorController : Holojam.Actor{
 			else Debug.LogWarning("ActorController: No head found for "+gameObject.name);
 		}
 	}
-	public override Vector3 eyes{
-		get{return transform.position;}
-	}
 	//The orientation accessor matches the rotation assignment above
 	public override Quaternion orientation{
 		get{return head!=null?head.rotation:Quaternion.identity;}

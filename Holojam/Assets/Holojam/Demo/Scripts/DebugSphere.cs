@@ -7,7 +7,5 @@ public class DebugSphere : MonoBehaviour{
 	public float offset = 0;
 	public Holojam.Actor target;
 	
-	void Update(){
-		transform.position=target.transform.position+target.transform.forward*offset;
-	}
+	void Update(){transform.position=target.eyes+target.look*offset;}
 }

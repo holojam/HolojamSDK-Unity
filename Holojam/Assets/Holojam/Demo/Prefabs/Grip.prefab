@@ -8,8 +8,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 406458}
-  - 114: {fileID: 11490340}
-  - 114: {fileID: 11487368}
+  - 114: {fileID: 11499124}
+  - 114: {fileID: 11410352}
   m_Layer: 0
   m_Name: Grip
   m_TagString: Untagged
@@ -94,7 +94,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 156382}
   m_Mesh: {fileID: 4300000, guid: 186fe28d06f354d878aeacf429bfbf57, type: 3}
---- !u!114 &11487368
+--- !u!114 &11410352
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -110,7 +110,7 @@ MonoBehaviour:
   centerOffset: {x: 0, y: -0.05, z: 0.05}
   pairedActor: {fileID: 0}
   lastPaired: 0
---- !u!114 &11490340
+--- !u!114 &11499124
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -121,6 +121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  label: 
+  isMine: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -6,8 +6,8 @@ namespace Holojam.Network {
 
 		public static List<HolojamView> instances = new List<HolojamView>();
 
-		private string label;
-		private bool isMine;
+		[SerializeField] private string label;
+		[SerializeField] private bool isMine;
 
 		private Vector3 rawPosition;
 		private Quaternion rawRotation;

@@ -1,21 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &121706
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 485548}
-  - 114: {fileID: 11411764}
-  m_Layer: 0
-  m_Name: LineUnity
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &156124
 GameObject:
   m_ObjectHideFlags: 1
@@ -39,7 +23,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 465164}
-  - 114: {fileID: 11412324}
+  - 114: {fileID: 11407722}
+  - 114: {fileID: 11409610}
   - 114: {fileID: 11475824}
   m_Layer: 0
   m_Name: Stylus
@@ -59,7 +44,7 @@ GameObject:
   - 114: {fileID: 11495050}
   - 120: {fileID: 12072444}
   m_Layer: 0
-  m_Name: MakeLine
+  m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,7 +93,7 @@ Transform:
   m_Children:
   - {fileID: 408134}
   m_Father: {fileID: 465164}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!4 &459890
 Transform:
   m_ObjectHideFlags: 1
@@ -121,7 +106,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 465164}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!4 &465164
 Transform:
   m_ObjectHideFlags: 1
@@ -133,23 +118,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 485548}
   - {fileID: 459890}
   - {fileID: 436530}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
---- !u!4 &485548
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 121706}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 465164}
   m_RootOrder: 0
 --- !u!23 &2361722
 MeshRenderer:
@@ -184,23 +155,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 197782}
   m_Mesh: {fileID: 4300000, guid: f40fce017d8a64185b2ce2f69fe2ec04, type: 3}
---- !u!114 &11411764
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 121706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a29877ddcdcd66f4c9146880af26e223, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  brush: {fileID: 156124}
-  wand: {fileID: 11412324}
-  maxVertexCount: 1000
-  line: {fileID: 174332}
-  lines: []
---- !u!114 &11412324
+--- !u!114 &11407722
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -208,10 +163,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 166982}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce1754270113e374b8716b55f4f90a14, type: 3}
+  m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liveObjectTag: 4
+  label: VR1_wand
+  isMine: 0
+--- !u!114 &11409610
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 166982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8304f294cd3d4cbfb00491751e3e7c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trackingTag: 4
 --- !u!114 &11475824
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -224,6 +192,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: {r: 1, g: 0.26896554, b: 0.353, a: 1}
+  line: {fileID: 11495050}
+  model: {fileID: 2361722}
+  tip: {fileID: 408134}
 --- !u!114 &11495050
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -241,7 +212,7 @@ MonoBehaviour:
   maxPoints: 1000
   isBeingDestroyed: 0
   isDestroyed: 0
-  lineWidth: 0.02
+  lineWidth: 0.028
 --- !u!120 &12072444
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -250,7 +221,7 @@ LineRenderer:
   m_GameObject: {fileID: 174332}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_Materials:
   - {fileID: 0}
   m_SubsetIndices: 
