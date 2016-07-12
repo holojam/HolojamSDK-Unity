@@ -251,7 +251,7 @@ namespace Holojam.Network {
 		public void Send() {
 			Debug.Log("Attempting to open send thread with ip/port: " + ip.ToString() + " " + port);
 			Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-			IPEndPoint ipEndPoint = new IPEndPoint(ip, 0);
+			IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 0);
 			IPEndPoint send_ipEndPoint = new IPEndPoint(ip, port);
 
 			try {
