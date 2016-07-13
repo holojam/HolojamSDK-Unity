@@ -1,32 +1,15 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &110726
+--- !u!1 &137388
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 413130}
-  - 33: {fileID: 3327434}
-  - 23: {fileID: 2303106}
-  m_Layer: 0
-  m_Name: Model
-  m_TagString: Motif
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &133650
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 481370}
-  - 114: {fileID: 11457976}
-  - 114: {fileID: 11402444}
+  - 4: {fileID: 406458}
+  - 114: {fileID: 11499124}
+  - 114: {fileID: 11410352}
   m_Layer: 0
   m_Name: Grip
   m_TagString: Untagged
@@ -34,45 +17,61 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &413130
+--- !u!1 &156382
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 437566}
+  - 33: {fileID: 3371680}
+  - 23: {fileID: 2390372}
+  m_Layer: 0
+  m_Name: Model
+  m_TagString: Motif
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &406458
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 110726}
-  m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5000001, w: 0.49999994}
-  m_LocalPosition: {x: 0, y: -0.058, z: -0.02}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: -90, y: -90, z: 0}
-  m_Children: []
-  m_Father: {fileID: 481370}
-  m_RootOrder: 0
---- !u!4 &481370
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 133650}
+  m_GameObject: {fileID: 137388}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.447, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 413130}
+  - {fileID: 437566}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!23 &2303106
+--- !u!4 &437566
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156382}
+  m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5000001, w: 0.49999994}
+  m_LocalPosition: {x: 0, y: -0.055, z: -0.04}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: -90, y: -90, z: 0}
+  m_Children: []
+  m_Father: {fileID: 406458}
+  m_RootOrder: 0
+--- !u!23 &2390372
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 110726}
+  m_GameObject: {fileID: 156382}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
   - {fileID: 2100000, guid: 069909995b48c4221a6250f3e2a0f6f7, type: 2}
-  - {fileID: 2100000, guid: 207ada5391e22427f87c6407b6385a06, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -88,19 +87,19 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!33 &3327434
+--- !u!33 &3371680
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 110726}
-  m_Mesh: {fileID: 4300000, guid: 4d95cd1d1548545d78c0186fbc2c43ec, type: 3}
---- !u!114 &11402444
+  m_GameObject: {fileID: 156382}
+  m_Mesh: {fileID: 4300000, guid: 186fe28d06f354d878aeacf429bfbf57, type: 3}
+--- !u!114 &11410352
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 133650}
+  m_GameObject: {fileID: 137388}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2fdcd345eee224807bd168b020c1a114, type: 3}
@@ -108,21 +107,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackingTag: 11
   type: Grip
-  centerOffset: {x: 0, y: -0.055, z: 0.035}
+  centerOffset: {x: 0, y: -0.05, z: 0.05}
   pairedActor: {fileID: 0}
   lastPaired: 0
---- !u!114 &11457976
+--- !u!114 &11499124
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 133650}
+  m_GameObject: {fileID: 137388}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  label: VR1_lefthand
+  label: 
   isMine: 0
 --- !u!1001 &100100000
 Prefab:
@@ -133,5 +132,5 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 133650}
+  m_RootGameObject: {fileID: 137388}
   m_IsPrefabParent: 1

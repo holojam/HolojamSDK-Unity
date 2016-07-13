@@ -28,7 +28,7 @@ namespace Holojam{
 			
 			HolojamNetwork hj = (HolojamNetwork)serializedObject.targetObject;
 			
-			EditorGUILayout.LabelField("Packets-per-Second",style);
+			EditorGUILayout.LabelField("Packets per Second",style);
 			EditorGUILayout.BeginHorizontal();
 				if(Application.isPlaying)
 					style.normal.textColor=hj.sentPPS>sentWarning.intValue?

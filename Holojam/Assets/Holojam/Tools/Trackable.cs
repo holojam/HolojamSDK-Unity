@@ -16,11 +16,12 @@ namespace Holojam{
 		public Quaternion trackedRotation{get{return view.RawRotation;}}
 		
 		//Manage view
-		HolojamView holojamView = null;
 		public HolojamView view{get{
 			if(holojamView==null)holojamView=GetComponent<HolojamView>();
 			return holojamView;
 		}}
+		HolojamView holojamView = null;
+		
 		void UpdateView(){
 			view.Label=Motive.GetName(trackingTag);
 			view.IsMine=false;

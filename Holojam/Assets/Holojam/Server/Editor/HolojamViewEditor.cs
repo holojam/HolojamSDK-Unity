@@ -18,7 +18,8 @@ namespace Holojam{
 			
 			bool label = hv.Label==null || hv.Label=="";
 			EditorGUILayout.LabelField(label?"No Label":hv.Label,
-				label?"":hv.IsTracked?"Tracked":"Untracked",
+				label?"":hv.IsMine?"Sending":
+				hv.IsTracked?"Tracked":"Untracked",
 				style
 			);
 			

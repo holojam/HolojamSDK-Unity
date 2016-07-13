@@ -90,6 +90,7 @@ namespace Holojam.Network {
 		}
 
 		void OnDestroy () {
+			base.OnDestroy();
 			sendThread.Stop ();
 			receiveThread.Stop ();
 		}
