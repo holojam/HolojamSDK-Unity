@@ -89,7 +89,7 @@ namespace Holojam.Network {
 			return receiveThread.GetObject(label, out o);
 		}
 
-		void OnDestroy () {
+		protected override void OnDestroy () {
 			base.OnDestroy();
 			sendThread.Stop ();
 			receiveThread.Stop ();
