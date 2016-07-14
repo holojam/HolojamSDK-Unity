@@ -10,79 +10,6 @@
 // Generated from: update_protocol_v3.proto
 namespace update_protocol_v3
 {
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ExtraData")]
-  public partial class ExtraData : global::ProtoBuf.IExtensible
-  {
-    public ExtraData() {}
-    
-    private string _label = "";
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"label", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string label
-    {
-      get { return _label; }
-      set { _label = value; }
-    }
-    private int _int_val = default(int);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"int_val", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(int))]
-    public int int_val
-    {
-      get { return _int_val; }
-      set { _int_val = value; }
-    }
-    private float _float_val = default(float);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"float_val", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    [global::System.ComponentModel.DefaultValue(default(float))]
-    public float float_val
-    {
-      get { return _float_val; }
-      set { _float_val = value; }
-    }
-    private double _double_val = default(double);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"double_val", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    [global::System.ComponentModel.DefaultValue(default(double))]
-    public double double_val
-    {
-      get { return _double_val; }
-      set { _double_val = value; }
-    }
-    private string _string_val = "";
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"string_val", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue("")]
-    public string string_val
-    {
-      get { return _string_val; }
-      set { _string_val = value; }
-    }
-    private bool _bool_val = default(bool);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"bool_val", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(default(bool))]
-    public bool bool_val
-    {
-      get { return _bool_val; }
-      set { _bool_val = value; }
-    }
-    private byte[] _bytes_val = null;
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"bytes_val", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    [global::System.ComponentModel.DefaultValue(null)]
-    public byte[] bytes_val
-    {
-      get { return _bytes_val; }
-      set { _bytes_val = value; }
-    }
-    private readonly global::System.Collections.Generic.List<update_protocol_v3.ExtraData> _extra_val = new global::System.Collections.Generic.List<update_protocol_v3.ExtraData>();
-    [global::ProtoBuf.ProtoMember(8, Name=@"extra_val", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<update_protocol_v3.ExtraData> extra_val
-    {
-      get { return _extra_val; }
-    }
-  
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"AxisButton")]
   public partial class AxisButton : global::ProtoBuf.IExtensible
   {
@@ -122,8 +49,16 @@ namespace update_protocol_v3
       get { return _label; }
       set { _label = value; }
     }
+    private bool _is_tracked = default(bool);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"is_tracked", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(default(bool))]
+    public bool is_tracked
+    {
+      get { return _is_tracked; }
+      set { _is_tracked = value; }
+    }
     private float _x = default(float);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"x", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"x", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     [global::System.ComponentModel.DefaultValue(default(float))]
     public float x
     {
@@ -131,7 +66,7 @@ namespace update_protocol_v3
       set { _x = value; }
     }
     private float _y = default(float);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"y", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"y", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     [global::System.ComponentModel.DefaultValue(default(float))]
     public float y
     {
@@ -139,7 +74,7 @@ namespace update_protocol_v3
       set { _y = value; }
     }
     private float _z = default(float);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"z", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"z", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     [global::System.ComponentModel.DefaultValue(default(float))]
     public float z
     {
@@ -147,7 +82,7 @@ namespace update_protocol_v3
       set { _z = value; }
     }
     private float _qx = default(float);
-    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"qx", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"qx", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     [global::System.ComponentModel.DefaultValue(default(float))]
     public float qx
     {
@@ -155,7 +90,7 @@ namespace update_protocol_v3
       set { _qx = value; }
     }
     private float _qy = default(float);
-    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"qy", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"qy", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     [global::System.ComponentModel.DefaultValue(default(float))]
     public float qy
     {
@@ -163,7 +98,7 @@ namespace update_protocol_v3
       set { _qy = value; }
     }
     private float _qz = default(float);
-    [global::ProtoBuf.ProtoMember(7, IsRequired = false, Name=@"qz", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"qz", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     [global::System.ComponentModel.DefaultValue(default(float))]
     public float qz
     {
@@ -171,7 +106,7 @@ namespace update_protocol_v3
       set { _qz = value; }
     }
     private float _qw = default(float);
-    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"qw", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"qw", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
     [global::System.ComponentModel.DefaultValue(default(float))]
     public float qw
     {
@@ -179,7 +114,7 @@ namespace update_protocol_v3
       set { _qw = value; }
     }
     private int _button_bits = default(int);
-    [global::ProtoBuf.ProtoMember(9, IsRequired = false, Name=@"button_bits", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::ProtoBuf.ProtoMember(10, IsRequired = false, Name=@"button_bits", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
     [global::System.ComponentModel.DefaultValue(default(int))]
     public int button_bits
     {
@@ -187,19 +122,20 @@ namespace update_protocol_v3
       set { _button_bits = value; }
     }
     private readonly global::System.Collections.Generic.List<update_protocol_v3.AxisButton> _axis_buttons = new global::System.Collections.Generic.List<update_protocol_v3.AxisButton>();
-    [global::ProtoBuf.ProtoMember(10, Name=@"axis_buttons", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::ProtoBuf.ProtoMember(11, Name=@"axis_buttons", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<update_protocol_v3.AxisButton> axis_buttons
     {
       get { return _axis_buttons; }
     }
   
-    private readonly global::System.Collections.Generic.List<update_protocol_v3.ExtraData> _extra_data = new global::System.Collections.Generic.List<update_protocol_v3.ExtraData>();
-    [global::ProtoBuf.ProtoMember(11, Name=@"extra_data", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<update_protocol_v3.ExtraData> extra_data
+    private string _extra_data = "";
+    [global::ProtoBuf.ProtoMember(12, IsRequired = false, Name=@"extra_data", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string extra_data
     {
       get { return _extra_data; }
+      set { _extra_data = value; }
     }
-  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -249,6 +185,14 @@ namespace update_protocol_v3
       get { return _live_objects; }
     }
   
+    private string _extra_data = "";
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"extra_data", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string extra_data
+    {
+      get { return _extra_data; }
+      set { _extra_data = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
