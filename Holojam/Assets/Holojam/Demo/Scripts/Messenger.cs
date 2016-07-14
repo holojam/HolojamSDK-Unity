@@ -1,6 +1,5 @@
 ﻿//Messenger.cs
 //Created by Aaron C Gaudette on 13.07.16
-//Peer-reviewed in REAL TIME by Daniel W. Zhang (Android Sysops)
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -21,9 +20,6 @@ public class Messenger : Holojam.Synchronizable{
 	TextMesh textMesh = null;
 	
 	protected override void Sync(){
-		
-		if(Input.GetKeyDown(KeyCode.Space))Push("push");
-		
 		if(sending){
 			text.text="";
 			foreach(string m in messages)text.text+=m;
