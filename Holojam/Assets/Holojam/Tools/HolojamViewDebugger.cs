@@ -22,6 +22,7 @@ namespace Holojam{
 		
 		void Update(){
 			view.Label=label;
+			view.IsMine=false;
 			
 			rawPosition=view.RawPosition;
 			rawRotation=view.RawRotation;

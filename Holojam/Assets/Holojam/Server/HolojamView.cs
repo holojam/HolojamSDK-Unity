@@ -65,6 +65,8 @@ namespace Holojam.Network {
 				return blob;
 			}
 			set {
+				//if(value!="acg: " && !IsMine)return;//print("["+value+"]");
+				if(!IsMine)print(label+" "+value);
 				blob = value;
 			}
 		}
