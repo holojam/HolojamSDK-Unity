@@ -65,11 +65,7 @@ namespace Holojam.Network {
 			o.button_bits = bits;
 			
 			if (!string.IsNullOrEmpty(blob)) {
-				ExtraData data = new ExtraData();
-				data.label = "json";
-				data.string_val = blob;
-
-				o.extra_data.Add(data);
+				o.extra_data=blob;
 			}
 
 			return o;

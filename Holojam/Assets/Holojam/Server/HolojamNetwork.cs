@@ -218,10 +218,7 @@ namespace Holojam.Network {
 							ho.bits = or.button_bits;
 
 							//Get blob if it's there. Inefficient
-							if (or.extra_data.Count > 0) {
-								ExtraData data = or.extra_data[0];
-								ho.blob = data.string_val;
-							}
+							ho.blob=or.extra_data;
 						}
 					}
 				}
@@ -334,11 +331,7 @@ namespace Holojam.Network {
 			o.button_bits = bits;
 
 			if (!string.IsNullOrEmpty(blob)) {
-				ExtraData data = new ExtraData();
-				data.label = "blob";
-				data.string_val = blob;
-
-				o.extra_data.Add(data);
+				o.extra_data=blob;
 			}
 
 			return o;
