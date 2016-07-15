@@ -436,7 +436,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &199191082
 Transform:
   m_ObjectHideFlags: 0
@@ -2385,7 +2385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bf1accd4fc91483d8d46808f7e3d139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  label: SyncedCube
+  label: Messenger
   rawPosition: {x: 0, y: 0, z: 0}
   rawRotation: {x: 0, y: 0, z: 0, w: 0}
   bits: 0
@@ -2401,7 +2401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  label: SyncedCube
+  label: Messenger
   isMine: 0
 --- !u!4 &1031375153
 Transform:
