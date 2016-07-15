@@ -10,7 +10,8 @@ namespace Holojam.IO
 	public class ViveEventData : PointerEventData
 	{
 		public ViveControllerModule module;
-		public SteamVR_TrackedObject controller;
+		public SteamVR_TrackedObject steamVRTrackedObject;
+		public int steamVRIndex;
 		public GameObject currentRaycast;
 		public GameObject previousRaycast;
 		public Vector2 touchpadAxis;
@@ -86,8 +87,8 @@ namespace Holojam.IO
 			eventData = new ViveEventData (EventSystem.current);
 
 			controller = this.GetComponent<SteamVR_TrackedObject> ();
+
 			eventData.module = this;
-			eventData.controller = this.controller;
 
 			foreach (EVRButtonId button in buttonIds) {
 				pressPairings.Add (button, null);

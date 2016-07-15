@@ -43,6 +43,7 @@ namespace Holojam.Network {
 
 			foreach (HolojamView view in HolojamView.instances) {
 				if (view.IsMine) {
+					view.IsTracked = true;
 					viewsToSend.Add(view);
 				} else {
 					if (string.IsNullOrEmpty(view.Label)) {
@@ -56,9 +57,11 @@ namespace Holojam.Network {
 						view.RawRotation = o.rotation;
 						view.Bits = o.bits;
 						view.Blob = o.blob;
-						view.IsTracked = true;
+						view.IsTracked = o.isTracked;
+						view.InObjectPool = true;
 					} else {
 						view.IsTracked = false;
+						view.InObjectPool = false;
 					}
 				}
 			}
@@ -84,7 +87,7 @@ namespace Holojam.Network {
 			}
 		}
 
-		public bool IsTracked(string label) {
+		public bool IsInObjectPool(string label) {
 			HolojamObject o;
 			return receiveThread.GetObject(label, out o);
 		}
@@ -217,6 +220,8 @@ namespace Holojam.Network {
 							}
 							ho.bits = or.button_bits;
 
+							ho.isTracked = or.is_tracked;
+
 							//Get blob if it's there. Inefficient
 							ho.blob=or.extra_data;
 						}
@@ -310,6 +315,7 @@ namespace Holojam.Network {
 		public Quaternion rotation = DEFAULT_ROTATION;
 		public int bits = 0;
 		public string blob = "";
+		public bool isTracked = false;
 
 		public HolojamObject(string label) {
 			this.label = label;
@@ -329,6 +335,7 @@ namespace Holojam.Network {
 			o.qw = rotation.w;
 
 			o.button_bits = bits;
+			o.is_tracked = isTracked;
 
 			if (!string.IsNullOrEmpty(blob)) {
 				o.extra_data=blob;

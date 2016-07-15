@@ -14,6 +14,7 @@ namespace Holojam.Network {
 		private int bits;
 		private string blob;
 		private bool isTracked = false;
+		private bool inObjectPool = false;
 
 		public string Label {
 			get {
@@ -71,12 +72,19 @@ namespace Holojam.Network {
 
 		public bool IsTracked {
 			get {
-				//Temporary fix until server is updated
-				return Application.isPlaying && (RawPosition!=Vector3.zero || isMine);
-				//return Application.isPlaying && (isMine || isTracked);
+				return Application.isPlaying && (isTracked || isMine);
 			}
 			set {
 				isTracked = value;
+			}
+		}
+
+		public bool InObjectPool {
+			get {
+				return inObjectPool;
+			} 
+			set {
+				inObjectPool = value;
 			}
 		}
 
