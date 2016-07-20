@@ -48,6 +48,7 @@ public class RoomGenerator : MonoBehaviour{
 		//Update for next quad
 		quadIndex++;
 	}
+
 	//Update mesh to engine
 	void ProcessMesh(){
 		mesh.Clear();

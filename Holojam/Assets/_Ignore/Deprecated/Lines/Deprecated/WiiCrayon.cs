@@ -4,7 +4,7 @@ using Holojam.IO;
 
 namespace Holojam.Crayons {
 	[RequireComponent(typeof(LineFactory))]
-	public class WiiCrayon : WiiGlobalReceiver, IGlobalWiiMoteAHandler, IGlobalWiiMoteBHandler {
+	public class WiiCrayon : GlobalReceiver, IGlobalWiiMoteAHandler, IGlobalWiiMoteBHandler {
 
 		protected LineFactory factory;
 		protected bool isDrawing = false;

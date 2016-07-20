@@ -9,19 +9,89 @@ namespace Holojam.IO
 {
 	public class ViveEventData : PointerEventData
 	{
-		public ViveControllerModule module;
-		public SteamVR_TrackedObject steamVRTrackedObject;
-		public int steamVRIndex;
-		public GameObject currentRaycast;
-		public GameObject previousRaycast;
-		public Vector2 touchpadAxis;
-		public Vector2 triggerAxis;
-		public GameObject applicationMenuPress;
-		public GameObject gripPress;
-		public GameObject touchpadPress;
-		public GameObject triggerPress;
-		public GameObject touchpadTouch;
-		public GameObject triggerTouch;
+    /// <summary>
+    /// The ViveControllerModule that manages the instance of ViveEventData.
+    /// </summary>
+		public ViveControllerModule Module {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The SteamVR Tracked Object connected to the module.
+    /// </summary>
+		public SteamVR_TrackedObject SteamVRTrackedObject {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The GameObject currently hit by a raycast from the module.
+    /// </summary>
+		public GameObject CurrentRaycast {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The GameObject previously hit by a raycast from the module.
+    /// </summary>
+		public GameObject PreviousRaycast {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The current touchpad axis values of the controller connected to the module.
+    /// </summary>
+		public Vector2 TouchpadAxis {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The current trigger axis value of the controller connected to the module.
+    /// </summary>
+		public Vector2 TriggerAxis {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The GameObject bound to the current press context of the Application Menu button.
+    /// </summary>
+		public GameObject ApplicationMenuPress {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The GameObject bound to the current press context of the Grip button.
+    /// </summary>
+		public GameObject GripPress {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The GameObject bound to the current press context of the Touchpad button.
+    /// </summary>
+		public GameObject TouchpadPress {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The GameObject bound to the current press context of the Trigger button.
+    /// </summary>
+		public GameObject TriggerPress {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The GameObject bound to the current touch context of the Touchpad button.
+    /// </summary>
+		public GameObject TouchpadTouch {
+      get; private set;
+    }
+
+    /// <summary>
+    /// The GameObject bound to the current touch context of the Trigger button.
+    /// </summary>
+		public GameObject TriggerTouch {
+      get; private set;
+    }
 
 		public ViveEventData (EventSystem eventSystem)
 			: base (eventSystem)
@@ -88,7 +158,7 @@ namespace Holojam.IO
 
 			controller = this.GetComponent<SteamVR_TrackedObject> ();
 
-			eventData.module = this;
+			eventData.Module = this;
 
 			foreach (EVRButtonId button in buttonIds) {
 				pressPairings.Add (button, null);
@@ -116,7 +186,7 @@ namespace Holojam.IO
 				this.ExecuteGlobalTouchUp (button);
 			}
 
-			eventData.currentRaycast = null;
+			eventData.CurrentRaycast = null;
 			this.UpdateCurrentObject ();
 
 		}
@@ -155,10 +225,10 @@ namespace Holojam.IO
 			Quaternion q = boundObject.rotation;
 			ray = new Ray (v, q * Vector3.forward);
 			hits.AddRange (Physics.RaycastAll (ray, interactDistance));
-			eventData.previousRaycast = eventData.currentRaycast;
+			eventData.PreviousRaycast = eventData.CurrentRaycast;
 
 			if (hits.Count == 0) {
-				eventData.currentRaycast = null;
+				eventData.CurrentRaycast = null;
 				return;
 			}
 
@@ -172,10 +242,10 @@ namespace Holojam.IO
 
 			//MAKE SURE CLOSEST OBJECT IS INTERACTABLE
 			if (interactTag != null && interactTag.Length > 1 && !minHit.transform.tag.Equals (interactTag)) {
-				eventData.currentRaycast = null;
+				eventData.CurrentRaycast = null;
 				return;
 			} else {
-				eventData.currentRaycast = minHit.transform.gameObject;
+				eventData.CurrentRaycast = minHit.transform.gameObject;
 			}
 		}
 
@@ -186,9 +256,9 @@ namespace Holojam.IO
 
 		void HandlePointerExitAndEnter (ViveEventData eventData)
 		{
-			if (eventData.previousRaycast != eventData.currentRaycast) {
-				ExecuteEvents.Execute<IPointerEnterHandler> (eventData.currentRaycast, eventData, ExecuteEvents.pointerEnterHandler);
-				ExecuteEvents.Execute<IPointerExitHandler> (eventData.previousRaycast, eventData, ExecuteEvents.pointerExitHandler);
+			if (eventData.PreviousRaycast != eventData.CurrentRaycast) {
+				ExecuteEvents.Execute<IPointerEnterHandler> (eventData.CurrentRaycast, eventData, ExecuteEvents.pointerEnterHandler);
+				ExecuteEvents.Execute<IPointerExitHandler> (eventData.PreviousRaycast, eventData, ExecuteEvents.pointerExitHandler);
 			}
 		}
 
@@ -201,8 +271,8 @@ namespace Holojam.IO
 		{
 			int index = (int)controller.index;
 
-			eventData.touchpadAxis = SteamVR_Controller.Input (index).GetAxis (axisIds [0]);
-			eventData.triggerAxis = SteamVR_Controller.Input (index).GetAxis (axisIds [1]);
+			eventData.TouchpadAxis = SteamVR_Controller.Input (index).GetAxis (axisIds [0]);
+			eventData.TriggerAxis = SteamVR_Controller.Input (index).GetAxis (axisIds [1]);
 
 			//Press
 			foreach (EVRButtonId button in buttonIds) {
@@ -235,29 +305,29 @@ namespace Holojam.IO
 
 		private void ExecutePressDown (EVRButtonId id)
 		{
-			GameObject go = eventData.currentRaycast;
+			GameObject go = eventData.CurrentRaycast;
 			if (go == null)
 				return;
 
 			switch (id) {
 			case EVRButtonId.k_EButton_ApplicationMenu:
-				eventData.applicationMenuPress = go;
-				ExecuteEvents.Execute<IApplicationMenuPressDownHandler> (eventData.applicationMenuPress, eventData,
+				eventData.ApplicationMenuPress = go;
+				ExecuteEvents.Execute<IApplicationMenuPressDownHandler> (eventData.ApplicationMenuPress, eventData,
 					(x, y) => x.OnApplicationMenuPressDown (eventData));
 				break;
 			case EVRButtonId.k_EButton_Grip:
-				eventData.gripPress = go;
-				ExecuteEvents.Execute<IGripPressDownHandler> (eventData.gripPress, eventData,
+				eventData.GripPress = go;
+				ExecuteEvents.Execute<IGripPressDownHandler> (eventData.GripPress, eventData,
 					(x, y) => x.OnGripPressDown (eventData));
 				break;
 			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				eventData.touchpadPress = go;
-				ExecuteEvents.Execute<ITouchpadPressDownHandler> (eventData.touchpadPress, eventData,
+				eventData.TouchpadPress = go;
+				ExecuteEvents.Execute<ITouchpadPressDownHandler> (eventData.TouchpadPress, eventData,
 					(x, y) => x.OnTouchpadPressDown (eventData));
 				break;
 			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				eventData.triggerPress = go;
-				ExecuteEvents.Execute<ITriggerPressDownHandler> (eventData.triggerPress, eventData,
+				eventData.TriggerPress = go;
+				ExecuteEvents.Execute<ITriggerPressDownHandler> (eventData.TriggerPress, eventData,
 					(x, y) => x.OnTriggerPressDown (eventData));
 				break;
 			}
@@ -273,19 +343,19 @@ namespace Holojam.IO
 
 			switch (id) {
 			case EVRButtonId.k_EButton_ApplicationMenu:
-				ExecuteEvents.Execute<IApplicationMenuPressHandler> (eventData.applicationMenuPress, eventData,
+				ExecuteEvents.Execute<IApplicationMenuPressHandler> (eventData.ApplicationMenuPress, eventData,
 					(x, y) => x.OnApplicationMenuPress (eventData));
 				break;
 			case EVRButtonId.k_EButton_Grip:
-				ExecuteEvents.Execute<IGripPressHandler> (eventData.gripPress, eventData,
+				ExecuteEvents.Execute<IGripPressHandler> (eventData.GripPress, eventData,
 					(x, y) => x.OnGripPress (eventData));
 				break;
 			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				ExecuteEvents.Execute<ITouchpadPressHandler> (eventData.touchpadPress, eventData,
+				ExecuteEvents.Execute<ITouchpadPressHandler> (eventData.TouchpadPress, eventData,
 					(x, y) => x.OnTouchpadPress (eventData));
 				break;
 			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				ExecuteEvents.Execute<ITriggerPressHandler> (eventData.triggerPress, eventData,
+				ExecuteEvents.Execute<ITriggerPressHandler> (eventData.TriggerPress, eventData,
 					(x, y) => x.OnTriggerPress (eventData));
 				break;
 			}
@@ -298,24 +368,24 @@ namespace Holojam.IO
 
 			switch (id) {
 			case EVRButtonId.k_EButton_ApplicationMenu:
-				ExecuteEvents.Execute<IApplicationMenuPressUpHandler> (eventData.applicationMenuPress, eventData,
+				ExecuteEvents.Execute<IApplicationMenuPressUpHandler> (eventData.ApplicationMenuPress, eventData,
 					(x, y) => x.OnApplicationMenuPressUp (eventData));
-				eventData.applicationMenuPress = null;
+				eventData.ApplicationMenuPress = null;
 				break;
 			case EVRButtonId.k_EButton_Grip:
-				ExecuteEvents.Execute<IGripPressUpHandler> (eventData.gripPress, eventData,
+				ExecuteEvents.Execute<IGripPressUpHandler> (eventData.GripPress, eventData,
 					(x, y) => x.OnGripPressUp (eventData));
-				eventData.gripPress = null;
+				eventData.GripPress = null;
 				break;
 			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				ExecuteEvents.Execute<ITouchpadPressUpHandler> (eventData.touchpadPress, eventData,
+				ExecuteEvents.Execute<ITouchpadPressUpHandler> (eventData.TouchpadPress, eventData,
 					(x, y) => x.OnTouchpadPressUp (eventData));
-				eventData.touchpadPress = null;
+				eventData.TouchpadPress = null;
 				break;
 			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				ExecuteEvents.Execute<ITriggerPressUpHandler> (eventData.triggerPress, eventData,
+				ExecuteEvents.Execute<ITriggerPressUpHandler> (eventData.TriggerPress, eventData,
 					(x, y) => x.OnTriggerPressUp (eventData));
-				eventData.triggerPress = null;
+				eventData.TriggerPress = null;
 				break;
 			}
 
@@ -324,19 +394,19 @@ namespace Holojam.IO
 
 		private void ExecuteTouchDown (EVRButtonId id)
 		{
-			GameObject go = eventData.currentRaycast;
+			GameObject go = eventData.CurrentRaycast;
 			if (go == null)
 				return;
 
 			switch (id) {
 			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				eventData.touchpadTouch = go;
-				ExecuteEvents.Execute<ITouchpadTouchDownHandler> (eventData.touchpadTouch, eventData,
+				eventData.TouchpadTouch = go;
+				ExecuteEvents.Execute<ITouchpadTouchDownHandler> (eventData.TouchpadTouch, eventData,
 					(x, y) => x.OnTouchpadTouchDown (eventData));
 				break;
 			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				eventData.triggerTouch = go;
-				ExecuteEvents.Execute<ITriggerTouchDownHandler> (eventData.triggerTouch, eventData,
+				eventData.TriggerTouch = go;
+				ExecuteEvents.Execute<ITriggerTouchDownHandler> (eventData.TriggerTouch, eventData,
 					(x, y) => x.OnTriggerTouchDown (eventData));
 				break;
 			}
@@ -351,11 +421,11 @@ namespace Holojam.IO
 
 			switch (id) {
 			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				ExecuteEvents.Execute<ITouchpadTouchHandler> (eventData.touchpadTouch, eventData,
+				ExecuteEvents.Execute<ITouchpadTouchHandler> (eventData.TouchpadTouch, eventData,
 					(x, y) => x.OnTouchpadTouch (eventData));
 				break;
 			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				ExecuteEvents.Execute<ITriggerTouchHandler> (eventData.triggerTouch, eventData,
+				ExecuteEvents.Execute<ITriggerTouchHandler> (eventData.TriggerTouch, eventData,
 					(x, y) => x.OnTriggerTouch (eventData));
 				break;
 			}
@@ -368,14 +438,14 @@ namespace Holojam.IO
 
 			switch (id) {
 			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				ExecuteEvents.Execute<ITouchpadTouchUpHandler> (eventData.touchpadTouch, eventData,
+				ExecuteEvents.Execute<ITouchpadTouchUpHandler> (eventData.TouchpadTouch, eventData,
 					(x, y) => x.OnTouchpadTouchUp (eventData));
-				eventData.touchpadTouch = null;
+				eventData.TouchpadTouch = null;
 				break;
 			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				ExecuteEvents.Execute<ITriggerTouchUpHandler> (eventData.triggerTouch, eventData,
+				ExecuteEvents.Execute<ITriggerTouchUpHandler> (eventData.TriggerTouch, eventData,
 					(x, y) => x.OnTriggerTouchUp (eventData));
-				eventData.triggerTouch = null;
+				eventData.TriggerTouch = null;
 				break;
 			}
 		}
