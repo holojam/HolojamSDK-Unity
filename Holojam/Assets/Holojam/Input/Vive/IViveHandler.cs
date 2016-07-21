@@ -12,29 +12,29 @@ namespace Holojam.IO {
 	public interface IApplicationMenuHandler : IApplicationMenuPressDownHandler, IApplicationMenuPressHandler, IApplicationMenuPressUpHandler { }
 
 	public interface IApplicationMenuPressDownHandler : IEventSystemHandler {
-		void OnApplicationMenuPressDown(ViveEventData eventData);
+		void OnApplicationMenuPressDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IApplicationMenuPressHandler : IEventSystemHandler {
-		void OnApplicationMenuPress(ViveEventData eventData);
+		void OnApplicationMenuPress(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IApplicationMenuPressUpHandler : IEventSystemHandler {
-		void OnApplicationMenuPressUp(ViveEventData eventData);
+		void OnApplicationMenuPressUp(ViveControllerModule.EventData eventData);
 	}
 
 	//GRIP HANDLER
 	public interface IGripHandler : IGripPressDownHandler, IGripPressHandler, IGripPressUpHandler { }
 
 	public interface IGripPressDownHandler : IEventSystemHandler {
-		void OnGripPressDown(ViveEventData eventData);
+		void OnGripPressDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGripPressHandler : IEventSystemHandler {
-		void OnGripPress(ViveEventData eventData);
+		void OnGripPress(ViveControllerModule.EventData eventData);
 	}
 	public interface IGripPressUpHandler : IEventSystemHandler {
-		void OnGripPressUp(ViveEventData eventData);
+		void OnGripPressUp(ViveControllerModule.EventData eventData);
 	}
 
 	//TOUCHPAD HANDLER
@@ -43,27 +43,27 @@ namespace Holojam.IO {
 	public interface ITouchpadTouchSetHandler : ITouchpadTouchDownHandler, ITouchpadTouchHandler, ITouchpadTouchUpHandler { }
 
 	public interface ITouchpadPressDownHandler : IEventSystemHandler {
-		void OnTouchpadPressDown(ViveEventData eventData);
+		void OnTouchpadPressDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITouchpadPressHandler : IEventSystemHandler {
-		void OnTouchpadPress(ViveEventData eventData);
+		void OnTouchpadPress(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITouchpadPressUpHandler : IEventSystemHandler {
-		void OnTouchpadPressUp(ViveEventData eventData);
+		void OnTouchpadPressUp(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITouchpadTouchDownHandler : IEventSystemHandler {
-		void OnTouchpadTouchDown(ViveEventData eventData);
+		void OnTouchpadTouchDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITouchpadTouchHandler : IEventSystemHandler {
-		void OnTouchpadTouch(ViveEventData eventData);
+		void OnTouchpadTouch(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITouchpadTouchUpHandler : IEventSystemHandler {
-		void OnTouchpadTouchUp(ViveEventData eventData);
+		void OnTouchpadTouchUp(ViveControllerModule.EventData eventData);
 	}
 
 	//TRIGGER HANDLER
@@ -72,27 +72,27 @@ namespace Holojam.IO {
 	public interface ITriggerTouchSetHandler : ITriggerTouchDownHandler, ITriggerTouchHandler, ITriggerTouchUpHandler { }
 
 	public interface ITriggerPressDownHandler : IEventSystemHandler {
-		void OnTriggerPressDown(ViveEventData eventData);
+		void OnTriggerPressDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITriggerPressHandler : IEventSystemHandler {
-		void OnTriggerPress(ViveEventData eventData);
+		void OnTriggerPress(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITriggerPressUpHandler : IEventSystemHandler {
-		void OnTriggerPressUp(ViveEventData eventData);
+		void OnTriggerPressUp(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITriggerTouchDownHandler : IEventSystemHandler {
-		void OnTriggerTouchDown(ViveEventData eventData);
+		void OnTriggerTouchDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITriggerTouchHandler : IEventSystemHandler {
-		void OnTriggerTouch(ViveEventData eventData);
+		void OnTriggerTouch(ViveControllerModule.EventData eventData);
 	}
 
 	public interface ITriggerTouchUpHandler : IEventSystemHandler {
-		void OnTriggerTouchUp(ViveEventData eventData);
+		void OnTriggerTouchUp(ViveControllerModule.EventData eventData);
 	}
 
 
@@ -103,15 +103,15 @@ namespace Holojam.IO {
 	public interface IGlobalGripHandler : IGlobalGripPressDownHandler, IGlobalGripPressHandler, IGlobalGripPressUpHandler { }
 
 	public interface IGlobalGripPressDownHandler : IEventSystemHandler {
-		void OnGlobalGripPressDown(ViveEventData eventData);
+		void OnGlobalGripPressDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalGripPressHandler : IEventSystemHandler {
-		void OnGlobalGripPress(ViveEventData eventData);
+		void OnGlobalGripPress(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalGripPressUpHandler : IEventSystemHandler {
-		void OnGlobalGripPressUp(ViveEventData eventData);
+		void OnGlobalGripPressUp(ViveControllerModule.EventData eventData);
 	}
 
 
@@ -121,42 +121,42 @@ namespace Holojam.IO {
 	public interface IGlobalTriggerTouchSetHandler : IGlobalTriggerTouchDownHandler, IGlobalTriggerTouchHandler, IGlobalTriggerTouchUpHandler { }
 
 	public interface IGlobalTriggerPressDownHandler : IEventSystemHandler {
-		void OnGlobalTriggerPressDown(ViveEventData eventData);
+		void OnGlobalTriggerPressDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTriggerPressHandler : IEventSystemHandler {
-		void OnGlobalTriggerPress(ViveEventData eventData);
+		void OnGlobalTriggerPress(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTriggerPressUpHandler : IEventSystemHandler {
-		void OnGlobalTriggerPressUp(ViveEventData eventData);
+		void OnGlobalTriggerPressUp(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTriggerTouchDownHandler : IEventSystemHandler {
-		void OnGlobalTriggerTouchDown(ViveEventData eventData);
+		void OnGlobalTriggerTouchDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTriggerTouchHandler : IEventSystemHandler {
-		void OnGlobalTriggerTouch(ViveEventData eventData);
+		void OnGlobalTriggerTouch(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTriggerTouchUpHandler : IEventSystemHandler {
-		void OnGlobalTriggerTouchUp(ViveEventData eventData);
+		void OnGlobalTriggerTouchUp(ViveControllerModule.EventData eventData);
 	}
 
 	//GLOBAL APPLICATION MENU
 	public interface IGlobalApplicationMenuHandler : IGlobalApplicationMenuPressDownHandler, IGlobalApplicationMenuPressHandler, IGlobalApplicationMenuPressUpHandler { }
 
 	public interface IGlobalApplicationMenuPressDownHandler : IEventSystemHandler {
-		void OnGlobalApplicationMenuPressDown(ViveEventData eventData);
+		void OnGlobalApplicationMenuPressDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalApplicationMenuPressHandler : IEventSystemHandler {
-		void OnGlobalApplicationMenuPress(ViveEventData eventData);
+		void OnGlobalApplicationMenuPress(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalApplicationMenuPressUpHandler : IEventSystemHandler {
-		void OnGlobalApplicationMenuPressUp(ViveEventData eventData);
+		void OnGlobalApplicationMenuPressUp(ViveControllerModule.EventData eventData);
 	}
 
 	//GLOBAL TOUCHPAD 
@@ -166,27 +166,27 @@ namespace Holojam.IO {
 	public interface IGlobalTouchpadTouchSetHandler : IGlobalTouchpadTouchDownHandler, IGlobalTouchpadTouchHandler, IGlobalTouchpadTouchUpHandler { }
 
 	public interface IGlobalTouchpadPressDownHandler : IEventSystemHandler {
-		void OnGlobalTouchpadPressDown(ViveEventData eventData);
+		void OnGlobalTouchpadPressDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTouchpadPressHandler : IEventSystemHandler {
-		void OnGlobalTouchpadPress(ViveEventData eventData);
+		void OnGlobalTouchpadPress(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTouchpadPressUpHandler : IEventSystemHandler {
-		void OnGlobalTouchpadPressUp(ViveEventData eventData);
+		void OnGlobalTouchpadPressUp(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTouchpadTouchDownHandler : IEventSystemHandler {
-		void OnGlobalTouchpadTouchDown(ViveEventData eventData);
+		void OnGlobalTouchpadTouchDown(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTouchpadTouchHandler : IEventSystemHandler {
-		void OnGlobalTouchpadTouch(ViveEventData eventData);
+		void OnGlobalTouchpadTouch(ViveControllerModule.EventData eventData);
 	}
 
 	public interface IGlobalTouchpadTouchUpHandler : IEventSystemHandler {
-		void OnGlobalTouchpadTouchUp(ViveEventData eventData);
+		void OnGlobalTouchpadTouchUp(ViveControllerModule.EventData eventData);
 	}
 }
 #endif

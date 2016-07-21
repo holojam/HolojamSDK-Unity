@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Holojam.IO {
@@ -18,12 +17,12 @@ namespace Holojam.IO {
     /// <summary>
     /// Optional paired module for instance.
     /// <remarks>
-    /// If populated, this instance will only receive input from this module.
+    /// If not null, this instance will only receive input from this module.
     /// </remarks>
     /// </summary>
     public BaseInputModule module;
 
-    private static List<GlobalReceiver> instances = new List<GlobalReceiver>();
+    private static List<GlobalReceiver> instanceCache = new List<GlobalReceiver>();
     private static System.Object instanceLock = new System.Object();
 
     /// <summary>
@@ -32,7 +31,7 @@ namespace Holojam.IO {
     /// <value>
     /// Returns a copy of the instances.
     /// </value>
-    public static List<GlobalReceiver> Instances {
+    public static List<GlobalReceiver> instances {
       get {
         lock (instanceLock) {
           return GetCopyOfInstances();
@@ -45,7 +44,9 @@ namespace Holojam.IO {
     /// </summary>
     /// <returns></returns>
     public static List<GlobalReceiver> GetCopyOfInstances() {
-      return new List<GlobalReceiver>(instances);
+      lock (instanceLock) {
+        return new List<GlobalReceiver>(instanceCache);
+      }
     }
 
     /// <summary>
@@ -53,16 +54,16 @@ namespace Holojam.IO {
     /// </summary>
     protected virtual void OnEnable() {
       lock (instanceLock) {
-        instances.Add(this);
+        instanceCache.Add(this);
       }
     }
 
     /// <summary>
     /// Removes this instance from the list of instances, when it is disabled.
     /// </summary>
-    protected virtual void OnDestroy() {
+    protected virtual void OnDisable() {
       lock (instanceLock) {
-        instances.Remove(this);
+        instanceCache.Remove(this);
       }
     }
   }

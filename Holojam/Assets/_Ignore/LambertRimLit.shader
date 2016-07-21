@@ -1,3 +1,6 @@
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
 //LambertRimLit.shader
 //Created by Aaron C Gaudette on 20.08.14
 //Like the Lambert shader, but with rim lighting
@@ -50,11 +53,11 @@ Shader "Custom/Fragment/Lambert Rim Lit"{
 				
 				//Vertex position
 				output.pos = mul(UNITY_MATRIX_MVP,input.vertex);
-				float4 worldPosition = mul(_Object2World,input.vertex);
+				float4 worldPosition = mul(unity_ObjectToWorld,input.vertex);
 				
 				//Direction vectors
 				fixed3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - worldPosition.xyz);
-				fixed3 normalDirection = normalize(mul(float4(input.normal,0.0),_World2Object).xyz);
+				fixed3 normalDirection = normalize(mul(float4(input.normal,0.0),unity_WorldToObject).xyz);
 				
 				half3 vertexToLightSource = _WorldSpaceLightPos0.xyz - worldPosition.xyz;
 				//Modify attenuation based on light source (directional or point)
@@ -122,11 +125,11 @@ Shader "Custom/Fragment/Lambert Rim Lit"{
 				
 				//Vertex position
 				output.pos = mul(UNITY_MATRIX_MVP,input.vertex);
-				float4 worldPosition = mul(_Object2World,input.vertex);
+				float4 worldPosition = mul(unity_ObjectToWorld,input.vertex);
 				
 				//Direction vectors
 				fixed3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - worldPosition.xyz);
-				fixed3 normalDirection = normalize(mul(float4(input.normal,0.0),_World2Object).xyz);
+				fixed3 normalDirection = normalize(mul(float4(input.normal,0.0),unity_WorldToObject).xyz);
 				
 				half3 vertexToLightSource = _WorldSpaceLightPos0.xyz - worldPosition.xyz;
 				//Modify attenuation based on light source (directional or point)

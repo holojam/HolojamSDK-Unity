@@ -1,631 +1,675 @@
 ﻿#if VIVE
 using UnityEngine;
-using System.Collections;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using Valve.VR;
 
-namespace Holojam.IO
-{
-	public class ViveEventData : PointerEventData
-	{
-    /// <summary>
-    /// The ViveControllerModule that manages the instance of ViveEventData.
-    /// </summary>
-		public ViveControllerModule Module {
-      get; private set;
+namespace Holojam.IO {
+  [RequireComponent(typeof(SteamVR_TrackedObject))]
+  public class ViveControllerModule : BaseInputModule {
+
+    /////Public/////
+    //References
+    //Primitives
+    [Tooltip("Optional tag for limiting interaction.")]
+    public string interactTag;
+    [Range(0, float.MaxValue)]
+    [Tooltip("Interaction range of the module.")]
+    public float interactDistance = 10f;
+
+    /////Private/////
+    //References
+    private Dictionary<EVRButtonId, GameObject> pressPairings = new Dictionary<EVRButtonId, GameObject>();
+    private Dictionary<EVRButtonId, List<GlobalReceiver>> pressReceivers = new Dictionary<EVRButtonId, List<GlobalReceiver>>();
+    private Dictionary<EVRButtonId, GameObject> touchPairings = new Dictionary<EVRButtonId, GameObject>();
+    private Dictionary<EVRButtonId, List<GlobalReceiver>> touchReceivers = new Dictionary<EVRButtonId, List<GlobalReceiver>>();
+    private SteamVR_TrackedObject controller;
+    private EventData eventData;
+
+    private List<RaycastHit> hits = new List<RaycastHit>();
+    private Ray ray;
+
+    //Steam Controller button and axis ids
+    private EVRButtonId[] pressIds = new EVRButtonId[] {
+      EVRButtonId.k_EButton_ApplicationMenu,
+      EVRButtonId.k_EButton_Grip,
+      EVRButtonId.k_EButton_SteamVR_Touchpad,
+      EVRButtonId.k_EButton_SteamVR_Trigger
+    };
+
+    private EVRButtonId[] touchIds = new EVRButtonId[] {
+      EVRButtonId.k_EButton_SteamVR_Touchpad,
+      EVRButtonId.k_EButton_SteamVR_Trigger
+    };
+
+    private EVRButtonId[] axisIds = new EVRButtonId[] {
+      EVRButtonId.k_EButton_SteamVR_Touchpad,
+      EVRButtonId.k_EButton_SteamVR_Trigger
+    };
+
+    protected override void Awake() {
+      base.Awake();
+
+      controller = this.GetComponent<SteamVR_TrackedObject>();
+      eventData = new EventData(this, controller, EventSystem.current);
+
+      foreach (EVRButtonId button in pressIds) {
+        pressPairings.Add(button, null);
+        pressReceivers.Add(button, null);
+      }
+
+      foreach (EVRButtonId button in touchIds) {
+        touchPairings.Add(button, null);
+        touchReceivers.Add(button, null);
+      }
+    }
+    
+    protected override void OnDisable() {
+      base.OnDisable();
+
+      foreach (EVRButtonId button in pressIds) {
+        this.ExecutePressUp(button);
+        this.ExecuteGlobalPressUp(button);
+      }
+
+      foreach (EVRButtonId button in touchIds) {
+        this.ExecuteTouchUp(button);
+        this.ExecuteGlobalTouchUp(button);
+      }
+
+      eventData.currentRaycast = null;
+      this.UpdateCurrentObject();
+      eventData.Reset();
+    }
+
+    void Update() {
+      this.Raycast();
+      this.UpdateCurrentObject();
+      this.HandleButtons();
     }
 
     /// <summary>
-    /// The SteamVR Tracked Object connected to the module.
+    /// Unused; part of inheriting from BaseInputModule. Will be removed later.
+    /// Does not affect the API.
     /// </summary>
-		public SteamVR_TrackedObject SteamVRTrackedObject {
-      get; private set;
+    public override void Process() {
     }
 
-    /// <summary>
-    /// The GameObject currently hit by a raycast from the module.
-    /// </summary>
-		public GameObject CurrentRaycast {
-      get; private set;
+    private void Raycast() {
+      hits.Clear();
+
+      //CAST RAY
+      Vector3 v = transform.position;
+      Quaternion q = transform.rotation;
+      ray = new Ray(v, q * Vector3.forward);
+      hits.AddRange(Physics.RaycastAll(ray, interactDistance));
+      eventData.previousRaycast = eventData.currentRaycast;
+
+      if (hits.Count == 0) {
+        eventData.SetCurrentRaycast(null, Vector3.zero, Vector3.zero);
+        return;
+      }
+
+      //find the closest object.
+      RaycastHit minHit = hits[0];
+      for (int i = 0; i < hits.Count; i++) {
+        if (hits[i].distance < minHit.distance) {
+          minHit = hits[i];
+        }
+      }
+
+      //make sure the closest object is able to be interacted with.
+      if (interactTag != null && interactTag.Length > 1 
+        && !minHit.transform.tag.Equals(interactTag)) {
+        eventData.SetCurrentRaycast(null, Vector3.zero, Vector3.zero);
+      } else {
+        eventData.SetCurrentRaycast(
+          minHit.transform.gameObject, minHit.normal, minHit.point);
+      }
     }
 
-    /// <summary>
-    /// The GameObject previously hit by a raycast from the module.
-    /// </summary>
-		public GameObject PreviousRaycast {
-      get; private set;
+    void UpdateCurrentObject() {
+      this.HandlePointerExitAndEnter(eventData);
     }
 
-    /// <summary>
-    /// The current touchpad axis values of the controller connected to the module.
-    /// </summary>
-		public Vector2 TouchpadAxis {
-      get; private set;
+    void HandlePointerExitAndEnter(EventData eventData) {
+      if (eventData.previousRaycast != eventData.currentRaycast) {
+        ExecuteEvents.Execute<IPointerEnterHandler>(
+          eventData.currentRaycast, eventData, ExecuteEvents.pointerEnterHandler);
+        ExecuteEvents.Execute<IPointerExitHandler>(
+          eventData.previousRaycast, eventData, ExecuteEvents.pointerExitHandler);
+      }
     }
 
-    /// <summary>
-    /// The current trigger axis value of the controller connected to the module.
-    /// </summary>
-		public Vector2 TriggerAxis {
-      get; private set;
+    void HandleButtons() {
+      int index = (int) controller.index;
+
+      eventData.touchpadAxis = SteamVR_Controller.Input(index).GetAxis(axisIds[0]);
+      eventData.triggerAxis = SteamVR_Controller.Input(index).GetAxis(axisIds[1]);
+
+      //Press
+      foreach (EVRButtonId button in pressIds) {
+        if (GetPressDown(index, button)) {
+          ExecutePressDown(button);
+          ExecuteGlobalPressDown(button);
+        } else if (GetPress(index, button)) {
+          ExecutePress(button);
+          ExecuteGlobalPress(button);
+        } else if (GetPressUp(index, button)) {
+          ExecutePressUp(button);
+          ExecuteGlobalPressUp(button);
+        }
+      }
+
+      //Touch
+      foreach (EVRButtonId button in touchIds) {
+        if (GetTouchDown(index, button)) {
+          ExecuteTouchDown(button);
+          ExecuteGlobalTouchDown(button);
+        } else if (GetTouch(index, button)) {
+          ExecuteTouch(button);
+          ExecuteGlobalTouch(button);
+        } else if (GetTouchUp(index, button)) {
+          ExecuteTouchUp(button);
+          ExecuteGlobalTouchUp(button);
+        }
+      }
     }
 
-    /// <summary>
-    /// The GameObject bound to the current press context of the Application Menu button.
-    /// </summary>
-		public GameObject ApplicationMenuPress {
-      get; private set;
+    private void ExecutePressDown(EVRButtonId id) {
+      GameObject go = eventData.currentRaycast;
+      if (go == null)
+        return;
+
+      switch (id) {
+        case EVRButtonId.k_EButton_ApplicationMenu:
+          eventData.applicationMenuPress = go;
+          ExecuteEvents.Execute<IApplicationMenuPressDownHandler>(eventData.applicationMenuPress, eventData,
+            (x, y) => x.OnApplicationMenuPressDown(eventData));
+          break;
+        case EVRButtonId.k_EButton_Grip:
+          eventData.gripPress = go;
+          ExecuteEvents.Execute<IGripPressDownHandler>(eventData.gripPress, eventData,
+            (x, y) => x.OnGripPressDown(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          eventData.touchpadPress = go;
+          ExecuteEvents.Execute<ITouchpadPressDownHandler>(eventData.touchpadPress, eventData,
+            (x, y) => x.OnTouchpadPressDown(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          eventData.triggerPress = go;
+          ExecuteEvents.Execute<ITriggerPressDownHandler>(eventData.triggerPress, eventData,
+            (x, y) => x.OnTriggerPressDown(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+
+      //Add pairing.
+      pressPairings[id] = go;
     }
 
-    /// <summary>
-    /// The GameObject bound to the current press context of the Grip button.
-    /// </summary>
-		public GameObject GripPress {
-      get; private set;
+    private void ExecutePress(EVRButtonId id) {
+      if (pressPairings[id] == null)
+        return;
+
+      switch (id) {
+        case EVRButtonId.k_EButton_ApplicationMenu:
+          ExecuteEvents.Execute<IApplicationMenuPressHandler>(eventData.applicationMenuPress, eventData,
+            (x, y) => x.OnApplicationMenuPress(eventData));
+          break;
+        case EVRButtonId.k_EButton_Grip:
+          ExecuteEvents.Execute<IGripPressHandler>(eventData.gripPress, eventData,
+            (x, y) => x.OnGripPress(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          ExecuteEvents.Execute<ITouchpadPressHandler>(eventData.touchpadPress, eventData,
+            (x, y) => x.OnTouchpadPress(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          ExecuteEvents.Execute<ITriggerPressHandler>(eventData.triggerPress, eventData,
+            (x, y) => x.OnTriggerPress(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
     }
 
-    /// <summary>
-    /// The GameObject bound to the current press context of the Touchpad button.
-    /// </summary>
-		public GameObject TouchpadPress {
-      get; private set;
+    private void ExecutePressUp(EVRButtonId id) {
+      if (pressPairings[id] == null)
+        return;
+
+      switch (id) {
+        case EVRButtonId.k_EButton_ApplicationMenu:
+          ExecuteEvents.Execute<IApplicationMenuPressUpHandler>(eventData.applicationMenuPress, eventData,
+            (x, y) => x.OnApplicationMenuPressUp(eventData));
+          eventData.applicationMenuPress = null;
+          break;
+        case EVRButtonId.k_EButton_Grip:
+          ExecuteEvents.Execute<IGripPressUpHandler>(eventData.gripPress, eventData,
+            (x, y) => x.OnGripPressUp(eventData));
+          eventData.gripPress = null;
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          ExecuteEvents.Execute<ITouchpadPressUpHandler>(eventData.touchpadPress, eventData,
+            (x, y) => x.OnTouchpadPressUp(eventData));
+          eventData.touchpadPress = null;
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          ExecuteEvents.Execute<ITriggerPressUpHandler>(eventData.triggerPress, eventData,
+            (x, y) => x.OnTriggerPressUp(eventData));
+          eventData.triggerPress = null;
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+
+      //Remove pairing.
+      pressPairings[id] = null;
     }
 
-    /// <summary>
-    /// The GameObject bound to the current press context of the Trigger button.
-    /// </summary>
-		public GameObject TriggerPress {
-      get; private set;
+    private void ExecuteTouchDown(EVRButtonId id) {
+      GameObject go = eventData.currentRaycast;
+      if (go == null)
+        return;
+
+      switch (id) {
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          eventData.touchpadTouch = go;
+          ExecuteEvents.Execute<ITouchpadTouchDownHandler>(eventData.touchpadTouch, eventData,
+            (x, y) => x.OnTouchpadTouchDown(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          eventData.triggerTouch = go;
+          ExecuteEvents.Execute<ITriggerTouchDownHandler>(eventData.triggerTouch, eventData,
+            (x, y) => x.OnTriggerTouchDown(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+
+      //Add pairing.
+      touchPairings[id] = go;
     }
 
-    /// <summary>
-    /// The GameObject bound to the current touch context of the Touchpad button.
-    /// </summary>
-		public GameObject TouchpadTouch {
-      get; private set;
+    private void ExecuteTouch(EVRButtonId id) {
+      if (touchPairings[id] == null)
+        return;
+
+      switch (id) {
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          ExecuteEvents.Execute<ITouchpadTouchHandler>(eventData.touchpadTouch, eventData,
+            (x, y) => x.OnTouchpadTouch(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          ExecuteEvents.Execute<ITriggerTouchHandler>(eventData.triggerTouch, eventData,
+            (x, y) => x.OnTriggerTouch(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
     }
 
-    /// <summary>
-    /// The GameObject bound to the current touch context of the Trigger button.
-    /// </summary>
-		public GameObject TriggerTouch {
-      get; private set;
+    private void ExecuteTouchUp(EVRButtonId id) {
+      if (touchPairings[id] == null)
+        return;
+
+      switch (id) {
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          ExecuteEvents.Execute<ITouchpadTouchUpHandler>(eventData.touchpadTouch, eventData,
+            (x, y) => x.OnTouchpadTouchUp(eventData));
+          eventData.touchpadTouch = null;
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          ExecuteEvents.Execute<ITriggerTouchUpHandler>(eventData.triggerTouch, eventData,
+            (x, y) => x.OnTriggerTouchUp(eventData));
+          eventData.triggerTouch = null;
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+
+      //Remove pairing.
+      touchPairings[id] = null;
     }
 
-		public ViveEventData (EventSystem eventSystem)
-			: base (eventSystem)
-		{
-		}
-	}
-
-	[RequireComponent (typeof(SteamVR_TrackedObject))]
-	public class ViveControllerModule : BaseInputModule
-	{
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <TODO>
-		///     * Handle a global receiver joining amidst a button being pressed.
-		/// </TODO>
-
-		/////Public/////
-		//References
-		public Transform boundObject;
-		//Primitives
-		//public bool forceModuleActive = false;
-		public bool debugMode = false;
-		public string interactTag;
-		public float interactDistance = 10f;
-
-		/////Private/////
-		//References
-		private Dictionary<EVRButtonId, GameObject> pressPairings = new Dictionary<EVRButtonId, GameObject> ();
-		//private Dictionary<ulong, List<ViveGlobalReceiver>> pressReceivers = new Dictionary<ulong, List<ViveGlobalReceiver>>();
-		private Dictionary<EVRButtonId, GameObject> touchPairings = new Dictionary<EVRButtonId, GameObject> ();
-		//private Dictionary<ulong, List<ViveGlobalReceiver>> touchReceivers = new Dictionary<ulong, List<ViveGlobalReceiver>>();
-		private SteamVR_TrackedObject controller;
-		private ViveEventData eventData;
-		//Primitives
-
-
-		//Steam Controller button and axis ids
-		EVRButtonId[] buttonIds = new EVRButtonId[] {
-			EVRButtonId.k_EButton_ApplicationMenu,
-			EVRButtonId.k_EButton_Grip,
-			EVRButtonId.k_EButton_SteamVR_Touchpad,
-			EVRButtonId.k_EButton_SteamVR_Trigger
-		};
-
-		EVRButtonId[] touchIds = new EVRButtonId[] {
-			EVRButtonId.k_EButton_SteamVR_Touchpad,
-			EVRButtonId.k_EButton_SteamVR_Trigger
-		};
-
-		EVRButtonId[] axisIds = new EVRButtonId[] {
-			EVRButtonId.k_EButton_SteamVR_Touchpad,
-			EVRButtonId.k_EButton_SteamVR_Trigger
-		};
-
-
-
-
-		void Awake ()
-		{
-			eventData = new ViveEventData (EventSystem.current);
-
-			controller = this.GetComponent<SteamVR_TrackedObject> ();
-
-			eventData.Module = this;
-
-			foreach (EVRButtonId button in buttonIds) {
-				pressPairings.Add (button, null);
-			}
-
-			foreach (EVRButtonId button in touchIds) {
-				touchPairings.Add (button, null);
-			}
-		}
-
-		void OnEnable ()
-		{
-			
-		}
-
-		void OnDisable ()
-		{
-			foreach (EVRButtonId button in buttonIds) {
-				this.ExecutePressUp (button);
-				this.ExecuteGlobalPressUp (button);
-			}
-
-			foreach (EVRButtonId button in touchIds) {
-				this.ExecuteTouchUp (button);
-				this.ExecuteGlobalTouchUp (button);
-			}
-
-			eventData.CurrentRaycast = null;
-			this.UpdateCurrentObject ();
-
-		}
-
-		void Update ()
-		{
-			this.PositionBoundObject ();
-			this.CastRayFromBoundObject ();
-			this.UpdateCurrentObject ();
-			//this.PlaceCursor();
-			this.HandleButtons ();
-		}
-
-		public override void Process ()
-		{
-
-		}
-
-		void PositionBoundObject ()
-		{
-			if (boundObject == null)
-				boundObject = this.transform;
-			boundObject.localPosition = controller.transform.localPosition;
-			boundObject.localRotation = controller.transform.localRotation;
-		}
-
-		private List<RaycastHit> hits = new List<RaycastHit> ();
-		private Ray ray;
-
-		void CastRayFromBoundObject ()
-		{
-			hits.Clear ();
-
-			//CAST RAY
-			Vector3 v = boundObject.position;
-			Quaternion q = boundObject.rotation;
-			ray = new Ray (v, q * Vector3.forward);
-			hits.AddRange (Physics.RaycastAll (ray, interactDistance));
-			eventData.PreviousRaycast = eventData.CurrentRaycast;
-
-			if (hits.Count == 0) {
-				eventData.CurrentRaycast = null;
-				return;
-			}
-
-			//FIND THE CLOSEST OBJECT
-			RaycastHit minHit = hits [0];
-			for (int i = 0; i < hits.Count; i++) {
-				if (hits [i].distance < minHit.distance) {
-					minHit = hits [i];
-				}
-			}
-
-			//MAKE SURE CLOSEST OBJECT IS INTERACTABLE
-			if (interactTag != null && interactTag.Length > 1 && !minHit.transform.tag.Equals (interactTag)) {
-				eventData.CurrentRaycast = null;
-				return;
-			} else {
-				eventData.CurrentRaycast = minHit.transform.gameObject;
-			}
-		}
-
-		void UpdateCurrentObject ()
-		{
-			this.HandlePointerExitAndEnter (eventData);
-		}
-
-		void HandlePointerExitAndEnter (ViveEventData eventData)
-		{
-			if (eventData.PreviousRaycast != eventData.CurrentRaycast) {
-				ExecuteEvents.Execute<IPointerEnterHandler> (eventData.CurrentRaycast, eventData, ExecuteEvents.pointerEnterHandler);
-				ExecuteEvents.Execute<IPointerExitHandler> (eventData.PreviousRaycast, eventData, ExecuteEvents.pointerExitHandler);
-			}
-		}
-
-		void PlaceCursor ()
-		{
-			//TODO.
-		}
-
-		void HandleButtons ()
-		{
-			int index = (int)controller.index;
-
-			eventData.TouchpadAxis = SteamVR_Controller.Input (index).GetAxis (axisIds [0]);
-			eventData.TriggerAxis = SteamVR_Controller.Input (index).GetAxis (axisIds [1]);
-
-			//Press
-			foreach (EVRButtonId button in buttonIds) {
-				if (this.GetPressDown (index, button)) {
-					this.ExecutePressDown (button);
-					this.ExecuteGlobalPressDown (button);
-				} else if (this.GetPress (index, button)) {
-					this.ExecutePress (button);
-					this.ExecuteGlobalPress (button);
-				} else if (this.GetPressUp (index, button)) {
-					this.ExecutePressUp (button);
-					this.ExecuteGlobalPressUp (button);
-				}
-			}
-
-			//Touch
-			foreach (EVRButtonId button in touchIds) {
-				if (this.GetTouchDown (index, button)) {
-					this.ExecuteTouchDown (button);
-					this.ExecuteGlobalTouchDown (button);
-				} else if (this.GetTouch (index, button)) {
-					this.ExecuteTouch (button);
-					this.ExecuteGlobalTouch (button);
-				} else if (this.GetTouchUp (index, button)) {
-					this.ExecuteTouchUp (button);
-					this.ExecuteGlobalTouchUp (button);
-				}
-			}
-		}
-
-		private void ExecutePressDown (EVRButtonId id)
-		{
-			GameObject go = eventData.CurrentRaycast;
-			if (go == null)
-				return;
-
-			switch (id) {
-			case EVRButtonId.k_EButton_ApplicationMenu:
-				eventData.ApplicationMenuPress = go;
-				ExecuteEvents.Execute<IApplicationMenuPressDownHandler> (eventData.ApplicationMenuPress, eventData,
-					(x, y) => x.OnApplicationMenuPressDown (eventData));
-				break;
-			case EVRButtonId.k_EButton_Grip:
-				eventData.GripPress = go;
-				ExecuteEvents.Execute<IGripPressDownHandler> (eventData.GripPress, eventData,
-					(x, y) => x.OnGripPressDown (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				eventData.TouchpadPress = go;
-				ExecuteEvents.Execute<ITouchpadPressDownHandler> (eventData.TouchpadPress, eventData,
-					(x, y) => x.OnTouchpadPressDown (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				eventData.TriggerPress = go;
-				ExecuteEvents.Execute<ITriggerPressDownHandler> (eventData.TriggerPress, eventData,
-					(x, y) => x.OnTriggerPressDown (eventData));
-				break;
-			}
-
-			//Add pairing.
-			pressPairings [id] = go;
-		}
-
-		private void ExecutePress (EVRButtonId id)
-		{
-			if (pressPairings [id] == null)
-				return;
-
-			switch (id) {
-			case EVRButtonId.k_EButton_ApplicationMenu:
-				ExecuteEvents.Execute<IApplicationMenuPressHandler> (eventData.ApplicationMenuPress, eventData,
-					(x, y) => x.OnApplicationMenuPress (eventData));
-				break;
-			case EVRButtonId.k_EButton_Grip:
-				ExecuteEvents.Execute<IGripPressHandler> (eventData.GripPress, eventData,
-					(x, y) => x.OnGripPress (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				ExecuteEvents.Execute<ITouchpadPressHandler> (eventData.TouchpadPress, eventData,
-					(x, y) => x.OnTouchpadPress (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				ExecuteEvents.Execute<ITriggerPressHandler> (eventData.TriggerPress, eventData,
-					(x, y) => x.OnTriggerPress (eventData));
-				break;
-			}
-		}
-
-		private void ExecutePressUp (EVRButtonId id)
-		{
-			if (pressPairings [id] == null)
-				return;
-
-			switch (id) {
-			case EVRButtonId.k_EButton_ApplicationMenu:
-				ExecuteEvents.Execute<IApplicationMenuPressUpHandler> (eventData.ApplicationMenuPress, eventData,
-					(x, y) => x.OnApplicationMenuPressUp (eventData));
-				eventData.ApplicationMenuPress = null;
-				break;
-			case EVRButtonId.k_EButton_Grip:
-				ExecuteEvents.Execute<IGripPressUpHandler> (eventData.GripPress, eventData,
-					(x, y) => x.OnGripPressUp (eventData));
-				eventData.GripPress = null;
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				ExecuteEvents.Execute<ITouchpadPressUpHandler> (eventData.TouchpadPress, eventData,
-					(x, y) => x.OnTouchpadPressUp (eventData));
-				eventData.TouchpadPress = null;
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				ExecuteEvents.Execute<ITriggerPressUpHandler> (eventData.TriggerPress, eventData,
-					(x, y) => x.OnTriggerPressUp (eventData));
-				eventData.TriggerPress = null;
-				break;
-			}
-
-			pressPairings [id] = null;
-		}
-
-		private void ExecuteTouchDown (EVRButtonId id)
-		{
-			GameObject go = eventData.CurrentRaycast;
-			if (go == null)
-				return;
-
-			switch (id) {
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				eventData.TouchpadTouch = go;
-				ExecuteEvents.Execute<ITouchpadTouchDownHandler> (eventData.TouchpadTouch, eventData,
-					(x, y) => x.OnTouchpadTouchDown (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				eventData.TriggerTouch = go;
-				ExecuteEvents.Execute<ITriggerTouchDownHandler> (eventData.TriggerTouch, eventData,
-					(x, y) => x.OnTriggerTouchDown (eventData));
-				break;
-			}
-
-			touchPairings [id] = go;
-		}
-
-		private void ExecuteTouch (EVRButtonId id)
-		{
-			if (touchPairings [id] == null)
-				return;
-
-			switch (id) {
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				ExecuteEvents.Execute<ITouchpadTouchHandler> (eventData.TouchpadTouch, eventData,
-					(x, y) => x.OnTouchpadTouch (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				ExecuteEvents.Execute<ITriggerTouchHandler> (eventData.TriggerTouch, eventData,
-					(x, y) => x.OnTriggerTouch (eventData));
-				break;
-			}
-		}
-
-		private void ExecuteTouchUp (EVRButtonId id)
-		{
-			if (touchPairings [id] == null)
-				return;
-
-			switch (id) {
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				ExecuteEvents.Execute<ITouchpadTouchUpHandler> (eventData.TouchpadTouch, eventData,
-					(x, y) => x.OnTouchpadTouchUp (eventData));
-				eventData.TouchpadTouch = null;
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				ExecuteEvents.Execute<ITriggerTouchUpHandler> (eventData.TriggerTouch, eventData,
-					(x, y) => x.OnTriggerTouchUp (eventData));
-				eventData.TriggerTouch = null;
-				break;
-			}
-		}
-
-		private void ExecuteGlobalPressDown (EVRButtonId id)
-		{
-			switch (id) {
-			case EVRButtonId.k_EButton_ApplicationMenu:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalApplicationMenuPressDownHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalApplicationMenuPressDown (eventData));
-				break;
-			case EVRButtonId.k_EButton_Grip:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalGripPressDownHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalGripPressDown (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTouchpadPressDownHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTouchpadPressDown (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTriggerPressDownHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTriggerPressDown (eventData));
-				break;
-			}
-		}
-
-		private void ExecuteGlobalPress (EVRButtonId id)
-		{
-			switch (id) {
-			case EVRButtonId.k_EButton_ApplicationMenu:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalApplicationMenuPressHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalApplicationMenuPress (eventData));
-				break;
-			case EVRButtonId.k_EButton_Grip:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalGripPressHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalGripPress (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTouchpadPressHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTouchpadPress (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTriggerPressHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTriggerPress (eventData));
-				break;
-			}
-		}
-
-		private void ExecuteGlobalPressUp (EVRButtonId id)
-		{
-			switch (id) {
-			case EVRButtonId.k_EButton_ApplicationMenu:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalApplicationMenuPressUpHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalApplicationMenuPressUp (eventData));
-				break;
-			case EVRButtonId.k_EButton_Grip:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalGripPressUpHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalGripPressUp (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTouchpadPressUpHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTouchpadPressUp (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTriggerPressUpHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTriggerPressUp (eventData));
-				break;
-			}
-		}
-
-		private void ExecuteGlobalTouchDown (EVRButtonId id)
-		{
-			switch (id) {
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTouchpadTouchDownHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTouchpadTouchDown (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTriggerTouchDownHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTriggerTouchDown (eventData));
-				break;
-			}
-		}
-
-		private void ExecuteGlobalTouch (EVRButtonId id)
-		{
-			switch (id) {
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTouchpadTouchHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTouchpadTouch (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTriggerTouchHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTriggerTouch (eventData));
-				break;
-			}
-		}
-
-		private void ExecuteGlobalTouchUp (EVRButtonId id)
-		{
-			switch (id) {
-			case EVRButtonId.k_EButton_SteamVR_Touchpad:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTouchpadTouchUpHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTouchpadTouchUp (eventData));
-				break;
-			case EVRButtonId.k_EButton_SteamVR_Trigger:
-				foreach (GlobalReceiver r in GlobalReceiver.instances)
-					if (!r.module || r.module.Equals (this))
-						ExecuteEvents.Execute<IGlobalTriggerTouchUpHandler> (r.gameObject, eventData,
-							(x, y) => x.OnGlobalTriggerTouchUp (eventData));
-				break;
-			}
-		}
-
-
-
-		bool GetPressDown (int index, EVRButtonId button)
-		{
-			return SteamVR_Controller.Input (index).GetPressDown (button);
-		}
-
-		bool GetPress (int index, EVRButtonId button)
-		{
-			return SteamVR_Controller.Input (index).GetPress (button);
-		}
-
-		bool GetPressUp (int index, EVRButtonId button)
-		{
-			return SteamVR_Controller.Input (index).GetPressUp (button);
-		}
-
-		bool GetTouchDown (int index, EVRButtonId button)
-		{
-			return SteamVR_Controller.Input (index).GetTouchDown (button);
-		}
-
-		bool GetTouch (int index, EVRButtonId button)
-		{
-			return SteamVR_Controller.Input (index).GetTouch (button);
-		}
-
-		bool GetTouchUp (int index, EVRButtonId button)
-		{
-			return SteamVR_Controller.Input (index).GetTouchUp (button);
-		}
-	}
+    private void ExecuteGlobalPressDown(EVRButtonId id) {
+      //Add paired list.
+      pressReceivers[id] = GlobalReceiver.instances;
+
+      switch (id) {
+        case EVRButtonId.k_EButton_ApplicationMenu:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalApplicationMenuPressDownHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalApplicationMenuPressDown(eventData));
+          break;
+        case EVRButtonId.k_EButton_Grip:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalGripPressDownHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalGripPressDown(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTouchpadPressDownHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTouchpadPressDown(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTriggerPressDownHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTriggerPressDown(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+    }
+
+    private void ExecuteGlobalPress(EVRButtonId id) {
+      if (pressReceivers[id] == null || pressReceivers[id].Count == 0) {
+        return;
+      }
+
+      switch (id) {
+        case EVRButtonId.k_EButton_ApplicationMenu:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalApplicationMenuPressHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalApplicationMenuPress(eventData));
+          break;
+        case EVRButtonId.k_EButton_Grip:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalGripPressHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalGripPress(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTouchpadPressHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTouchpadPress(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTriggerPressHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTriggerPress(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+    }
+
+    private void ExecuteGlobalPressUp(EVRButtonId id) {
+      if (pressReceivers[id] == null || pressReceivers[id].Count == 0) {
+        return;
+      }
+
+      switch (id) {
+        case EVRButtonId.k_EButton_ApplicationMenu:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalApplicationMenuPressUpHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalApplicationMenuPressUp(eventData));
+          break;
+        case EVRButtonId.k_EButton_Grip:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalGripPressUpHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalGripPressUp(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTouchpadPressUpHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTouchpadPressUp(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          foreach (GlobalReceiver r in pressReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTriggerPressUpHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTriggerPressUp(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+
+      //Remove paired list
+      pressReceivers[id] = null;
+    }
+
+    private void ExecuteGlobalTouchDown(EVRButtonId id) {
+      touchReceivers[id] = GlobalReceiver.instances;
+
+      switch (id) {
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          foreach (GlobalReceiver r in touchReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTouchpadTouchDownHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTouchpadTouchDown(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          foreach (GlobalReceiver r in touchReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTriggerTouchDownHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTriggerTouchDown(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+    }
+
+    private void ExecuteGlobalTouch(EVRButtonId id) {
+      if (touchReceivers[id] == null || touchReceivers[id].Count == 0) {
+        return;
+      }
+
+      switch (id) {
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          foreach (GlobalReceiver r in touchReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTouchpadTouchHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTouchpadTouch(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          foreach (GlobalReceiver r in touchReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTriggerTouchHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTriggerTouch(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+    }
+
+    private void ExecuteGlobalTouchUp(EVRButtonId id) {
+      if (touchReceivers[id] == null || touchReceivers[id].Count == 0) {
+        return;
+      }
+
+      switch (id) {
+        case EVRButtonId.k_EButton_SteamVR_Touchpad:
+          foreach (GlobalReceiver r in touchReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTouchpadTouchUpHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTouchpadTouchUp(eventData));
+          break;
+        case EVRButtonId.k_EButton_SteamVR_Trigger:
+          foreach (GlobalReceiver r in touchReceivers[id])
+            if (!r.module || r.module.Equals(this))
+              ExecuteEvents.Execute<IGlobalTriggerTouchUpHandler>(r.gameObject, eventData,
+                (x, y) => x.OnGlobalTriggerTouchUp(eventData));
+          break;
+        default:
+          throw new System.Exception("Unknown/Illegal EVRButtonId.");
+      }
+
+      //Remove paired list.
+      touchReceivers[id] = null;
+    }
+
+    private bool GetPressDown(int index, EVRButtonId button) {
+      return SteamVR_Controller.Input(index).GetPressDown(button);
+    }
+
+    private bool GetPress(int index, EVRButtonId button) {
+      return SteamVR_Controller.Input(index).GetPress(button);
+    }
+
+    private bool GetPressUp(int index, EVRButtonId button) {
+      return SteamVR_Controller.Input(index).GetPressUp(button);
+    }
+
+    private bool GetTouchDown(int index, EVRButtonId button) {
+      return SteamVR_Controller.Input(index).GetTouchDown(button);
+    }
+
+    private bool GetTouch(int index, EVRButtonId button) {
+      return SteamVR_Controller.Input(index).GetTouch(button);
+    }
+
+    private bool GetTouchUp(int index, EVRButtonId button) {
+      return SteamVR_Controller.Input(index).GetTouchUp(button);
+    }
+
+    public class EventData : BaseEventData {
+
+      /// <summary>
+      /// The ViveControllerModule that manages the instance of ViveEventData.
+      /// </summary>
+      public ViveControllerModule module {
+        get; private set;
+      }
+
+      /// <summary>
+      /// The SteamVR Tracked Object connected to the module.
+      /// </summary>
+      public SteamVR_TrackedObject steamVRTrackedObject {
+        get; private set;
+      }
+
+      /// <summary>
+      /// The GameObject currently hit by a raycast from the module.
+      /// </summary>
+      public GameObject currentRaycast {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The GameObject previously hit by a raycast from the module.
+      /// </summary>
+      public GameObject previousRaycast {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The current touchpad axis values of the controller connected to the module.
+      /// </summary>
+      public Vector2 touchpadAxis {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The current trigger axis value of the controller connected to the module.
+      /// </summary>
+      public Vector2 triggerAxis {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The GameObject bound to the current press context of the Application Menu button.
+      /// </summary>
+      public GameObject applicationMenuPress {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The GameObject bound to the current press context of the Grip button.
+      /// </summary>
+      public GameObject gripPress {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The GameObject bound to the current press context of the Touchpad button.
+      /// </summary>
+      public GameObject touchpadPress {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The GameObject bound to the current press context of the Trigger button.
+      /// </summary>
+      public GameObject triggerPress {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The GameObject bound to the current touch context of the Touchpad button.
+      /// </summary>
+      public GameObject touchpadTouch {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The GameObject bound to the current touch context of the Trigger button.
+      /// </summary>
+      public GameObject triggerTouch {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The world normal of the current raycast, if it exists. Otherwise, this will equal Vector3.zero.
+      /// </summary>
+      public Vector3 worldNormal {
+        get; internal set;
+      }
+
+      /// <summary>
+      /// The world position of the current raycast, if it exists. Otherwise, this will equal Vector3.zero.
+      /// </summary>
+      public Vector3 worldPosition {
+        get; internal set;
+      }
+
+      internal EventData(ViveControllerModule module, SteamVR_TrackedObject trackedObject, EventSystem eventSystem)
+        : base(eventSystem) {
+        this.module = module;
+        this.steamVRTrackedObject = trackedObject;
+      }
+
+      /// <summary>
+      /// Reset the event data fields. 
+      /// </summary>
+      /// <remarks>
+      /// There is currently a warning because this hides AbstractEventData.Reset. This will be removed when
+      /// we no longer rely on Unity's event system paradigm.
+      /// </remarks>
+      internal void Reset() {
+        currentRaycast = null;
+        previousRaycast = null;
+        touchpadAxis = Vector2.zero;
+        triggerAxis = Vector2.zero;
+        applicationMenuPress = null;
+        gripPress = null;
+        touchpadPress = null;
+        triggerPress = null;
+        touchpadTouch = null;
+        triggerTouch = null;
+        worldNormal = Vector3.zero;
+        worldPosition = Vector3.zero;
+      }
+
+      internal void SetCurrentRaycast(GameObject go, Vector3 normal, Vector3 position) {
+        this.currentRaycast = go;
+        this.worldNormal = normal;
+        this.worldPosition = position;
+      }
+    }
+  }
 
 }
 #endif
