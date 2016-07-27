@@ -13,12 +13,13 @@ namespace Holojam.Network {
 
 		//Editor debugging
 		public int sentWarning = -1, receivedWarning = 48;
-		public int sentPPS, receivedPPS;
+		public int sentPPS;
+		public List<int> receivedPPS;
 
 		[System.NonSerialized]
 		public int sentPacketsPerSecond;
 		[System.NonSerialized]
-		public int receivedPacketsPerSecond;
+		public List<int> receivedPacketsPerSecond;
 
 		//Constant and Read-only
 		public const int HOLOJAM_MOTIVE_PORT = 1611; //Port for receiving motive information
@@ -31,8 +32,9 @@ namespace Holojam.Network {
 		void Start() {
 			sendThread = new HolojamSendThread(BLACK_BOX_SERVER_PORT);
 			receiveThreads = new List<HolojamRecieveThread> ();
-			receiveThreads.Add(new HolojamRecieveThread(HOLOJAM_MOTIVE_PORT));
-			receiveThreads.Add(new HolojamRecieveThread(HOLOJAM_NONMOTIVE_PORT));
+			receivedPPS = new List<int> ();
+			AddReceiveThread(HOLOJAM_MOTIVE_PORT);
+			AddReceiveThread(HOLOJAM_NONMOTIVE_PORT);
 
 			sendThread.Start();
 			foreach (HolojamThread thread in receiveThreads) {
@@ -40,6 +42,12 @@ namespace Holojam.Network {
 			}
 
 			StartCoroutine(DisplayPacketsPerSecond());
+		}
+
+		void AddReceiveThread(int port) {
+			receiveThreads.Add(new HolojamRecieveThread(port));
+			receivedPacketsPerSecond.Add (0);
+			receivedPPS.Add (0);
 		}
 
 		void FixedUpdate() {
@@ -80,20 +88,24 @@ namespace Holojam.Network {
 			}
 			while (running) {
 				yield return new WaitForSeconds(1f);
+
+				sentPacketsPerSecond = sendThread.PacketCount;
+				sendThread.PacketCount = 0;
+				sentPPS = sentPacketsPerSecond;
+
+				if (Time.frameCount > 0 && sentPPS <= sentWarning) {
+					Debug.LogWarning (
+						" HolojamNetwork: Sent Packets - " + sentPacketsPerSecond
+					);
+				}
 				int threadIndex = 0;
 				foreach (HolojamThread receiveThread in receiveThreads) {
-					sentPacketsPerSecond = sendThread.PacketCount;
-					sendThread.PacketCount = 0;
-					receivedPacketsPerSecond = receiveThread.PacketCount;
+					receivedPacketsPerSecond[threadIndex] = receiveThread.PacketCount;
 					receiveThread.PacketCount = 0;
-
-					sentPPS = sentPacketsPerSecond;
-					receivedPPS = receivedPacketsPerSecond;
-					if (Time.frameCount > 0 && 
-						(sentPPS <= sentWarning || receivedPPS <= receivedWarning)) {
+					receivedPPS[threadIndex] = receivedPacketsPerSecond[threadIndex];
+					if (Time.frameCount > 0 && receivedPPS[threadIndex] <= receivedWarning) {
 						Debug.LogWarning (
 							"Thread " + threadIndex +
-							" HolojamNetwork: Sent Packets - " + sentPacketsPerSecond +
 							" Received Packets - " + receivedPacketsPerSecond
 						);
 					}
