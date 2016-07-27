@@ -30,7 +30,7 @@ namespace Holojam.Network {
 
 		void Start() {
 			sendThread = new HolojamSendThread(BLACK_BOX_SERVER_PORT);
-			receiveThreads = new List<HolojamThread> ();
+			receiveThreads = new List<HolojamRecieveThread> ();
 			receiveThreads.Add(new HolojamRecieveThread(HOLOJAM_MOTIVE_PORT));
 			receiveThreads.Add(new HolojamRecieveThread(HOLOJAM_NONMOTIVE_PORT));
 
@@ -62,6 +62,7 @@ namespace Holojam.Network {
 							view.Bits = o.bits;
 							view.Blob = o.blob;
 							view.IsTracked = true;
+							break;
 						} else {
 							view.IsTracked = false;
 						}
@@ -92,12 +93,12 @@ namespace Holojam.Network {
 						(sentPPS <= sentWarning || receivedPPS <= receivedWarning)) {
 						Debug.LogWarning (
 							"Thread " + threadIndex +
-							"HolojamNetwork: Sent Packets - " + sentPacketsPerSecond +
+							" HolojamNetwork: Sent Packets - " + sentPacketsPerSecond +
 							" Received Packets - " + receivedPacketsPerSecond
 						);
 					}
+					threadIndex++;
 				}
-				threadIndex++;
 			}
 		}
 
@@ -105,7 +106,7 @@ namespace Holojam.Network {
 			HolojamObject o;
 			bool tracked = false;
 			foreach (HolojamThread thread in receiveThreads) {
-				tracked = tracked || thread.GetObject (label, out o);
+				tracked = thread.GetObject (label, out o) || tracked;
 			}
 			return tracked;
 		}
@@ -201,9 +202,6 @@ namespace Holojam.Network {
 
 			int nBytesReceived = 0;
 			while (isRunning) {
-				if (port == 1612) {
-					Debug.Log ("receive");
-				}
 				nBytesReceived = socket.Receive(currentPacket.bytes);
 				currentPacket.stream.Position = 0;
 
@@ -236,8 +234,6 @@ namespace Holojam.Network {
 
 							ho = new HolojamObject(label);
 							managedObjects[label] = ho;
-
-							Debug.Log (label + " position: " + or.x + " " + or.y + " " + or.z );
 
 							if (update.lhs_frame) {
 								ho.position = new Vector3(-(float)or.x, (float)or.y, (float)or.z);
