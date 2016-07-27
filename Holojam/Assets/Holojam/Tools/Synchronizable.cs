@@ -22,7 +22,7 @@ namespace Holojam{
 			view.Label=label;
 			sending=sending || (useMasterPC && IsMasterPC());
 			view.IsMine=sending;
-			view.IsTracked=sending;
+			view.IsTracked=sending?true:view.IsTracked;
 		}
 		
 		public Vector3 synchronizedVector3{
