@@ -30,6 +30,7 @@ namespace Holojam.Network {
 
 		void Start() {
 			sendThread = new HolojamSendThread(BLACK_BOX_SERVER_PORT);
+			receiveThreads = new List<HolojamThread> ();
 			receiveThreads.Add(new HolojamRecieveThread(HOLOJAM_MOTIVE_PORT));
 			receiveThreads.Add(new HolojamRecieveThread(HOLOJAM_NONMOTIVE_PORT));
 
