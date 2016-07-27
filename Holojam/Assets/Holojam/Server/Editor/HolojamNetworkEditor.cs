@@ -26,20 +26,24 @@ namespace Holojam{
 				receivedWarning.intValue=EditorGUILayout.IntField("Received",Mathf.Max(receivedWarning.intValue,-1));
 			EditorGUILayout.EndHorizontal();
 			
-			HolojamNetwork hj = (HolojamNetwork)serializedObject.targetObject;
-			
 			EditorGUILayout.LabelField("Packets per Second",style);
-			EditorGUILayout.BeginHorizontal();
+			
+			HolojamNetwork hj = (HolojamNetwork)serializedObject.targetObject;
+			if(Application.isPlaying)
+				style.normal.textColor=hj.sentPPS>sentWarning.intValue?
+					new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
+			
+			EditorGUILayout.LabelField("Sent",hj.sentPPS.ToString(),style);
+			
+			for(int i=0;i<hj.receivedPPS.Count;++i){
 				if(Application.isPlaying)
-					style.normal.textColor=hj.sentPPS>sentWarning.intValue?
+					style.normal.textColor=hj.receivedPPS[i]>receivedWarning.intValue?
 						new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
-				EditorGUILayout.LabelField("Sent",hj.sentPPS.ToString(),style);
 				
-				if(Application.isPlaying)
-					style.normal.textColor=hj.receivedPPS>receivedWarning.intValue?
-						new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
-				EditorGUILayout.LabelField("Received",hj.receivedPPS.ToString(),style);
-			EditorGUILayout.EndHorizontal();
+				EditorGUIUtility.labelWidth=128;
+				EditorGUILayout.LabelField("Received (Thread "+(i+1)+")",hj.receivedPPS[i].ToString(),style);
+				EditorGUIUtility.labelWidth=64;
+			}
 			
 			serializedObject.ApplyModifiedProperties();
 		}

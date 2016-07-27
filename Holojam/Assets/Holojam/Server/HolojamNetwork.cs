@@ -30,6 +30,8 @@ namespace Holojam.Network {
 		private List<HolojamRecieveThread> receiveThreads;
 
 		void Start() {
+			receivedPacketsPerSecond = new List<int> ();
+			
 			sendThread = new HolojamSendThread(BLACK_BOX_SERVER_PORT);
 			receiveThreads = new List<HolojamRecieveThread> ();
 			receivedPPS = new List<int> ();

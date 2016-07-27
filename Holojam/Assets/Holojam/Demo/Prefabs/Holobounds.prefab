@@ -43,7 +43,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 159892}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.12933898, y: 1.5, z: -0.3423273}
+  m_LocalPosition: {x: -0.008376569, y: 1.5, z: 0.3700317}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -142,10 +142,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   calibrator: {fileID: 0}
   bounds:
-  - {x: -2.002428, y: -2.4138057}
-  - {x: -1.6946151, y: 1.8052273}
-  - {x: 1.6242839, y: 1.9046686}
-  - {x: 1.5554032, y: -2.6653993}
+  - {x: -1.5961511, y: -1.1984593}
+  - {x: -1.7826414, y: 1.9620643}
+  - {x: 1.6732582, y: 2.4522233}
+  - {x: 1.6720281, y: -1.7357016}
   floor: 0
   ceiling: 3
 --- !u!114 &11410362
