@@ -1,4 +1,4 @@
-#pragma warning disable 0618 //Deprecated
+// #pragma warning disable 0618 //Deprecated
 
 using UnityEngine;
 using System.Collections;
@@ -15,7 +15,6 @@ using update_protocol_v3;
 using System.Threading;
 
 namespace Holojam.Network {
-
 
      public class MasterStream : Singleton<MasterStream> {
 

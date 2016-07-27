@@ -3038,46 +3038,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 401340, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -0.008376569
-      objectReference: {fileID: 0}
-    - target: {fileID: 401340, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0.3700317
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401556, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: bounds.Array.data[0].x
-      value: -1.5961511
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401556, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: bounds.Array.data[0].y
-      value: -1.1984593
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401556, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: bounds.Array.data[1].x
-      value: -1.7826414
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401556, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: bounds.Array.data[1].y
-      value: 1.9620643
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401556, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: bounds.Array.data[2].x
-      value: 1.6732582
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401556, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: bounds.Array.data[2].y
-      value: 2.4522233
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401556, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: bounds.Array.data[3].x
-      value: 1.6720281
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401556, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
-      propertyPath: bounds.Array.data[3].y
-      value: -1.7357016
-      objectReference: {fileID: 0}
     - target: {fileID: 11401556, guid: 352f6cee29b934f8dbb5c1ea87ac1ca0, type: 2}
       propertyPath: calibrator
       value: 
@@ -3675,7 +3635,7 @@ MonoBehaviour:
   sentWarning: 32
   receivedWarning: 48
   sentPPS: 0
-  receivedPPS: 0
+  receivedPPS: 
 --- !u!1001 &1839278464
 Prefab:
   m_ObjectHideFlags: 0
