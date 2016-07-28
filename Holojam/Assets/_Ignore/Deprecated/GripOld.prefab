@@ -11,7 +11,7 @@ GameObject:
   - 114: {fileID: 11499124}
   - 114: {fileID: 11410352}
   m_Layer: 0
-  m_Name: Grip
+  m_Name: GripOld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

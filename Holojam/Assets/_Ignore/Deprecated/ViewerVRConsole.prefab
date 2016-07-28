@@ -208,8 +208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isMine: 0
   label: 
+  isMine: 0
 --- !u!114 &11414520
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -224,6 +224,7 @@ MonoBehaviour:
   trackingType: 2
   actor: {fileID: 0}
   view: {fileID: 11404294}
+  trackingTag: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
