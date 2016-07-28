@@ -76,6 +76,7 @@ namespace Holojam{
 						break;
 				}
 			} else transform.rotation=correction; //Transition seamlessly to IMU when untracked
+			VRDebug.println(actor != null ? actor.trackingTag.ToString() : trackingTag.ToString());
 		}
 		//Get tracking data from desired source
 		Vector3 GetPosition(){return actor!=null?actor.eyes:view.RawPosition;}
