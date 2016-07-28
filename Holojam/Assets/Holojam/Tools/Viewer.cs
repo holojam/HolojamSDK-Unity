@@ -66,6 +66,8 @@ namespace Holojam{
 				//IMU orientation (applied automatically by Oculus) is assumed below as a precondition
 				switch(trackingType){
 					case TrackingType.IMU: //IMU, absolutely oriented by optical tracking intermittently
+						if(Utility.IsMasterPC())
+							goto case TrackingType.OPTICAL; //Don't use IMU tracking in the editor
 						transform.rotation=correction;
 						break;
 					case TrackingType.OPTICAL: //Purely optical tracking, no IMU

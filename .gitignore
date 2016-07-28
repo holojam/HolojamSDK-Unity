@@ -19,6 +19,7 @@ obj/
 *.apk
 
 *.pidb.meta
+.#*
 sysinfo.txt
 
 .DS_Store
