@@ -105,12 +105,6 @@ namespace Holojam.Network {
 					receivedPacketsPerSecond[threadIndex] = receiveThread.PacketCount;
 					receiveThread.PacketCount = 0;
 					receivedPPS[threadIndex] = receivedPacketsPerSecond[threadIndex];
-					if (Time.frameCount > 0 && receivedPPS[threadIndex] <= receivedWarning) {
-						Debug.LogWarning (
-							"Thread " + threadIndex +
-							" Received Packets - " + receivedPacketsPerSecond
-						);
-					}
 					threadIndex++;
 				}
 			}
@@ -125,7 +119,8 @@ namespace Holojam.Network {
 			return tracked;
 		}
 
-		void OnDestroy () {
+		protected override void OnDestroy () {
+			base.OnDestroy ();
 			sendThread.Stop ();
 			foreach (HolojamThread thread in receiveThreads) {
 				thread.Stop ();
