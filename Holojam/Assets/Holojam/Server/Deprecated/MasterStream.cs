@@ -16,7 +16,6 @@ using System.Threading;
 
 namespace Holojam.Network {
 
-
      public class MasterStream : Singleton<MasterStream> {
 
           public int warningThreshold = 48;

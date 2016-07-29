@@ -20,7 +20,7 @@ namespace Holojam{
 		
 		void UpdateView(){
 			view.Label=label;
-			sending=sending || (useMasterPC && IsMasterPC());
+			sending=sending || (useMasterPC && Utility.IsMasterPC());
 			view.IsMine=sending;
 		}
 		
@@ -61,17 +61,6 @@ namespace Holojam{
 				transform.position=synchronizedVector3;
 				transform.rotation=synchronizedQuaternion;
 			}
-		}
-		
-		bool IsMasterPC(){
-			switch(Application.platform){
-				case RuntimePlatform.OSXEditor: return true;
-				case RuntimePlatform.OSXPlayer: return true;
-				case RuntimePlatform.WindowsEditor: return true;
-				case RuntimePlatform.WindowsPlayer: return true;
-				case RuntimePlatform.LinuxPlayer: return true;
-			}
-			return false;
 		}
 	}
 }
