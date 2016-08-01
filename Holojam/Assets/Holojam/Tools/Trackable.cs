@@ -39,13 +39,8 @@ namespace Holojam{
 		protected virtual void UpdateTracking(){
 			//By default, assigns position and rotation injectively
 			if(view.IsTracked){
-        if (smooth) {
-          transform.position = Vector3.Lerp(transform.position, trackedPosition, Time.deltaTime);
-          transform.rotation = Quaternion.Slerp(transform.rotation, trackedRotation, Time.deltaTime);
-        } else {
-          transform.position = trackedPosition;
-          transform.rotation = trackedRotation;
-        }
+				transform.position = trackedPosition;
+				transform.rotation = trackedRotation;
 			}
 			//Untracked maintains last known position and rotation
 		}

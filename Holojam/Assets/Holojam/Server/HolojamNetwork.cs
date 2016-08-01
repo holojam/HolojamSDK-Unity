@@ -15,6 +15,7 @@ namespace Holojam.Network {
 		public int sentWarning = -1, receivedWarning = 48;
 		public int sentPPS;
 		public List<int> receivedPPS;
+		public List<string> threadData;
 
 		[System.NonSerialized]
 		public int sentPacketsPerSecond;
@@ -90,6 +91,9 @@ namespace Holojam.Network {
 			}
 			while (running) {
 				yield return new WaitForSeconds(1f);
+				
+				threadData.Clear();
+				threadData.Add(sendThread.ToString());
 
 				sentPacketsPerSecond = sendThread.PacketCount;
 				sendThread.PacketCount = 0;
@@ -102,6 +106,8 @@ namespace Holojam.Network {
 				}
 				int threadIndex = 0;
 				foreach (HolojamThread receiveThread in receiveThreads) {
+					threadData.Add(receiveThread.ToString());
+					
 					receivedPacketsPerSecond[threadIndex] = receiveThread.PacketCount;
 					receiveThread.PacketCount = 0;
 					receivedPPS[threadIndex] = receivedPacketsPerSecond[threadIndex];
@@ -194,6 +200,16 @@ namespace Holojam.Network {
 				} else {
 					return false;
 				}
+			}
+		}
+		
+		public override string ToString() {
+			lock(lockObject){
+				string s = "Port "+port+":";
+				if(managedObjects.Count==0)s+="\n  (Empty)";
+				else foreach(string k in managedObjects.Keys)
+					s+="\n  "+k;
+				return s;
 			}
 		}
 	}
