@@ -52,6 +52,7 @@ namespace Holojam{
 			foreach(string s in hj.threadData)
 				EditorGUILayout.LabelField(s);
 			
+			/*
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField("Views",bold);
 			style = new GUIStyle();
@@ -61,6 +62,7 @@ namespace Holojam{
 						new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
 				EditorGUILayout.LabelField("  "+v.Label+(v.IsMine?" (S)":""),style);
 			}
+			*/
 			
 			serializedObject.ApplyModifiedProperties();
 		}
