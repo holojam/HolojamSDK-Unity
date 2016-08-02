@@ -23,9 +23,7 @@ namespace Holojam.Network {
 		public List<int> receivedPacketsPerSecond;
 
 		//Constant and Read-only
-		public const int HOLOJAM_MOTIVE_PORT = 1611; //Port for receiving motive information
-		public const int HOLOJAM_NONMOTIVE_PORT = 1612; // Port for receiving non-motive information
-		public const int BLACK_BOX_SERVER_PORT = 1615; //Port for sending information
+		public const int PORT = 1611;
 
 		private HolojamSendThread sendThread;
 		private List<HolojamReceiveThread> receiveThreads;
@@ -33,11 +31,11 @@ namespace Holojam.Network {
 		void Start() {
 			receivedPacketsPerSecond = new List<int> ();
 			
-			sendThread = new HolojamSendThread(BLACK_BOX_SERVER_PORT);
+			sendThread = new HolojamSendThread(PORT);
 			receiveThreads = new List<HolojamReceiveThread> ();
 			receivedPPS = new List<int> ();
-			AddReceiveThread(HOLOJAM_MOTIVE_PORT);
-			AddReceiveThread(HOLOJAM_NONMOTIVE_PORT);
+			AddReceiveThread(PORT);
+			//AddReceiveThread(HOLOJAM_NONMOTIVE_PORT);
 
 			sendThread.Start();
 			foreach (HolojamThread thread in receiveThreads) {
@@ -243,13 +241,13 @@ namespace Holojam.Network {
 
 		public void Receive() {
 			Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+			socket.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
 			socket.Bind(new IPEndPoint(IPAddress.Any, port));
 			socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, 
 								   new MulticastOption(IPAddress.Parse("224.1.1.1")));
 
 			int nBytesReceived = 0;
 			while (isRunning) {
-				
 				nBytesReceived = socket.Receive(currentPacket.bytes);
 				currentPacket.stream.Position = 0;
 
@@ -333,6 +331,8 @@ namespace Holojam.Network {
 		public void Send() {
 			//Debug.Log("Attempting to open send thread with ip/port: " + ip.ToString() + " " + port);
 			Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+			socket.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+
 			IPEndPoint ipEndPoint = new IPEndPoint(ip, 0);
 			IPEndPoint send_ipEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.44"), port);
 
