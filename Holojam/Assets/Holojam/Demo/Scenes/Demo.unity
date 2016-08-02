@@ -262,6 +262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTag: 0
+  smooth: 1
   handle: Blue
   motif: {r: 0, g: 1, b: 1, a: 1}
   mask: {fileID: 782223718}
@@ -669,6 +670,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTag: 24
+  smooth: 1
 --- !u!114 &482184428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2023,6 +2025,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTag: 2
+  smooth: 1
   handle: Red
   motif: {r: 1, g: 0, b: 0, a: 1}
   mask: {fileID: 408168082}
@@ -2070,6 +2073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTag: 23
+  smooth: 1
 --- !u!4 &1177200647
 Transform:
   m_ObjectHideFlags: 0
@@ -2584,6 +2588,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTag: 3
+  smooth: 1
   handle: Yellow
   motif: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   mask: {fileID: 846457367}
@@ -3026,6 +3031,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTag: 8
+  smooth: 1
 --- !u!23 &1707563173
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3187,6 +3193,7 @@ MonoBehaviour:
   receivedWarning: 48
   sentPPS: 0
   receivedPPS: 
+  threadData: []
 --- !u!1001 &1839278464
 Prefab:
   m_ObjectHideFlags: 0
@@ -3402,6 +3409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTag: 1
+  smooth: 1
   handle: Green
   motif: {r: 0, g: 1, b: 0, a: 1}
   mask: {fileID: 27169721}

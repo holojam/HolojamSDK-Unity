@@ -179,10 +179,6 @@ Material:
         second: 0
       data:
         first:
-          name: _InvFade
-        second: 1
-      data:
-        first:
           name: _Tile
         second: 12
       data:
@@ -197,6 +193,10 @@ Material:
         first:
           name: _RimStrength
         second: 4
+      data:
+        first:
+          name: _InvFade
+        second: 1
     m_Colors:
       data:
         first:
@@ -205,7 +205,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 1, g: 0.597, b: 0, a: 0.82617503}
+        second: {r: 1, g: 0.597, b: 0, a: 1}
       data:
         first:
           name: _SpecColor

@@ -331,7 +331,7 @@ namespace Holojam.Network {
 		public HolojamSendThread(int port) : base(port) { }
 
 		public void Send() {
-			Debug.Log("Attempting to open send thread with ip/port: " + ip.ToString() + " " + port);
+			//Debug.Log("Attempting to open send thread with ip/port: " + ip.ToString() + " " + port);
 			Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			IPEndPoint ipEndPoint = new IPEndPoint(ip, 0);
 			IPEndPoint send_ipEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.44"), port);
@@ -339,7 +339,7 @@ namespace Holojam.Network {
 			try {
 				socket.Bind(ipEndPoint);
 			} catch (SocketException e) {
-				Debug.Log("Error binding socket: " + ip.ToString() + " " + port + " " + e.ToString());
+				Debug.LogWarning("Error binding socket: " + ip.ToString() + " " + port + " " + e.ToString());
 				isRunning = false;
 			}
 
