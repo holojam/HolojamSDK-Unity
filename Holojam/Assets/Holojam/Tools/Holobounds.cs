@@ -37,9 +37,8 @@ namespace Holojam{
 
       //Offset from center of floor
       public Vector3 Offset(Vector3 o){
-         Vector3 f = Floor(0.25f*(bounds[0]+bounds[1]+bounds[2]+bounds[3]))+o;
-         return localSpace && transform.parent!=null?
-            transform.parent.TransformPoint(f):f;
+         Vector3 f = 0.25f*(Corner(0)+Corner(1)+Corner(2)+Corner(3))+o;
+         return f;
       }
 
       //Bounding corner points
