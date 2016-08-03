@@ -8,10 +8,11 @@ using Holojam.Network;
 namespace Holojam{
 	[CustomEditor(typeof(Pairable)), CanEditMultipleObjects]
 	public class PairableEditor : Editor{
-		SerializedProperty type, trackingTag, centerOffset;
+		SerializedProperty type, trackingTag, localSpace, centerOffset;
 		void OnEnable(){
 			type=serializedObject.FindProperty("type");
 			trackingTag=serializedObject.FindProperty("trackingTag");
+			localSpace=serializedObject.FindProperty("localSpace");
 			centerOffset=serializedObject.FindProperty("centerOffset");
 		}
 		public override void OnInspectorGUI(){
@@ -19,6 +20,7 @@ namespace Holojam{
 			
 			EditorGUILayout.PropertyField(type,new GUIContent("Pairable Type"));
 			EditorGUILayout.PropertyField(trackingTag);
+			EditorGUILayout.PropertyField(localSpace);
 			EditorGUILayout.PropertyField(centerOffset,new GUIContent("Center Offset"));
 			
 			if(!serializedObject.isEditingMultipleObjects){

@@ -12,7 +12,7 @@ public class ExampleFloor : MonoBehaviour{
 	void Update(){
 		if(holobounds!=null){
 			transform.localScale=square?
-				new Vector3(scale,scale,1):
+				new Vector3(scale,1,scale):
 				new Vector3(scale*holobounds.xRatio,scale,1);
 		}
 	}

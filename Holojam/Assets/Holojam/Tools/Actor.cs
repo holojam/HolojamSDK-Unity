@@ -57,6 +57,7 @@ namespace Holojam{
 		
 		//Useful (goggles) visualization for edge of GearVR headset
 		void OnDrawGizmos(){
+			DrawGizmoGhost();
 			Gizmos.color=motif;
 			Vector3 offset = eyes+look*0.015f;
 			Drawer.Circle(offset+left*0.035f,look,up,0.03f);

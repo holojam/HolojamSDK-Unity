@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 482812}
   - 114: {fileID: 11414520}
-  - 114: {fileID: 11404294}
   m_Layer: 0
   m_Name: Viewer
   m_TagString: Untagged
@@ -28,6 +27,7 @@ GameObject:
   - 114: {fileID: 11404100}
   - 23: {fileID: 2324662}
   - 102: {fileID: 10266508}
+  - 114: {fileID: 11414308}
   m_Layer: 0
   m_Name: VRConsole
   m_TagString: Untagged
@@ -197,19 +197,17 @@ MonoBehaviour:
   numLinesDisplayed: 4
   linewrapOn: 1
   numCharsPerLine: 30
---- !u!114 &11404294
+--- !u!114 &11414308
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 114792}
+  m_GameObject: {fileID: 150638}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
+  m_Script: {fileID: 11500000, guid: e6952e2ef5ad44e21ae8b970ae0552bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  label: 
-  isMine: 0
 --- !u!114 &11414520
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -223,8 +221,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackingType: 2
   actor: {fileID: 0}
-  view: {fileID: 11404294}
+  view: {fileID: 0}
   trackingTag: 0
+  localSpace: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

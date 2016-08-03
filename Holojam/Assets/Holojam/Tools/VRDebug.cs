@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Holojam{
 
-	public class VRConsoleDebug : MonoBehaviour{
+	public class VRDebug : MonoBehaviour{
 
 		static VRConsole debug = null;
 
@@ -21,12 +21,17 @@ namespace Holojam{
 		}
 
 		public static void print(string s, bool printToDebug = false) {
-			instance.print ("DEBUG: " + s, printToDebug);
+			instance.queueForPrinting(s);
+			if (printToDebug) {
+				Debug.Log(s);
+			}
 		}
 
 		public static void println(string s, bool printToDebug = false) {
-			instance.println ("DEBUG: " + s, printToDebug);
-
+			instance.queueForPrinting (s + "\n");
+			if (printToDebug) {
+				Debug.Log (s);
+			}
 		}
 	}
 }

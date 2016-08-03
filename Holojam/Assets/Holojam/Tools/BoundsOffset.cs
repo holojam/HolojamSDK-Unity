@@ -11,7 +11,10 @@ namespace Holojam{
 		public Vector3 offset = Vector3.zero;
 		
 		void Update(){
-			if(holobounds!=null)transform.position=offset+holobounds.center;
+			if(holobounds!=null){
+				transform.position=holobounds.Offset(offset);
+				transform.rotation=holobounds.rotation;
+			}
 		}
 	}
 }
