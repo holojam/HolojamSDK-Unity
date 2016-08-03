@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: aecb332132105451e8b7625cca2b8893
-timeCreated: 1466706318
+guid: 2ed72a2cb256b434189053daba16b412
+timeCreated: 1469749238
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Hat
+    4300000: Table
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -36,7 +36,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 100
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1

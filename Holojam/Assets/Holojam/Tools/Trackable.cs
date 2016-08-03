@@ -9,7 +9,7 @@ namespace Holojam{
 	[ExecuteInEditMode, RequireComponent(typeof(HolojamView))]
 	public class Trackable : MonoBehaviour{
 		public Motive.Tag trackingTag = Motive.Tag.BOX1;
-		//public bool smooth = true; //To be implemented later
+		public bool smooth = true; //To be implemented later
 		
 		//Accessors in case modification needs to be made to the raw data (like smoothing)
 		public Vector3 trackedPosition{get{return view.RawPosition;}}
@@ -39,8 +39,13 @@ namespace Holojam{
 		protected virtual void UpdateTracking(){
 			//By default, assigns position and rotation injectively
 			if(view.IsTracked){
-				transform.position=trackedPosition;
-				transform.rotation=trackedRotation;
+        if (smooth) {
+          transform.position = Vector3.Lerp(transform.position, trackedPosition, Time.deltaTime);
+          transform.rotation = Quaternion.Slerp(transform.rotation, trackedRotation, Time.deltaTime);
+        } else {
+          transform.position = trackedPosition;
+          transform.rotation = trackedRotation;
+        }
 			}
 			//Untracked maintains last known position and rotation
 		}

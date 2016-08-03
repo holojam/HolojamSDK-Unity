@@ -74,7 +74,7 @@ namespace Holojam.Network {
 
     public bool IsTracked {
       get {
-        return Application.isPlaying && (isTracked || isMine);
+        return Application.isPlaying && instances.Contains(this) && (isTracked || isMine);
       }
       set {
         isTracked = value;

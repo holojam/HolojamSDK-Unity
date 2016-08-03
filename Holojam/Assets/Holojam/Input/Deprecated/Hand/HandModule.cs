@@ -1,4 +1,4 @@
-﻿// #pragma warning disable 0618 //Deprecated
+﻿#pragma warning disable 0618 //Deprecated
 
 using UnityEngine;
 using UnityEngine.EventSystems;

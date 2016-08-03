@@ -154,15 +154,15 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 152078}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c9a9ca5b74bd482ea2ad8beca4fd052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 64c3b41c6645b496ea825bf2cf077392, type: 2}
   actorManager: {fileID: 0}
-  minRange: 1.5
-  maxAlpha: 0.6
+  minRange: 0.7
+  maxAlpha: 1
 --- !u!114 &11444118
 MonoBehaviour:
   m_ObjectHideFlags: 1

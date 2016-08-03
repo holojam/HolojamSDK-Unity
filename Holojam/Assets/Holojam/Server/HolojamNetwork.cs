@@ -56,6 +56,7 @@ namespace Holojam.Network {
 			List<HolojamView> viewsToSend = new List<HolojamView>();
 
 			foreach (HolojamView view in HolojamView.instances) {
+				
 				if (view.IsMine) {
 					viewsToSend.Add(view);
 				} else {
@@ -63,19 +64,18 @@ namespace Holojam.Network {
 						Debug.LogWarning("Warning: No HolojamView label on object: " + view.name);
 						continue;
 					}
-
+					
 					HolojamObject o;
 					foreach (HolojamThread thread in receiveThreads) {
-						if (thread.GetObject (view.Label, out o)) {
+						if (thread.GetObject (view.Label, out o, Time.deltaTime)) {
 							view.RawPosition = o.position;
 							view.RawRotation = o.rotation;
 							view.Bits = o.bits;
 							view.Blob = o.blob;
-							view.IsTracked = true;
+							view.IsTracked = o.isTracked;
 							break;
-						} else {
-							view.IsTracked = false;
 						}
+						else view.IsTracked = false;
 					}
 				}
 			}
@@ -97,7 +97,7 @@ namespace Holojam.Network {
 
 				if (Time.frameCount > 0 && sentPPS <= sentWarning) {
 					Debug.LogWarning (
-						" HolojamNetwork: Sent Packets - " + sentPacketsPerSecond
+						"HolojamNetwork: Sent Packets - " + sentPPS
 					);
 				}
 				int threadIndex = 0;
@@ -105,27 +105,21 @@ namespace Holojam.Network {
 					receivedPacketsPerSecond[threadIndex] = receiveThread.PacketCount;
 					receiveThread.PacketCount = 0;
 					receivedPPS[threadIndex] = receivedPacketsPerSecond[threadIndex];
+					
 					if (Time.frameCount > 0 && receivedPPS[threadIndex] <= receivedWarning) {
 						Debug.LogWarning (
-							"Thread " + threadIndex +
-							" Received Packets - " + receivedPacketsPerSecond
+							"HolojamNetwork: Received Packets (Thread " +
+							(threadIndex+1) + ") - " + receivedPPS[threadIndex]
 						);
 					}
+					
 					threadIndex++;
 				}
 			}
 		}
 
-		public bool IsTracked(string label) {
-			HolojamObject o;
-			bool tracked = false;
-			foreach (HolojamThread thread in receiveThreads) {
-				tracked = thread.GetObject (label, out o) || tracked;
-			}
-			return tracked;
-		}
-
-		void OnDestroy () {
+		protected override void OnDestroy () {
+			base.OnDestroy ();
 			sendThread.Stop ();
 			foreach (HolojamThread thread in receiveThreads) {
 				thread.Stop ();
@@ -143,6 +137,9 @@ namespace Holojam.Network {
 		protected UnityEngine.Object lockObject = new UnityEngine.Object();
 		protected int packetCount = 0;
 		protected bool isRunning = false;
+		
+		protected float timer = 0;
+		private const float timeout = 0.4f; //Seconds
 
 		protected abstract ThreadStart ThreadStart {
 			get;
@@ -164,7 +161,7 @@ namespace Holojam.Network {
 
 		public void Start() {
 			if (this.isRunning) {
-				Debug.LogWarning("Thread already started!");
+				Debug.LogWarning("HolojamNetwork: Thread already started!");
 				return;
 			}
 
@@ -180,11 +177,19 @@ namespace Holojam.Network {
 			isRunning = false;
 		}
 
-		public bool GetObject(string key, out HolojamObject holoObject) {
+		public bool GetObject(string key, out HolojamObject holoObject, float delta) {
 			holoObject = null;
 			lock (lockObject) {
 				if (managedObjects.ContainsKey(key)) {
 					holoObject = managedObjects[key];
+					
+					//If packets haven't been received in awhile, reset the tracking flag
+					timer+=delta;
+					if(timer>timeout){
+						managedObjects[key].isTracked=false;
+						//Debug.LogWarning("Packet timeout!");
+					}
+					
 					return true;
 				} else {
 					return false;
@@ -216,7 +221,9 @@ namespace Holojam.Network {
 
 			int nBytesReceived = 0;
 			while (isRunning) {
+				
 				nBytesReceived = socket.Receive(currentPacket.bytes);
+				timer = 0; //Reset packet timer--we received packets!
 				currentPacket.stream.Position = 0;
 
 				update = Serializer.Deserialize<update_protocol_v3.Update>(
@@ -226,7 +233,7 @@ namespace Holojam.Network {
 				currentPacket.frame = update.mod_version;
 				if (currentPacket.frame > previousPacket.frame) {
 					packetCount++;
-
+					
 					previousPacket.stream.Position = 0;
 					currentPacket.stream.Position = 0;
 					tempPacket.copyFrom(previousPacket);
@@ -234,17 +241,16 @@ namespace Holojam.Network {
 					currentPacket.copyFrom(tempPacket);
 					lock (lockObject) {
 						managedObjects.Clear();
+						
 						for (int j = 0; j < update.live_objects.Count; j++) {
 							LiveObject or = update.live_objects[j];
 							string label = or.label;
-
 
 							HolojamObject ho;
 
 							//Reform managedObjects every frame.
 							//Inefficient for now, but will allow us to determine
 							//if an object is registered or not.
-
 
 							ho = new HolojamObject(label);
 							managedObjects[label] = ho;
@@ -266,10 +272,12 @@ namespace Holojam.Network {
 
 							//Get blob if it's there. Inefficient
 							ho.blob = or.extra_data;
+							
+							ho.isTracked = or.is_tracked;
 						}
 					}
 				}
-
+				
 				if (!isRunning) {
 					socket.Close();
 					break;
@@ -317,10 +325,10 @@ namespace Holojam.Network {
 					update.mod_version = lastLoadedFrame;
 					update.lhs_frame = false;
 					lastLoadedFrame++;
+					
 					foreach (KeyValuePair<string, HolojamObject> entry in managedObjects) {
-						LiveObject o = entry.Value.ToLiveObject();	
+						LiveObject o = entry.Value.ToLiveObject();
 						update.live_objects.Add(o);
-
 					}
 					using (MemoryStream stream = new MemoryStream()) {
 						packetCount++;
@@ -358,6 +366,7 @@ namespace Holojam.Network {
 		public Quaternion rotation = DEFAULT_ROTATION;
 		public int bits = 0;
 		public string blob = "";
+		public bool isTracked = false;
 
 		public HolojamObject(string label) {
 			this.label = label;
@@ -381,6 +390,8 @@ namespace Holojam.Network {
 			if (!string.IsNullOrEmpty(blob)) {
 				o.extra_data = blob;
 			}
+			
+			o.is_tracked = isTracked;
 
 			return o;
 		}
@@ -392,6 +403,7 @@ namespace Holojam.Network {
 			o.rotation = view.RawRotation;
 			o.bits = view.Bits;
 			o.blob = view.Blob;
+			o.isTracked = view.IsTracked;
 
 			return o;
 		}
