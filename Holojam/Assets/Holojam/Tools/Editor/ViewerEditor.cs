@@ -8,11 +8,12 @@ using Holojam.Network;
 namespace Holojam{
 	[CustomEditor(typeof(Viewer)), CanEditMultipleObjects]
 	public class ViewerEditor : Editor{
-		SerializedProperty trackingType, actor, trackingTag;
+		SerializedProperty trackingType, actor, trackingTag, localSpace;
 		void OnEnable(){
 			trackingType=serializedObject.FindProperty("trackingType");
 			actor=serializedObject.FindProperty("actor");
 			trackingTag=serializedObject.FindProperty("trackingTag");
+			localSpace=serializedObject.FindProperty("localSpace");
 		}
 		
 		public override void OnInspectorGUI(){
@@ -25,6 +26,7 @@ namespace Holojam{
 			
 			EditorGUI.BeginDisabledGroup(v.view==null);
 				EditorGUILayout.PropertyField(trackingTag);
+				EditorGUILayout.PropertyField(localSpace);
 			EditorGUI.EndDisabledGroup();
 			
 			if(!serializedObject.isEditingMultipleObjects){

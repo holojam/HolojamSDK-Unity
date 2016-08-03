@@ -8,17 +8,15 @@ using Holojam.Network;
 namespace Holojam{
    [ExecuteInEditMode]
    public class Holobounds : MonoBehaviour{
-      public Vector2[] bounds = new Vector2[4]; //Corners (FL, FR, BR, BL)
+      public Vector2[] bounds = new Vector2[4]; //Raw corners (FL, FR, BR, BL)
       public float floor = 0; //Floor Y
       public float ceiling = 3; //Ceiling Y -- not used for tracking
+      public bool localSpace = false;
 
       public HolojamView calibrator; //Tracked tool for setting values
 
       //Reference values & functions
 
-      public Vector3 center{get{
-         return Floor(0.25f*(bounds[0]+bounds[1]+bounds[2]+bounds[3]));
-      }}
       public float area{get{
          float a = 0;
          for(int i=0;i<4;++i){
@@ -31,14 +29,31 @@ namespace Holojam{
       public float xRatio{get{ //Ratio between side medians
          return Vector2.Distance(Side(3),Side(1)) / Vector2.Distance(Side(0),Side(2));
       }}
+      //Bounds rotation
+      public Quaternion rotation{get{
+         return localSpace && transform.parent!=null?
+            transform.parent.rotation:Quaternion.identity;
+      }}
+
+      //Offset from center of floor
+      public Vector3 Offset(Vector3 o){
+         Vector3 f = Floor(0.25f*(bounds[0]+bounds[1]+bounds[2]+bounds[3]))+o;
+         return localSpace && transform.parent!=null?
+            transform.parent.TransformPoint(f):f;
+      }
 
       //Bounding corner points
       public Vector3 Corner(int i){return Floor(bounds[i]);}
-      public Vector3 Upper(int i){return Corner(i)+Vector3.up*ceiling;}
+      public Vector3 Upper(int i){return Ceiling(bounds[i]);}
 
       //Distance from input point to edge of bounds
       public float Distance(Vector3 target){ 
-         Vector2 t = new Vector2(target.x,target.z); //Do calculations in 2D
+         //Do calculations in 2D
+         Vector2 t = new Vector2(target.x,target.z);
+         if(localSpace && transform.parent!=null){
+            Vector3 local = transform.parent.InverseTransformPoint(target);
+            t=new Vector3(local.x,local.z);
+         }
 
          float minDistance = -1;
          for(int i=0;i<4;++i){ //Iterate through corners
@@ -62,11 +77,34 @@ namespace Holojam{
       }
       //Draw for editor & debug
       void OnDrawGizmos(){
+         //Draw ghost at origin if in local space
+         if(localSpace && transform.parent!=null){
+            Gizmos.color=new Color(0.5f,0.25f,0);
+            for(int i=0;i<4;++i){
+               Vector3 corner = new Vector3(bounds[i].x,floor,bounds[i].y);
+               int next = (i+1)%4;
+               Gizmos.DrawLine(corner,new Vector3(bounds[next].x,floor,bounds[next].y));
+               Gizmos.DrawRay(corner,Vector3.up*ceiling);
+            }
+         }
+         //Normal drawing
          Gizmos.color=new Color(1,0.5f,0); //Orange
          for(int i=0;i<4;++i){
             //Edges and corners
             Gizmos.DrawLine(Corner(i),Corner((i+1)%4));
             Gizmos.DrawLine(Corner(i),Upper(i));
+         }
+      }
+
+      //Freeze transform
+      void Update(){
+         if(!localSpace || transform.parent==null){
+            transform.position=Vector3.zero;
+            transform.rotation=Quaternion.identity;
+         }
+         else{
+            transform.localPosition=Vector3.zero;
+            transform.localRotation=Quaternion.identity;
          }
       }
 
@@ -88,8 +126,15 @@ namespace Holojam{
          }
       }
 
-      //Convert Vector2 to floored Vector3 (for ease of use)
-      Vector3 Floor(Vector2 v){return new Vector3(v.x,floor,v.y);}
+      //Convert Vector2s to Vector3s (for ease of use)
+      Vector3 Floor(Vector2 v){
+         Vector3 f = new Vector3(v.x,floor,v.y);
+         return localSpace && transform.parent!=null? transform.parent.TransformPoint(f):f;
+      }
+      Vector3 Ceiling(Vector2 v){
+         Vector3 c = new Vector3(v.x,ceiling,v.y);
+         return localSpace && transform.parent!=null? transform.parent.TransformPoint(c):c;
+      }
       //Median point of each side (F, R, B, L)
       Vector2 Side(int i){return 0.5f*(bounds[i++]+bounds[i%4]);}
 

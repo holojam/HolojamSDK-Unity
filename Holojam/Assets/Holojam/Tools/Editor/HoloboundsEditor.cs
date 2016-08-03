@@ -10,8 +10,9 @@ namespace Holojam{
 	public class HoloboundsEditor : Editor{
 		static bool fold = true;
 		
-		SerializedProperty calibrator, bounds, floor, ceiling;
+		SerializedProperty localSpace, calibrator, bounds, floor, ceiling;
 		void OnEnable(){
+			localSpace=serializedObject.FindProperty("localSpace");
 			calibrator=serializedObject.FindProperty("calibrator");
 			bounds=serializedObject.FindProperty("bounds");
 			floor=serializedObject.FindProperty("floor");
@@ -21,6 +22,7 @@ namespace Holojam{
 		public override void OnInspectorGUI(){
 			serializedObject.Update();
 			
+			EditorGUILayout.PropertyField(localSpace);
 			EditorGUILayout.PropertyField(calibrator);
 			
 			Holobounds h = (Holobounds)serializedObject.targetObject;

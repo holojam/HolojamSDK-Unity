@@ -15,6 +15,7 @@ namespace Holojam{
 		public Actor actor = null;
 		[HideInInspector] public HolojamView view = null;
 		public Motive.Tag trackingTag = Motive.Tag.HEADSET1;
+		public bool localSpace = false;
 		
 		const float correctionThreshold = 0.98f; //Lower values allow greater deviation without correction
 		Quaternion correction = Quaternion.identity;
@@ -45,8 +46,12 @@ namespace Holojam{
 			Quaternion sourceRotation = GetRotation();
 			bool sourceTracked = GetTracked();
 			
+			//Don't use Camera.main (reference to Oculus' instantiated camera at runtime)
+			//in the editor or standalone, reference the child camera instead
+			Vector3 cameraPosition = Utility.IsMasterPC()?
+				GetComponentInChildren<Camera>().transform.position:Camera.main.transform.position;
 			//Negate Oculus' automatic head offset (variable reliant on orientation) independent of recenters
-			transform.position+=sourcePosition-Camera.main.transform.position;
+			transform.position+=sourcePosition-cameraPosition;
 			
 			if(sourceTracked){
 				Quaternion imu = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.CenterEye);
@@ -58,8 +63,15 @@ namespace Holojam{
 					lastRotation=imu; lastTime=Time.time;
 				}
 				
+				//Ignore local space rotation in the IMU calculations
+				Quaternion localRotation = transform.rotation;
+				if(actor!=null && actor.localSpace && actor.transform.parent!=null)
+					localRotation=Quaternion.Inverse(actor.transform.parent.rotation)*transform.rotation;
+				else if(actor==null && localSpace && transform.parent!=null)
+					localRotation=Quaternion.Inverse(transform.parent.rotation)*transform.rotation;
+				
 				//Recalculate IMU correction if stale (generally on init/recenter)
-				if(Quaternion.Dot(transform.rotation*imu,sourceRotation)<=correctionThreshold
+				if(Quaternion.Dot(localRotation*imu,sourceRotation)<=correctionThreshold
 					&& difference>=differenceThreshold) //But not if the headset is moving quickly
 					correction=optical;
 				
@@ -67,7 +79,7 @@ namespace Holojam{
 				switch(trackingType){
 					case TrackingType.IMU: //IMU, absolutely oriented by optical tracking intermittently
 						if(Utility.IsMasterPC())
-							goto case TrackingType.OPTICAL; //Don't use IMU tracking in the editor
+							goto case TrackingType.OPTICAL; //Don't use IMU tracking in the editor or standalone
 						transform.rotation=correction;
 						break;
 					case TrackingType.OPTICAL: //Purely optical tracking, no IMU
@@ -78,9 +90,19 @@ namespace Holojam{
 						break;
 				}
 			} else transform.rotation=correction; //Transition seamlessly to IMU when untracked
+			
+			//Apply local rotation if necessary
+			if(actor!=null && actor.localSpace && actor.transform.parent!=null)
+				transform.rotation=actor.transform.parent.rotation*transform.rotation;
+			else if(actor==null && localSpace && transform.parent!=null)
+				transform.rotation=transform.parent.rotation*transform.rotation;
 		}
 		//Get tracking data from desired source
-		Vector3 GetPosition(){return actor!=null?actor.eyes:view.RawPosition;}
+		Vector3 GetPosition(){
+			return actor!=null? actor.eyes:
+			localSpace && transform.parent!=null?
+				transform.parent.TransformPoint(view.RawPosition) : view.RawPosition;
+		}
 		Quaternion GetRotation(){return actor!=null?actor.rawOrientation:view.RawRotation;}
 		bool GetTracked(){return actor!=null?actor.view.IsTracked:view.IsTracked;}
 	}

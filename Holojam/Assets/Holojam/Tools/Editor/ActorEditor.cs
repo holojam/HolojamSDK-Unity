@@ -12,11 +12,12 @@ namespace Holojam{
 		protected virtual void EnableDerived(){}
 		protected virtual void DrawDerived(){}
 		
-		SerializedProperty handle, motif, trackingTag, mask;
+		SerializedProperty handle, motif, trackingTag, localSpace, mask;
 		void OnEnable(){
 			handle=serializedObject.FindProperty("handle");
 			motif=serializedObject.FindProperty("motif");
 			trackingTag=serializedObject.FindProperty("trackingTag");
+			localSpace=serializedObject.FindProperty("localSpace");
 			mask=serializedObject.FindProperty("mask");
 			
 			EnableDerived();
@@ -30,6 +31,8 @@ namespace Holojam{
 				EditorGUILayout.PropertyField(trackingTag,new GUIContent(""));
 				EditorGUILayout.PropertyField(motif,new GUIContent(""),GUILayout.Width(48));
 			EditorGUILayout.EndHorizontal();
+			
+			EditorGUILayout.PropertyField(localSpace);
 			
 			EditorGUILayout.PropertyField(mask);
 			DrawDerived();
