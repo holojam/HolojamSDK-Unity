@@ -27,7 +27,8 @@ namespace Holojam{
 		float lastTime = 0;
 		Quaternion lastRotation = Quaternion.identity;
 		
-		void Update(){
+		//Update late to catch local space updates
+		void LateUpdate(){
 			//Flush extra components if necessary
 			HolojamView[] views = GetComponents<HolojamView>();
 			if((view==null && views.Length>0) || (view!=null && (views.Length>1 || views.Length==0))){

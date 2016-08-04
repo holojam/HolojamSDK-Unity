@@ -55,11 +55,11 @@ namespace Holojam{
          Quad(holobounds.Corner(3),holobounds.Upper(3),holobounds.Upper(0),holobounds.Corner(0));
       }
       void Quad(Vector3 bl, Vector3 tl, Vector3 tr, Vector3 br){
-         //Set vertices
-         verts.Add(tl);
-         verts.Add(tr);
-         verts.Add(br);
-         verts.Add(bl);
+         //Set vertices (negate local offset)
+         verts.Add(tl-transform.position);
+         verts.Add(tr-transform.position);
+         verts.Add(br-transform.position);
+         verts.Add(bl-transform.position);
 
          //Build triangles
          int prefix = quadIndex*4;

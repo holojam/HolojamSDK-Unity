@@ -20,7 +20,7 @@ namespace Holojam{
 		
 		void UpdateView(){
 			view.Label=label;
-			sending=sending || (useMasterPC && Utility.IsMasterPC());
+			sending=(sending && !useMasterPC) || (useMasterPC && Utility.IsMasterPC());
 			view.IsMine=sending;
 		}
 		

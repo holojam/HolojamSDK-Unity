@@ -27,6 +27,7 @@ GameObject:
   - 4: {fileID: 481370}
   - 114: {fileID: 11457976}
   - 114: {fileID: 11402444}
+  - 135: {fileID: 13520608}
   m_Layer: 0
   m_Name: Grip
   m_TagString: Untagged
@@ -107,6 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTag: 11
+  localSpace: 0
   type: Grip
   centerOffset: {x: 0, y: -0.055, z: 0.035}
   pairedActor: {fileID: 0}
@@ -124,6 +126,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: VR1_lefthand
   isMine: 0
+--- !u!135 &13520608
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133650}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.052900232
+  m_Center: {x: 0, y: -0.055, z: 0.035}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
