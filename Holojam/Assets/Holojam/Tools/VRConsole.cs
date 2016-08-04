@@ -7,6 +7,7 @@ namespace Holojam{
 	public class VRConsole : MonoBehaviour {
 
 		string privateCache;
+		string freshStrings;
 		public int numLinesDisplayed = 5;
 		public bool linewrapOn = true;
 		public int numCharsPerLine = 20;
@@ -16,30 +17,31 @@ namespace Holojam{
 		// Use this for initialization
 		void Start () {
 			privateCache = "";
+			freshStrings = "";
+			getConsole ().GetComponent<Renderer> ().enabled = false;
 		}
 		
 		// Update is called once per frame
-		public virtual void Update () {
+		public void FixedUpdate () {
 			toggleDisplay ();
-			//println (Time.time.ToString());
-			//var centerEye = UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.CenterEye);
-			//var head = UnityEngine.VR.InputTracking.GetLocalPosition (UnityEngine.VR.VRNode.Head);
-			//var leftEye = UnityEngine.VR.InputTracking.GetLocalPosition (UnityEngine.VR.VRNode.LeftEye);
-			//var rightEye = UnityEngine.VR.InputTracking.GetLocalPosition (UnityEngine.VR.VRNode.RightEye);
-			//VRConsoleDebug.println("CenterEye: (" + centerEye.x.ToString("F8") + "," + centerEye.y.ToString("F8") + "," + centerEye.z.ToString("F8") + ")");
-			//print ("Head: " + head);
-			//print ("LeftEye: " + leftEye);
-			//print ("RightEye: " + rightEye);
-			//VRConsoleDebug.println("CenterEye: " + Vector3.Distance(centerEye, Vector3.zero).ToString("F8"));
-			//print ("Head: " + Vector3.Distance(head, Vector3.zero));
-			//print ("LeftEye: " + Vector3.Distance(leftEye, Vector3.zero));
-			//print ("HeadToCenter: " + Vector3.Distance(centerEye, head));
-			//print ("RightEye: " + Vector3.Distance(rightEye, Vector3.zero));
+			printFreshStrings();
 			reformat ();
 		}
 
+		private void printFreshStrings() {
+			if (freshStrings.Equals ("")) {
+				return;
+			}
+			if (freshStrings.LastIndexOf ("\n") != freshStrings.Length - 1) {
+				freshStrings += "\n";
+			}
+			print (freshStrings);
+			privateCache += freshStrings;
+			freshStrings = "";
+		}
+
 		private void toggleDisplay() {
-			if (Input.GetButtonDown ("Tap")) {
+			if (Input.GetKeyDown (KeyCode.Mouse0)) {
 				getConsole ().GetComponent<Renderer> ().enabled = !getConsole ().GetComponent<Renderer> ().enabled;
 			}
 		}
@@ -78,6 +80,10 @@ namespace Holojam{
 			}
 		}
 
+		public void queueForPrinting(string s) {
+			freshStrings += s;
+		}
+
 		void replaceAllInstancesOfChar(char c) {
 			setText(getConsole().text.Replace("\n",""));
 		}
@@ -109,6 +115,9 @@ namespace Holojam{
 				strings = copy.Split (newLineArray, 2);
 				build += Regex.Replace (strings[0], ".{"+numCharsPerLine+"}(?!$)", "$0\n");
 				build += "\n";
+				if (strings.Length < 2) {
+					break;
+				} 
 				copy = strings [1];
 			}
 			setText (build);
