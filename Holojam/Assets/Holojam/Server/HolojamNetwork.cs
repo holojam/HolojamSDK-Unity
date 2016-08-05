@@ -334,13 +334,29 @@ namespace Holojam.Network {
 			socket.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
 
 			IPEndPoint ipEndPoint = new IPEndPoint(ip, 0);
-			IPEndPoint send_ipEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.44"), port);
+			string sendingIP = "192.168.1.44";
+			IPEndPoint send_ipEndPoint = new IPEndPoint(IPAddress.Parse(sendingIP), port);
 
 			try {
 				socket.Bind(ipEndPoint);
 			} catch (SocketException e) {
 				Debug.LogWarning("Error binding socket: " + ip.ToString() + " " + port + " " + e.ToString());
 				isRunning = false;
+			}
+
+			//Checks if sending ip is local. If not, then we'll ping
+			//the server for a unicast stream
+			if (!sendingIP.StartsWith("192.")) {
+				update = new update_protocol_v3.Update ();
+				update.label = "ping";
+				update.mod_version = 0;
+				update.lhs_frame = false;
+
+				using (MemoryStream stream = new MemoryStream ()) {
+					Serializer.Serialize<Update> (stream, update);
+					packetBytes = stream.GetBuffer ();
+					socket.SendTo (packetBytes, send_ipEndPoint);
+				}
 			}
 
 			while (isRunning) {
