@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 482812}
   - 114: {fileID: 11414520}
-  - 114: {fileID: 11404294}
   m_Layer: 0
   m_Name: Viewer
   m_TagString: Untagged
@@ -74,7 +73,7 @@ Transform:
   m_GameObject: {fileID: 150638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.75, y: 1.25, z: 6}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 411078}
@@ -167,9 +166,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 150638}
-  m_Text: '
-
-'
+  m_Text: 
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -197,19 +194,6 @@ MonoBehaviour:
   numLinesDisplayed: 4
   linewrapOn: 1
   numCharsPerLine: 30
---- !u!114 &11404294
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 114792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  label: 
-  isMine: 0
 --- !u!114 &11414520
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -223,7 +207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackingType: 2
   actor: {fileID: 0}
-  view: {fileID: 11404294}
+  view: {fileID: 0}
   trackingTag: 0
   localSpace: 0
 --- !u!1001 &100100000
