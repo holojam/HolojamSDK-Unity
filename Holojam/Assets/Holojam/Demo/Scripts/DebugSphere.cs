@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DebugSphere : MonoBehaviour{
 	public float offset = 0;
-	public Holojam.Actor target;
+	public Holojam.Tools.Actor target;
 	
 	void Update(){transform.position=target.eyes+target.look*offset;}
 }

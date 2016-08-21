@@ -5,7 +5,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 
 public class ExampleFloor : MonoBehaviour{
-	public Holojam.Holobounds holobounds;
+	public Holojam.Tools.Holobounds holobounds;
 	public float scale = 2;
 	public bool square = false;
 	

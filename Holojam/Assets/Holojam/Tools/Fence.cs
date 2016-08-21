@@ -5,8 +5,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Holojam{
-
+namespace Holojam.Tools{
    [RequireComponent(typeof(Holobounds))]
    [RequireComponent(typeof(MeshFilter))]
    [RequireComponent(typeof(MeshRenderer))]

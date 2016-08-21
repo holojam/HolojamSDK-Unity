@@ -7,7 +7,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public class RoomGenerator : MonoBehaviour{
-	public Holojam.Holobounds holobounds;
+	public Holojam.Tools.Holobounds holobounds;
 	
 	public Material floorMaterial, ceilingMaterial;
 	public Material[] wallMaterials = new Material[4];

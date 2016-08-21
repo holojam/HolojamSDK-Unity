@@ -5,7 +5,7 @@
 using UnityEngine;
 using Holojam.Network;
 
-namespace Holojam{
+namespace Holojam.Tools{
    [ExecuteInEditMode]
    public class Holobounds : MonoBehaviour{
       public Vector2[] bounds = new Vector2[4]; //Raw corners (FL, FR, BR, BL)

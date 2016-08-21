@@ -4,32 +4,41 @@
 
 using UnityEngine;
 
-public class ActorController : Holojam.Actor{
-	public Transform head;
-	
-	protected override void UpdateTracking(){
-		if(view.IsTracked){
-			transform.position=trackedPosition;
-			
-			//This example type uses a separate transform for rotation (a head) instead of itself
-			if(head!=null){
-				head.localPosition=Vector3.zero;
-				head.rotation=trackedRotation;
-			}
-			else Debug.LogWarning("ActorController: No head found for "+gameObject.name);
-		}
-	}
-	//The orientation accessor matches the rotation assignment above
-	public override Quaternion orientation{
-		get{return head!=null?head.rotation:Quaternion.identity;}
-	}
-	
-	//Assign color of geometry with Motif tag
-	void Start(){ApplyMotif();}
-	
-	void ApplyMotif(){
-		if(Application.isPlaying)
-			foreach(Renderer r in GetComponentsInChildren<Renderer>())
-				if(r.gameObject.tag=="Motif")r.material.color=motif;
-	}
+public class ActorController : Holojam.Tools.Actor{
+   public Transform head;
+
+   protected override void Update(){
+      UpdateView();
+
+      //Update overridden to add this line
+      if(actorManager.runtimeIndexing)ApplyMotif();
+
+      if(!Application.isPlaying)return;
+      UpdateTracking();
+   }
+   protected override void UpdateTracking(){
+      if(view.IsTracked){
+         transform.position = trackedPosition;
+
+         //This example type uses a separate transform for rotation (a head) instead of itself
+         if(head!=null){
+            head.localPosition = Vector3.zero;
+            head.rotation = trackedRotation;
+         }
+         else Debug.LogWarning("ActorController: No head found for "+gameObject.name);
+      }
+   }
+   //The orientation accessor matches the rotation assignment above
+   public override Quaternion orientation{
+      get{return head!=null?head.rotation:Quaternion.identity;}
+   }
+
+   //Assign color of geometry with Motif tag
+   void Start(){ApplyMotif();}
+
+   void ApplyMotif(){
+      if(Application.isPlaying)
+         foreach(Renderer r in GetComponentsInChildren<Renderer>())
+            if(r.gameObject.tag=="Motif")r.material.color = motif;
+   }
 }

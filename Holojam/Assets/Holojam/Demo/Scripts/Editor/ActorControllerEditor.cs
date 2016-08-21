@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(ActorController)), CanEditMultipleObjects]
-public class ActorControllerEditor : Holojam.ActorEditor{
+public class ActorControllerEditor : Holojam.Tools.ActorEditor{
 	SerializedProperty head;
 	protected override void EnableDerived(){
 		head=serializedObject.FindProperty("head");

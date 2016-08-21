@@ -3,7 +3,7 @@
 
 using UnityEngine;
 
-public class HoloTime : Holojam.Synchronizable{
+public class HoloTime : Holojam.Tools.Synchronizable{
 	public float time = 0;
 	
 	protected override void Sync(){

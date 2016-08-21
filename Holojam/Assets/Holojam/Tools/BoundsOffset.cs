@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace Holojam{
+namespace Holojam.Tools{
 	[ExecuteInEditMode]
 	public class BoundsOffset : MonoBehaviour{
 		public Holobounds holobounds;

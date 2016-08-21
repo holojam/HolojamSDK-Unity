@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Text.RegularExpressions;
 
-namespace Holojam{
+namespace Holojam.Tools{
 
 	public class VRDebug : MonoBehaviour{
 

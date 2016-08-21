@@ -6,7 +6,7 @@ using UnityEngine;
 using Holojam.Network;
 using System;
 
-namespace Holojam{
+namespace Holojam.Tools{
 	[ExecuteInEditMode]
 	[RequireComponent(typeof(ActorManager))]
 	public class ActorInstantiator : MonoBehaviour{

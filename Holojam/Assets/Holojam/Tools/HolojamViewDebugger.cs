@@ -4,7 +4,7 @@
 using UnityEngine;
 using Holojam.Network;
 
-namespace Holojam{
+namespace Holojam.Tools{
 	[ExecuteInEditMode, RequireComponent(typeof(HolojamView))]
 	public class HolojamViewDebugger : MonoBehaviour{
 		public string label;

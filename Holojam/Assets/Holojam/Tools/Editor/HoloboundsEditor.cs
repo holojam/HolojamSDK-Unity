@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using Holojam.Network;
 
-namespace Holojam{
+namespace Holojam.Tools{
 	[CustomEditor(typeof(Holobounds))]
 	public class HoloboundsEditor : Editor{
 		static bool fold = true;

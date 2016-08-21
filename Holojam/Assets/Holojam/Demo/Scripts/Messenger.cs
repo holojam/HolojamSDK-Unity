@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(TextMesh))]
-public class Messenger : Holojam.Synchronizable{
+public class Messenger : Holojam.Tools.Synchronizable{
 	void Reset(){label="Messenger";}
 	
 	[Space(8)] public string handle = "";

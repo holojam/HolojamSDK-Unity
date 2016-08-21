@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Holojam{
+namespace Holojam.Tools{
 	[CustomEditor(typeof(ActorInstantiator))]
 	public class ActorInstantiatorEditor : Editor{
 		SerializedProperty actor, amount;

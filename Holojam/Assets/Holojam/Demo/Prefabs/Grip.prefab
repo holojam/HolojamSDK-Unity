@@ -111,8 +111,11 @@ MonoBehaviour:
   localSpace: 0
   type: Grip
   centerOffset: {x: 0, y: -0.055, z: 0.035}
-  pairedActor: {fileID: 0}
-  lastPaired: 0
+  pairTime: 1.3
+  unpairTime: 1.6
+  cooldown: 1.5
+  pairCap: 0
+  pairedTo: {fileID: 0}
 --- !u!114 &11457976
 MonoBehaviour:
   m_ObjectHideFlags: 1
