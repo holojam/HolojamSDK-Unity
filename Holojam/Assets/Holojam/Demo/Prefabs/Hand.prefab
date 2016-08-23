@@ -29,7 +29,7 @@ GameObject:
   - 114: {fileID: 11402444}
   - 135: {fileID: 13520608}
   m_Layer: 0
-  m_Name: Grip
+  m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,12 +109,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackingTag: 11
   localSpace: 0
-  type: Grip
+  type: Hand
   centerOffset: {x: 0, y: -0.055, z: 0.035}
   pairTime: 1.3
   unpairTime: 1.6
   cooldown: 1.5
-  pairCap: 0
   pairedTo: {fileID: 0}
 --- !u!114 &11457976
 MonoBehaviour:

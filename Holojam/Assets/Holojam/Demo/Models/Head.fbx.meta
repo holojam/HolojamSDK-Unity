@@ -1,22 +1,27 @@
 fileFormatVersion: 2
-guid: 43f15b34756694b62ac4606248a7c6a9
-timeCreated: 1471834639
+guid: 14ec31b65366e4f5f8b9f8242f66b5ae
+timeCreated: 1471933961
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Poncho
+    100000: Eyes
     100002: //RootNode
-    100004: Torso
-    400000: Poncho
+    100004: Head
+    100006: Snapback
+    400000: Eyes
     400002: //RootNode
-    400004: Torso
-    2300000: Poncho
-    2300002: Torso
-    3300000: Poncho
-    3300002: Torso
-    4300000: Poncho
-    4300002: Torso
+    400004: Head
+    400006: Snapback
+    2300000: Eyes
+    2300002: Head
+    2300004: Snapback
+    3300000: Eyes
+    3300002: Head
+    3300004: Snapback
+    4300000: Snapback
+    4300002: Eyes
+    4300004: Head
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -43,7 +48,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.2
+    globalScale: 10
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1

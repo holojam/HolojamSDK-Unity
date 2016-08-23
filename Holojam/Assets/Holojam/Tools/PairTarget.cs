@@ -172,7 +172,7 @@ namespace Holojam.Tools{
          foreach(TypeCap cap in typeCaps)
             if(cap.type==type)
                return cap.cap==0 || PairCount(type)<cap.cap;
-         return false;
+         return true; //If not found, assume unlimited
       }
 
       //Update paired list and reset timers

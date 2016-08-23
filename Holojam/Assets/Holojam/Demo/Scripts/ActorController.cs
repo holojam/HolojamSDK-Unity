@@ -10,10 +10,11 @@ public class ActorController : Holojam.Tools.Actor{
    protected override void Update(){
       UpdateView();
 
+      if(!Application.isPlaying)return;
+
       //Update overridden to add this line
       if(actorManager.runtimeIndexing)ApplyMotif();
 
-      if(!Application.isPlaying)return;
       UpdateTracking();
    }
    protected override void UpdateTracking(){
@@ -38,7 +39,7 @@ public class ActorController : Holojam.Tools.Actor{
 
    void ApplyMotif(){
       if(Application.isPlaying)
-         foreach(Renderer r in GetComponentsInChildren<Renderer>())
+         foreach(Renderer r in GetComponentsInChildren<Renderer>(true))
             if(r.gameObject.tag=="Motif")r.material.color = motif;
    }
 }

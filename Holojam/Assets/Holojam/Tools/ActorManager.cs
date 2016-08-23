@@ -2,8 +2,10 @@
 //Created by Aaron C Gaudette on 22.06.16
 
 using UnityEngine;
-using UnityEditor;
 using Holojam.Network;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Holojam.Tools{
    [ExecuteInEditMode]
@@ -34,7 +36,7 @@ namespace Holojam.Tools{
 
       enum Result{INDEXED,PASSED,EMPTY,NOBUILD,NOVIEW};
       Result Index(bool force = false){
-         int count = transform.GetComponentsInChildren<Actor>().Length;
+         int count = transform.GetComponentsInChildren<Actor>(true).Length;
          if(actors.Length!=count)actors = new Actor[count];
          int[] indices = new int[count];
 
@@ -93,7 +95,9 @@ namespace Holojam.Tools{
          }
          else{
             viewer.actor=buildActor;
+            #if UNITY_EDITOR
             EditorUtility.SetDirty(viewer);
+            #endif
          }
 
          return Result.INDEXED;

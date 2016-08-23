@@ -3,7 +3,6 @@
 //Rewrite of TrackedHeadset.cs, completed on 02.07.16
 
 using UnityEngine;
-using UnityEditor;
 using Holojam.Network;
 
 namespace Holojam.Tools{

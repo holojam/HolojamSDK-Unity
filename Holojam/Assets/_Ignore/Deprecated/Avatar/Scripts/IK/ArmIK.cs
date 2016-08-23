@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Holojam.Avatar.IK {
 
-    [ExecuteInEditMode]
+    //[ExecuteInEditMode]
     public class ArmIK : MonoBehaviour {
 
         public bool debug = true;
@@ -45,6 +45,7 @@ namespace Holojam.Avatar.IK {
             C = tempEnd.localPosition;//endEffector.position - startEffector.position;
             D = Hint(C);
 
+            /*
             //smoothing
             float t = Mathf.Sqrt(Vector3.Dot(C, C)) / (a + b) - .2f;
             t = Mathf.Max(0, Mathf.Min(1, t * t * (3 - t - t)));
@@ -52,6 +53,7 @@ namespace Holojam.Avatar.IK {
             a *= t;
             b *= t;
             //smoothing
+            */
 
             cc = Vector3.Dot(C, C);
             x = (1 + (a * a - b * b) / cc) / 2;

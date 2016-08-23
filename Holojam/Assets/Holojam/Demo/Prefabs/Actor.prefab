@@ -277,6 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackingTag: 0
+  localSpace: 0
   handle: Actor
   motif: {r: 1, g: 1, b: 1, a: 1}
   mask: {fileID: 162842}
