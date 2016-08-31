@@ -6,7 +6,7 @@ namespace Holojam.Tools{
 
 	public class VRConsole : MonoBehaviour {
 
-		string privateCache;
+		//string privateCache;
 		string freshStrings;
 		public int numLinesDisplayed = 5;
 		public bool linewrapOn = true;
@@ -16,7 +16,7 @@ namespace Holojam.Tools{
 
 		// Use this for initialization
 		void Start () {
-			privateCache = "";
+			//privateCache = "";
 			freshStrings = "";
 			getConsole ().GetComponent<Renderer> ().enabled = false;
 		}
@@ -36,7 +36,7 @@ namespace Holojam.Tools{
 				freshStrings += "\n";
 			}
 			print (freshStrings);
-			privateCache += freshStrings;
+			//privateCache += freshStrings;
 			freshStrings = "";
 		}
 
@@ -132,7 +132,7 @@ namespace Holojam.Tools{
 
 			while (numNewLines > numLinesDisplayed) {
 				strings = temp.Split(newLineArray, 2);
-				privateCache += (strings [0] + '\n');
+				//privateCache += (strings [0] + '\n');
 				temp = strings [1];
 				numNewLines--;
 			}
