@@ -245,6 +245,7 @@ namespace Holojam.Network {
 			socket.Bind(new IPEndPoint(IPAddress.Any, port));
 			socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, 
 								   new MulticastOption(IPAddress.Parse("224.1.1.1")));
+			socket.ReceiveTimeout = 1000;
 
 			int nBytesReceived = 0;
 			while (isRunning) {
@@ -332,6 +333,7 @@ namespace Holojam.Network {
 			//Debug.Log("Attempting to open send thread with ip/port: " + ip.ToString() + " " + port);
 			Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			socket.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+			socket.SendTimeout = 1000;
 
 			IPEndPoint ipEndPoint = new IPEndPoint(ip, 0);
 			string sendingIP = "192.168.1.44";
