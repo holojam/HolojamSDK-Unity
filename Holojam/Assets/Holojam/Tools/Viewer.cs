@@ -99,7 +99,7 @@ namespace Holojam.Tools{
             transform.rotation=transform.parent.rotation*transform.rotation;
 
          //Prints tracking status to VR debugger
-         VRDebug.println(actor!=null? actor.trackingTag.ToString():trackingTag.ToString());
+         VRDebug.Println(actor!=null? actor.trackingTag.ToString():trackingTag.ToString());
       }
       //Get tracking data from desired source
       Vector3 GetPosition(){
