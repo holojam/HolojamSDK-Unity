@@ -20,7 +20,8 @@ namespace Holojam.Tools{
 
       protected void UpdateView(){
          view.Label=label;
-         view.IsMine = sending && (Utility.IsMasterPC() || !useMasterPC);
+         sending = sending && (Utility.IsMasterPC() || !useMasterPC);
+         view.IsMine = sending;
       }
 
       public Vector3 synchronizedVector3{

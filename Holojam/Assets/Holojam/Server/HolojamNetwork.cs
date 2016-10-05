@@ -11,6 +11,9 @@ using System.Threading;
 namespace Holojam.Network {
 	public class HolojamNetwork : Singleton<HolojamNetwork> {
 
+		public string multicastAddress = "224.1.1.1", serverAddress = "192.168.1.44";
+		public int multicastPort = 1611, serverPort = 1611;
+
 		//Editor debugging
 		public int sentWarning = -1, receivedWarning = 48;
 		public int sentPPS;
@@ -23,7 +26,7 @@ namespace Holojam.Network {
 		public List<int> receivedPacketsPerSecond;
 
 		//Constant and Read-only
-		public const int PORT = 1611;
+		//public const int PORT = 1611;
 
 		private HolojamSendThread sendThread;
 		private List<HolojamReceiveThread> receiveThreads;
@@ -31,10 +34,10 @@ namespace Holojam.Network {
 		void Start() {
 			receivedPacketsPerSecond = new List<int> ();
 			
-			sendThread = new HolojamSendThread(PORT);
+			sendThread = new HolojamSendThread(serverPort,serverAddress);
 			receiveThreads = new List<HolojamReceiveThread> ();
 			receivedPPS = new List<int> ();
-			AddReceiveThread(PORT);
+			AddReceiveThread(multicastPort,multicastAddress);
 			//AddReceiveThread(HOLOJAM_NONMOTIVE_PORT);
 
 			sendThread.Start();
@@ -45,8 +48,8 @@ namespace Holojam.Network {
 			StartCoroutine(DisplayPacketsPerSecond());
 		}
 
-		void AddReceiveThread(int port) {
-			receiveThreads.Add(new HolojamReceiveThread(port));
+		void AddReceiveThread(int port,string address){
+			receiveThreads.Add(new HolojamReceiveThread(port,address));
 			receivedPacketsPerSecond.Add (0);
 			receivedPPS.Add (0);
 		}
@@ -139,6 +142,7 @@ namespace Holojam.Network {
 		protected Thread thread;
 
 		protected int port;
+		protected string address;
 		protected Dictionary<string, HolojamObject> managedObjects = new Dictionary<string, HolojamObject>();
 		protected UnityEngine.Object lockObject = new UnityEngine.Object();
 		protected int packetCount = 0;
@@ -157,8 +161,9 @@ namespace Holojam.Network {
 			get { return isRunning; }
 		}
 
-		protected HolojamThread(int port) {
+		protected HolojamThread(int port, string address) {
 			this.port = port;
+			this.address = address;
 			thread = new Thread(ThreadStart);
 		}
 
@@ -237,14 +242,14 @@ namespace Holojam.Network {
 			}
 		}
 
-		public HolojamReceiveThread(int port) : base(port) { }
+		public HolojamReceiveThread(int port, string address) : base(port,address) { }
 
 		public void Receive() {
 			Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			socket.SetSocketOption (SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
 			socket.Bind(new IPEndPoint(IPAddress.Any, port));
 			socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, 
-								   new MulticastOption(IPAddress.Parse("224.1.1.1")));
+				new MulticastOption(IPAddress.Parse(address)));
 			socket.ReceiveTimeout = 1000;
 
 			int nBytesReceived = 0;
@@ -327,7 +332,7 @@ namespace Holojam.Network {
 			}
 		}
 
-		public HolojamSendThread(int port) : base(port) { }
+		public HolojamSendThread(int port, string address) : base(port,address) { }
 
 		public void Send() {
 			//Debug.Log("Attempting to open send thread with ip/port: " + ip.ToString() + " " + port);
@@ -336,7 +341,8 @@ namespace Holojam.Network {
 			socket.SendTimeout = 1000;
 
 			IPEndPoint ipEndPoint = new IPEndPoint(ip, 0);
-			string sendingIP = "192.168.1.44";
+			//string sendingIP = "192.168.1.44";
+			string sendingIP = address;
 			IPEndPoint send_ipEndPoint = new IPEndPoint(IPAddress.Parse(sendingIP), port);
 
 			try {
@@ -356,7 +362,7 @@ namespace Holojam.Network {
 
 				using (MemoryStream stream = new MemoryStream ()) {
 					Serializer.Serialize<Update> (stream, update);
-					packetBytes = stream.GetBuffer ();
+					packetBytes = stream.ToArray();
 					socket.SendTo (packetBytes, send_ipEndPoint);
 				}
 			}
@@ -380,7 +386,7 @@ namespace Holojam.Network {
 					using (MemoryStream stream = new MemoryStream()) {
 						packetCount++;
 						Serializer.Serialize<Update>(stream, update);
-						packetBytes = stream.GetBuffer();
+						packetBytes = stream.ToArray();
 						socket.SendTo(packetBytes, send_ipEndPoint);
 					}
 				}
@@ -456,4 +462,3 @@ namespace Holojam.Network {
 		}
 	}
 }
-

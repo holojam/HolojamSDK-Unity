@@ -10,12 +10,23 @@ namespace Holojam{
 	[CustomEditor(typeof(HolojamNetwork))]
 	public class HolojamNetworkEditor : Editor{
 		SerializedProperty sentWarning, receivedWarning;
+		SerializedProperty multicastAddress, serverAddress, multicastPort, serverPort;
 		void OnEnable(){
 			sentWarning=serializedObject.FindProperty("sentWarning");
 			receivedWarning=serializedObject.FindProperty("receivedWarning");
+
+			multicastAddress = serializedObject.FindProperty("multicastAddress");
+			serverAddress = serializedObject.FindProperty("serverAddress");
+			multicastPort = serializedObject.FindProperty("multicastPort");
+			serverPort = serializedObject.FindProperty("serverPort");
 		}
 		public override void OnInspectorGUI(){
 			serializedObject.Update();
+
+			EditorGUILayout.PropertyField(multicastAddress);
+			EditorGUILayout.PropertyField(serverAddress);
+			EditorGUILayout.PropertyField(multicastPort);
+			EditorGUILayout.PropertyField(serverPort);
 			
 			EditorGUIUtility.labelWidth=64;
 			GUIStyle bold = new GUIStyle(EditorStyles.boldLabel);

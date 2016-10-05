@@ -985,7 +985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8304f294cd3d4cbfb00491751e3e7c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackingTag: 24
+  trackingTag: 28
   localSpace: 0
 --- !u!114 &482184428
 MonoBehaviour:
@@ -998,7 +998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07c8d0dae549d14e8fe873ea4fff0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  label: VR4_righthand
+  label: VR1_table
   isMine: 0
 --- !u!21 &486181281
 Material:
@@ -2754,7 +2754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8304f294cd3d4cbfb00491751e3e7c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackingTag: 23
+  trackingTag: 27
   localSpace: 0
 --- !u!4 &1177200647
 Transform:
@@ -4346,6 +4346,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38aeb8d0d9e48e34d94f33ad727c35b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  multicastAddress: 224.1.1.1
+  serverAddress: 192.168.1.44
+  multicastPort: 1611
+  serverPort: 1611
   sentWarning: 32
   receivedWarning: 48
   sentPPS: 0
