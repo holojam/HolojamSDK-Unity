@@ -3,9 +3,16 @@
 //Example Actor extension
 
 using UnityEngine;
+using System.Collections;
 
 public class ActorController : Holojam.Tools.Actor{
    public Transform head;
+   public Transform animatedEyes;
+
+   const float BLINK_TIME = 0.085f;
+   readonly Vector2 BLINK_DELAY = new Vector2(1,11);
+
+   float blinkDelay = 0, lastBlink = 0;
 
    protected override void Update(){
       UpdateView();
@@ -41,5 +48,28 @@ public class ActorController : Holojam.Tools.Actor{
       if(Application.isPlaying)
          foreach(Renderer r in GetComponentsInChildren<Renderer>(true))
             if(r.gameObject.tag=="Motif")r.material.color = motif;
+   }
+
+   void LateUpdate(){
+      //Blink
+      if(animatedEyes!=null && Time.time>lastBlink+blinkDelay)Blink();
+   }
+   //Blink
+   void Blink(){
+      StartCoroutine(ToggleEyes(animatedEyes.localScale));
+      blinkDelay = Random.Range(BLINK_DELAY.x,BLINK_DELAY.y);
+      lastBlink = Time.time;
+   }
+   IEnumerator ToggleEyes(Vector3 initialScale, bool close = true){
+      float initialTime = Time.time;
+      Vector3 shut = new Vector3(initialScale.x,0,initialScale.z);
+      while(close?animatedEyes.localScale.y>0:animatedEyes.localScale.y<initialScale.y){
+         animatedEyes.localScale = Vector3.Lerp(
+            close?initialScale:shut,close?shut:initialScale,
+            (Time.time-initialTime)/BLINK_TIME
+         );
+         yield return null;
+      }
+      if(close)StartCoroutine(ToggleEyes(initialScale,false));
    }
 }

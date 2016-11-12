@@ -13,9 +13,6 @@ namespace Holojam.Tools{
       public Actor actor;
       public int amount = 4;
 
-      //HoloIK-specific settings
-      public Transform groundPlane;
-
       string[] handles = {
          "Blue",
          "Green",
@@ -43,10 +40,6 @@ namespace Holojam.Tools{
             a.trackingTag=(Motive.Tag)index;
             a.handle=handles[i%handles.Length];
             a.motif=colors[i%colors.Length];
-
-            //HoloIK-specific settings
-            HoloIK ik = a.GetComponentInChildren<HoloIK>();
-            if(ik!=null)ik.groundPlane = groundPlane;
          }
          GetComponent<ActorManager>().Update();
       }

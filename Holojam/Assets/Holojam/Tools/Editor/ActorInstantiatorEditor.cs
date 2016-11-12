@@ -9,11 +9,9 @@ namespace Holojam.Tools{
    [CustomEditor(typeof(ActorInstantiator))]
    public class ActorInstantiatorEditor : Editor{
       SerializedProperty actor, amount;
-      SerializedProperty groundPlane;
       void OnEnable(){
          actor = serializedObject.FindProperty("actor");
          amount = serializedObject.FindProperty("amount");
-         groundPlane = serializedObject.FindProperty("groundPlane");
       }
       public override void OnInspectorGUI(){
          serializedObject.Update();
@@ -37,7 +35,6 @@ namespace Holojam.Tools{
          }
 
          EditorGUIUtility.labelWidth = 0;
-         EditorGUILayout.PropertyField(groundPlane);
 
          EditorUtility.SetDirty(serializedObject.targetObject);
          EditorUtility.SetDirty(ai.GetComponent<ActorManager>());
