@@ -19,6 +19,7 @@ obj/
 *.csproj
 *.unitypackage
 *.apk
+*.swp
 
 *.pidb.meta
 .#*

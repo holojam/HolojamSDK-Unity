@@ -11,7 +11,6 @@ namespace Holojam.Tools{
    [RequireComponent(typeof(MeshRenderer))]
    public class Fence : MonoBehaviour{
       public Material material;
-      public ActorManager actorManager;
 
       public float minRange = 1.5f; //Distance to fade
       public float maxAlpha = 1;
@@ -25,9 +24,10 @@ namespace Holojam.Tools{
       void Update(){
          Color newColor = material.color;
 
-         if(actorManager!=null && actorManager.buildActor!=null){
+         if(BuildManager.BUILD_ACTOR!=null){
             //Modulate transparency
-            newColor.a = maxAlpha * (1-holobounds.Distance(actorManager.buildActor.eyes)/minRange);
+            newColor.a =
+               maxAlpha * (1-holobounds.Distance(BuildManager.BUILD_ACTOR.center)/minRange);
          }
          else newColor.a=maxAlpha;
 

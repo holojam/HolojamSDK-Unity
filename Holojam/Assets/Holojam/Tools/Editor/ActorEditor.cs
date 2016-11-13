@@ -3,7 +3,6 @@
 
 using UnityEngine;
 using UnityEditor;
-using Holojam.Network;
 
 namespace Holojam.Tools{
    [CustomEditor(typeof(Actor)), CanEditMultipleObjects]
@@ -12,49 +11,54 @@ namespace Holojam.Tools{
       protected virtual void EnableDerived(){}
       protected virtual void DrawDerived(){}
 
-      SerializedProperty handle, motif, trackingTag, localSpace, mask;
+      SerializedProperty scope, index, localSpace;
       void OnEnable(){
-         handle = serializedObject.FindProperty("handle");
-         motif = serializedObject.FindProperty("motif");
-         trackingTag = serializedObject.FindProperty("trackingTag");
+         scope = serializedObject.FindProperty("scope");
+         index = serializedObject.FindProperty("index");
          localSpace = serializedObject.FindProperty("localSpace");
-         mask = serializedObject.FindProperty("mask");
 
          EnableDerived();
       }
       public override void OnInspectorGUI(){
          serializedObject.Update();
 
+         EditorGUIUtility.labelWidth = 64;
          EditorGUILayout.BeginHorizontal();
-            //Unity has no proper window width accessor, so this will offset marginally when scrolling
-            EditorGUILayout.PropertyField(handle,new GUIContent(""),GUILayout.Width(EditorGUIUtility.labelWidth-4));
-            EditorGUILayout.PropertyField(trackingTag,new GUIContent(""));
-            EditorGUILayout.PropertyField(motif,new GUIContent(""),GUILayout.Width(48));
+            EditorGUILayout.PropertyField(scope);
+            EditorGUILayout.PropertyField(index);
          EditorGUILayout.EndHorizontal();
 
+         EditorGUIUtility.labelWidth = 0;
          EditorGUILayout.PropertyField(localSpace);
 
-         EditorGUILayout.PropertyField(mask);
          DrawDerived();
 
          if(!serializedObject.isEditingMultipleObjects){
             Actor a = serializedObject.targetObject as Actor;
+            if(a==null){
+               serializedObject.ApplyModifiedProperties();
+               return;
+            }
 
             GUIStyle style = new GUIStyle(EditorStyles.boldLabel);
             if(Application.isPlaying)
-               style.normal.textColor = a.actorManager!=null?
+               style.normal.textColor = a.isLocal?
                   new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
 
             EditorGUILayout.LabelField("Status",
-               (a.actorManager!=null?"Managed":"Unmanaged"),
+               (a.isLocal?"Local":"Not Local"),
                style
             );
 
-            if(a.actorManager!=null && !a.actorManager.runtimeIndexing && Application.isPlaying)
+            /*
+            if(!a.actorManager.runtimeIndexing && Application.isPlaying){
                EditorGUILayout.LabelField(
-                  "Runtime indexing is OFF. Actor will not reflect changes under manager during playmode.",
+                  "Runtime indexing is OFF. "+
+                  "Actor will not reflect changes under manager during playmode.",
                   new GUIStyle(EditorStyles.wordWrappedMiniLabel)
                );
+            }
+            */
          }
 
          serializedObject.ApplyModifiedProperties();

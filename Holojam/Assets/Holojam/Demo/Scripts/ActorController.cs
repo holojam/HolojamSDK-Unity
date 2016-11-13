@@ -6,26 +6,20 @@ using UnityEngine;
 using System.Collections;
 
 public class ActorController : Holojam.Tools.Actor{
-   public Transform head;
-   public Transform animatedEyes;
-
    const float BLINK_TIME = 0.085f;
    readonly Vector2 BLINK_DELAY = new Vector2(1,11);
 
+   public Transform head;
+   public GameObject mask; //Disabled for build actors
+
+   public Color motif = Holojam.Utility.Palette.Select(DEFAULT_COLOR);
+   public Transform animatedEyes;
+   public Material skinMaterial;
+
    float blinkDelay = 0, lastBlink = 0;
 
-   protected override void Update(){
-      UpdateView();
-
-      if(!Application.isPlaying)return;
-
-      //Update overridden to add this line
-      if(actorManager.runtimeIndexing)ApplyMotif();
-
-      UpdateTracking();
-   }
    protected override void UpdateTracking(){
-      if(view.IsTracked){
+      if(view.tracked){
          transform.position = trackedPosition;
 
          //This example type uses a separate transform for rotation (a head) instead of itself
@@ -33,28 +27,34 @@ public class ActorController : Holojam.Tools.Actor{
             head.localPosition = Vector3.zero;
             head.rotation = trackedRotation;
          }
-         else Debug.LogWarning("ActorController: No head found for "+gameObject.name);
+         else Debug.LogWarning("ActorController: No head found for "+gameObject.name,this);
       }
+
+      //Toggle mask
+      if(mask!=null)
+         mask.SetActive(!isBuild);
    }
    //The orientation accessor matches the rotation assignment above
    public override Quaternion orientation{
       get{return head!=null?head.rotation:Quaternion.identity;}
    }
 
-   //Assign color of geometry with Motif tag
+   //Assign color and skin material
    void Start(){ApplyMotif();}
 
    void ApplyMotif(){
+      debugColor = motif;
       if(Application.isPlaying)
-         foreach(Renderer r in GetComponentsInChildren<Renderer>(true))
+         foreach(Renderer r in GetComponentsInChildren<Renderer>(true)){
             if(r.gameObject.tag=="Motif")r.material.color = motif;
+            if(r.gameObject.tag=="Skin")r.material = skinMaterial;
+         }
    }
 
+   //Blink
    void LateUpdate(){
-      //Blink
       if(animatedEyes!=null && Time.time>lastBlink+blinkDelay)Blink();
    }
-   //Blink
    void Blink(){
       StartCoroutine(ToggleEyes(animatedEyes.localScale));
       blinkDelay = Random.Range(BLINK_DELAY.x,BLINK_DELAY.y);

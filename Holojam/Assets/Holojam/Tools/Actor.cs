@@ -6,39 +6,67 @@
 //extend for more complex use-cases.
 
 using UnityEngine;
-using Holojam.Network;
+using System.Collections.Generic;
+using Holojam.Utility;
 
 namespace Holojam.Tools{
    public class Actor : Trackable{
-      public string handle = "Actor";
-      public Color motif = Color.white; //Useful color identifier, optional for rendering
-      void Reset(){trackingTag = Motive.Tag.HEADSET1;}
-      public GameObject mask; //This object is disabled for build actors by the manager
+      public static List<Actor> instances = new List<Actor>();
+      public static Dictionary<string,Actor> localInstances = new Dictionary<string,Actor>();
+      void OnEnable(){instances.Add(this);}
+      void OnDisable(){instances.Remove(this);}
 
-      public int index{get{return (int)trackingTag;}}
-      ActorManager manager;
-      public ActorManager actorManager{
-         get{
-            if(manager==null && transform.parent!=null)
-               manager = transform.parent.GetComponent<ActorManager>();
-            return manager;
+      public int index;
+      public bool isBuild{get{return index==BuildManager.BUILD_INDEX;}}
+      public bool isLocal{get{return localInstances.ContainsKey(brand);}}
+
+      protected const Utility.Palette.Colors DEFAULT_COLOR = Utility.Palette.Colors.SEA_FOAM;
+      public Color debugColor = Utility.Palette.Select(DEFAULT_COLOR);
+
+      const float dropInterval = 1;
+      bool lastTracked = false; float lastTime;
+
+      protected override void UpdateViewLabel(string label){
+         view.label = Network.Canon.IndexToLabel(index);
+         this.label = view.label;
+      }
+
+      void UpdateData(){
+         //Update local instances dictionary
+         bool local = view.scope==Network.Client.SEND_SCOPE || string.IsNullOrEmpty(view.scope);
+         if(local && !localInstances.ContainsKey(brand))
+            localInstances[brand] = this;
+         else if(!local && localInstances.ContainsKey(brand))
+            localInstances.Remove(brand);
+
+         //Call fade events
+         if(Time.time>lastTime+dropInterval){
+            if(view.tracked!=lastTracked){
+               if(view.tracked)FadeIn();
+               else FadeOut();
+            }
+            lastTracked = view.tracked;
+            lastTime = Time.time;
          }
       }
-      public bool isBuild{get{
-         return actorManager!=null && actorManager.buildActor==this;
-      }}
 
       //Override these in derived classes for custom unique implementation
 
       protected override void Update(){
-         base.Update(); //See Trackable.cs for details
+         base.Update(); //See Controller.cs for details
+         UpdateData(); //Mandatory call
       }
       protected override void UpdateTracking(){
          base.UpdateTracking(); //See Trackable.cs for details
       }
+      //Events called on join/loss
+      protected virtual void FadeIn(){}
+      protected virtual void FadeOut(){}
+
       //These generic accessors enable reliable Actor information to be obtained from outside the class.
-      //They should always reference assigned data (e.g. transform.position), not source (raw) data
-      public virtual Vector3 eyes{
+      //They should always reference assigned data (e.g. transform.position), not source (raw) data,
+      //so that the changes made in update are reflected
+      public virtual Vector3 center{
          get{return transform.position;}
       }
       public virtual Quaternion orientation{
@@ -52,26 +80,25 @@ namespace Holojam.Tools{
          //(the user's actual head movement) unless you absolutely know what you're doing.
          //The Viewer (VR camera) uses a custom tracking algorithm and relies on the
          //orientation accessor below to provide absolute truth.
-         //Alternatively, use the Viewer's OPTICAL tracking type if you want the headset's
-         //rotation to match this value exactly
-         get{return view.RawRotation;}
+         get{return view.rawRotation;}
       }
+      //TODO
 
       //Useful derived accessors
       public Vector3 look{get{return orientation*Vector3.forward;}}
       public Vector3 up{get{return orientation*Vector3.up;}}
       public Vector3 left{get{return orientation*Vector3.left;}}
 
-      //Useful (goggles) visualization for edge of GearVR headset
+      //Useful (goggles) visualization
       void OnDrawGizmos(){
          DrawGizmoGhost();
-         Gizmos.color = motif;
-         Vector3 offset = eyes+look*0.015f;
-         Drawer.Circle(offset+left*0.035f,look,up,0.03f);
-         Drawer.Circle(offset-left*0.035f,look,up,0.03f);
+         Gizmos.color = debugColor;
+         Vector3 offset = center+look*0.0f;
+         Utility.Drawer.Circle(offset+left*0.035f,look,up,0.03f);
+         Utility.Drawer.Circle(offset-left*0.035f,look,up,0.03f);
          //Reference forward vector
          Gizmos.DrawRay(offset,look);
       }
-      void OnDrawGizmosSelected(){}
+      void OnDrawGizmosSelected(){} //Override Trackable implementation
    }
 }

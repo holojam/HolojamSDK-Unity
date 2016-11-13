@@ -6,45 +6,30 @@ using UnityEngine;
 using Holojam.Network;
 
 namespace Holojam.Tools{
-   [ExecuteInEditMode, RequireComponent(typeof(HolojamView))]
-   public class Trackable : MonoBehaviour{
-      public Motive.Tag trackingTag = Motive.Tag.BOX1;
+   public class Trackable : Controller{
       public bool localSpace = false;
-   
+
       //Accessors in case modification needs to be made to the raw data (like smoothing)
       public Vector3 trackedPosition{get{
          return localSpace && transform.parent!=null?
-            transform.parent.TransformPoint(view.RawPosition): view.RawPosition;
+            transform.parent.TransformPoint(view.rawPosition): view.rawPosition;
       }}
       public Quaternion trackedRotation{get{
          return localSpace && transform.parent!=null?
-            transform.parent.rotation*view.RawRotation : view.RawRotation;
+            transform.parent.rotation*view.rawRotation : view.rawRotation;
       }}
-   
-      //Manage view
-      public HolojamView view{get{
-         if(holojamView==null)holojamView = GetComponent<HolojamView>();
-         return holojamView;
-      }}
-      HolojamView holojamView = null;
 
-      protected void UpdateView(){
-         view.Label = Motive.GetName(trackingTag);
-         view.IsMine = false;
+      protected override ProcessDelegate Process{get{return UpdateTracking;}}
+
+      protected override void UpdateViewSending(bool sending){
+         view.sending = false;
+         this.sending = view.sending;
       }
 
-      //Override these in derived classes
-      protected virtual void Update(){
-         UpdateView(); //Mandatory initialization call
-
-         //Optional check--you probably don't want to run this code in edit mode
-         if(!Application.isPlaying)return;
-
-         UpdateTracking();
-      }
+      //Override in derived classes
       protected virtual void UpdateTracking(){
          //By default, assigns position and rotation injectively
-         if(view.IsTracked){
+         if(view.tracked){
             transform.position = trackedPosition;
             transform.rotation = trackedRotation;
          }
@@ -57,7 +42,7 @@ namespace Holojam.Tools{
       void OnDrawGizmosSelected(){
          Gizmos.color = Color.gray;
          //Pivot
-         Drawer.Circle(transform.position,Vector3.up,Vector3.forward,0.18f);
+         Utility.Drawer.Circle(transform.position,Vector3.up,Vector3.forward,0.18f);
          Gizmos.DrawLine(transform.position-0.03f*Vector3.left,transform.position+0.03f*Vector3.left);
          Gizmos.DrawLine(transform.position-0.03f*Vector3.forward,transform.position+0.03f*Vector3.forward);
          //Forward
@@ -67,9 +52,15 @@ namespace Holojam.Tools{
       protected void DrawGizmoGhost(){
          if(!localSpace || transform.parent==null)return;
          Gizmos.color = Color.gray;
-         Gizmos.DrawLine(view.RawPosition-0.03f*Vector3.left,view.RawPosition+0.03f*Vector3.left);
-         Gizmos.DrawLine(view.RawPosition-0.03f*Vector3.forward,view.RawPosition+0.03f*Vector3.forward);
-         Gizmos.DrawLine(view.RawPosition-0.03f*Vector3.up,view.RawPosition+0.03f*Vector3.up);  
+         Gizmos.DrawLine(
+            view.rawPosition-0.03f*Vector3.left,
+            view.rawPosition+0.03f*Vector3.left
+         );
+         Gizmos.DrawLine(
+            view.rawPosition-0.03f*Vector3.forward,
+            view.rawPosition+0.03f*Vector3.forward
+         );
+         Gizmos.DrawLine(view.rawPosition-0.03f*Vector3.up,view.rawPosition+0.03f*Vector3.up);  
       }
    }
 }

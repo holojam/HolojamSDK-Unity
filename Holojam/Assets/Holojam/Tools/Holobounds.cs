@@ -3,7 +3,6 @@
 //Playspace manager and access point
 
 using UnityEngine;
-using Holojam.Network;
 
 namespace Holojam.Tools{
    [ExecuteInEditMode]
@@ -13,7 +12,7 @@ namespace Holojam.Tools{
       public float ceiling = 3; //Ceiling Y -- not used for tracking
       public bool localSpace = false;
 
-      public HolojamView calibrator; //Tracked tool for setting values
+      public Network.View calibrator; //Tracked tool for setting values
 
       //Reference values & functions
 
@@ -71,7 +70,7 @@ namespace Holojam.Tools{
             Debug.LogWarning("Holobounds: Calibrator not set");
             return;
          }
-         Vector3 position = calibrator.RawPosition;
+         Vector3 position = calibrator.rawPosition;
          if(i<4)bounds[i]=new Vector2(position.x,position.z);
          else if(i==4)floor=position.y;
          else ceiling=position.y;
