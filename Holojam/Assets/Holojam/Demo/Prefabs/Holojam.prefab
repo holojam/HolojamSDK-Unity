@@ -17,6 +17,40 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &104154
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 475404}
+  - 33: {fileID: 3329924}
+  - 23: {fileID: 2301648}
+  m_Layer: 0
+  m_Name: Mesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &131634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 422736}
+  - 114: {fileID: 11447992}
+  - 114: {fileID: 11430170}
+  m_Layer: 0
+  m_Name: Scope
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &159514
 GameObject:
   m_ObjectHideFlags: 1
@@ -79,7 +113,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 437874}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!4 &419806
 Transform:
   m_ObjectHideFlags: 1
@@ -93,7 +127,21 @@ Transform:
   m_Children:
   - {fileID: 472722}
   m_Father: {fileID: 437874}
-  m_RootOrder: 1
+  m_RootOrder: 2
+--- !u!4 &422736
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 131634}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 475404}
+  m_Father: {fileID: 437874}
+  m_RootOrder: 0
 --- !u!4 &437874
 Transform:
   m_ObjectHideFlags: 1
@@ -105,6 +153,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 422736}
   - {fileID: 412586}
   - {fileID: 419806}
   m_Father: {fileID: 0}
@@ -121,6 +170,19 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 419806}
+  m_RootOrder: 0
+--- !u!4 &475404
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 104154}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071067}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 422736}
   m_RootOrder: 0
 --- !u!20 &2003090
 Camera:
@@ -156,6 +218,39 @@ Camera:
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
+--- !u!23 &2301648
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 104154}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 207ada5391e22427f87c6407b6385a06, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!33 &3329924
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 104154}
+  m_Mesh: {fileID: 4300000, guid: ae74e674e1e724a74ab0bc378bcf513a, type: 3}
 --- !u!81 &8120386
 AudioListener:
   m_ObjectHideFlags: 1
@@ -195,6 +290,40 @@ MonoBehaviour:
   source: 
   sending: 0
   label: M1
+  rawPosition: {x: 0, y: 0, z: 0}
+  rawRotation: {x: 0, y: 0, z: 0, w: 0}
+  bits: 0
+  blob: 
+--- !u!114 &11430170
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 131634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 109aacd3aa792458c98ff4b34f946200, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: ExtraData
+  scope: Holoscope
+  sending: 0
+  origin: {x: 0, y: 0}
+--- !u!114 &11447992
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 131634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb380fb2ff0754e459bf9c7822a6b2bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scope: Holoscope
+  source: 
+  sending: 0
+  label: ExtraData
   rawPosition: {x: 0, y: 0, z: 0}
   rawRotation: {x: 0, y: 0, z: 0, w: 0}
   bits: 0
@@ -245,7 +374,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildManager: {fileID: 11459870}
-  debug: 0
+  extraData: {fileID: 11430170}
+  placeInEditor: 0
+  useTestIMU: 0
   input: {fileID: 0}
   output: {fileID: 0}
 --- !u!1001 &100100000

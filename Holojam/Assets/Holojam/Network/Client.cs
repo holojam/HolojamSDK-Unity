@@ -29,7 +29,7 @@ namespace Holojam.Network{
       //Debug
       #if UNITY_EDITOR
       public int sentPPS, receivedPPS;
-      public List<string> threadData;
+      public List<string> threadData = new List<string>();
       #endif
 
       List<View> viewsToSend;

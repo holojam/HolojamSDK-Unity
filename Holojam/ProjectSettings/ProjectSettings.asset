@@ -5,12 +5,12 @@ PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 8
   AndroidProfiler: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 3
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: FRL
-  productName: HolojamDemo
+  companyName: Holojam
+  productName: HolojamSDK
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_ShowUnitySplashScreen: 0
@@ -26,7 +26,7 @@ PlayerSettings:
   m_MobileMTRendering: 0
   m_Stereoscopic3D: 0
   iosShowActivityIndicatorOnLoading: -1
-  androidShowActivityIndicatorOnLoading: -1
+  androidShowActivityIndicatorOnLoading: 1
   iosAppInBackgroundBehavior: 0
   displayResolutionDialog: 2
   iosAllowHTTPDownload: 1
@@ -89,7 +89,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleIdentifier: com.FRL.HolojamDemo
+  bundleIdentifier: com.Holojam.HolojamSDK
   bundleVersion: 0.1
   preloadedAssets: []
   metroEnableIndependentInputSource: 0

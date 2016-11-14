@@ -316,6 +316,7 @@ MonoBehaviour:
   sending: 0
   localSpace: 0
   index: 0
+  debugColor: {r: 0.26, g: 0.86, b: 0.6, a: 1}
   head: {fileID: 442768}
   mask: {fileID: 185116}
   motif: {r: 0.26, g: 0.86, b: 0.6, a: 1}

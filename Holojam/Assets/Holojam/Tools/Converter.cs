@@ -7,20 +7,34 @@ using UnityEngine;
 namespace Holojam.Tools{
    public class Converter : MonoBehaviour{
       public BuildManager buildManager;
-      public bool debug = false;
+      public Scope extraData;
+      public bool placeInEditor = false;
+      public bool useTestIMU = false;
 
       [HideInInspector] public Network.View input, output;
       Transform imu;
-      Quaternion raw, fit, correction;
-
-      const float stem = .125f; //TMP
+      Network.View test;
+      Quaternion raw, fit, correction = Quaternion.identity;
 
       void Awake(){
          if(buildManager==null){
             Debug.LogWarning("Converter: Build Manager reference is null!");
             return;
          }
+         if(extraData==null){
+            Debug.LogWarning("Converter: Extra data reference is null!");
+            return;
+         }
+         if(BuildManager.IsMasterPC() && !placeInEditor && !useTestIMU)
+            return;
+
          imu = buildManager.viewer.transform.GetChild(0);
+         if(useTestIMU){
+            test = gameObject.AddComponent<Network.View>() as Network.View;
+            test.label = "IMU";
+            test.scope = Network.Client.SEND_SCOPE;
+            test.sending = false;
+         }
 
          input = gameObject.AddComponent<Network.View>() as Network.View;
          input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX,true);
@@ -29,24 +43,32 @@ namespace Holojam.Tools{
 
          output = gameObject.AddComponent<Network.View>() as Network.View;
          output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
-         output.scope = debug && BuildManager.IsMasterPC()?"Editor":Network.Client.SEND_SCOPE;
+         output.scope = Network.Client.SEND_SCOPE;
          output.sending = true;
       }
 
       void Update(){
+         //Update views
+         input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX,true);
+         output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
+
          //Editor debugging
-         if(debug && BuildManager.IsMasterPC())
-            output.rawPosition = input.rawPosition;
-         else if(!debug)
-            return;
+         if(BuildManager.IsMasterPC()){
+            if(placeInEditor){
+               output.rawPosition = extraData.Localize(input.rawPosition);
+               return;
+            }
+         }
 
          //Get IMU data
-         raw = imu.rotation;
+         raw = useTestIMU?test.rawRotation:imu.localRotation;
 
          if(!input.tracked){
             //Rely on old data in untracked case
-            output.rawRotation = raw*correction;
-            output.rawPosition = input.rawPosition - output.rawRotation*Vector3.up*stem;
+            output.rawRotation = extraData.Localize(raw*correction);
+            output.rawPosition = extraData.Localize(
+               input.rawPosition - output.rawRotation*Vector3.up*extraData.stem
+            );
             return;
          }
 
@@ -57,28 +79,23 @@ namespace Holojam.Tools{
          Vector3 imuRight = raw*Vector3.right;
          Vector3 imuUp = raw*Vector3.up;
          Vector3 imuForward = raw*Vector3.forward;
-         //Find the closest vector to real up
-         float dotx = Mathf.Abs(Vector3.Dot(imuRight,Vector3.up));
-         float doty = Mathf.Abs(Vector3.Dot(imuUp,Vector3.up));
-         float dotz = Mathf.Abs(Vector3.Dot(imuForward,Vector3.up));
-         float max = Mathf.Max(dotx,doty,dotz);
 
-         //The dotz case is degenerate, nothing to do but rely on old data.
-         Quaternion fit = raw;
+         //degenerate case, note
 
-         //Stable cases
-         if(max==doty){
-            Vector3 forward = Vector3.Cross(left,imuUp);
-            fit = Quaternion.LookRotation(forward,imuUp);
-         }
-         else if(max==dotz){
-            Vector3 up = Vector3.Cross(left,imuForward);
-            fit = Quaternion.LookRotation(imuForward,up);
-         }
-         correction = fit*Quaternion.Inverse(raw); //Get difference
+         Quaternion lq = Quaternion.LookRotation(-left,Vector3.up);
+         Quaternion iq = Quaternion.LookRotation(imuRight,Vector3.up);
 
-         output.rawRotation = raw*correction;
-         output.rawPosition = input.rawPosition - output.rawRotation*Vector3.up*stem;
+         Quaternion difference = lq*Quaternion.Inverse(iq);
+         Vector3 newForward = difference*imuForward;
+         Vector3 newUp = difference*imuUp;
+
+         Quaternion fit = Quaternion.LookRotation(newForward,newUp);
+         correction = fit*Quaternion.Inverse(raw);
+
+         output.rawRotation = extraData.Localize(fit);
+         output.rawPosition = extraData.Localize(
+            input.rawPosition - output.rawRotation*Vector3.up*extraData.stem
+         );
       }
    }
 }

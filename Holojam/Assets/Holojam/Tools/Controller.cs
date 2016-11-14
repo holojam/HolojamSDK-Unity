@@ -27,12 +27,16 @@ namespace Holojam.Tools{
       //Override these to modify view behavior
       protected virtual void UpdateViewLabel(string label){
          view.label = label;
+         //Unecessary here, but vital when fields are hidden in subclasses
+         this.label = view.label;
       }
       protected virtual void UpdateViewScope(string scope){
-         view.scope = scope!=""?scope:Network.Client.SEND_SCOPE;
+         view.scope = (scope!="" && !sending)?scope:Network.Client.SEND_SCOPE;
+         this.scope = view.scope;
       }
       protected virtual void UpdateViewSending(bool sending){
          view.sending = sending;
+         this.sending = view.sending;
       }
       protected virtual void UpdateView(){
          UpdateViewLabel(label);
