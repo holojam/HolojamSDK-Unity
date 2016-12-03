@@ -190,10 +190,10 @@ namespace Holojam.Network{
          socket.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.ReuseAddress,1);
          socket.SendTimeout = TIMEOUT;
 
-         IPEndPoint ipEndPoint = new IPEndPoint(ip,0);
-         IPEndPoint send_ipEndPoint = new IPEndPoint(IPAddress.Parse(address),port);
+         IPEndPoint endPoint = new IPEndPoint(ip,0);
+         IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(address),port);
 
-         try{socket.Bind(ipEndPoint);}
+         try{socket.Bind(endPoint);}
          catch(SocketException e){
             Debug.LogWarning("Holojam.Network.Client: Error binding socket: "+address+" "+port+" "+e.ToString());
             running = false;
@@ -210,16 +210,14 @@ namespace Holojam.Network{
                update.label = scope;
                update.extra_data = System.Environment.MachineName;
                //Populate
-               foreach(KeyValuePair<string,SwapFlake> entry in flakes){
-                  update_protocol_v3.LiveObject f = entry.Value.ToFlake();
-                  update.live_objects.Add(f);
-               }
+               foreach(KeyValuePair<string,SwapFlake> entry in flakes)
+                  update.live_objects.Add(entry.Value.ToFlake());
                //Serialize and send
-               using (MemoryStream stream = new MemoryStream()){
+               using(MemoryStream stream = new MemoryStream()){
                   packetCount++;
                   Serializer.Serialize<Update>(stream,update);
                   packet = stream.ToArray();
-                  socket.SendTo(packet,send_ipEndPoint);
+                  socket.SendTo(packet,sendEndPoint);
                }
             }
 

@@ -265,10 +265,10 @@ Prefab:
     - target: {fileID: 11419408, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: view
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1058832778}
     - target: {fileID: 11485254, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: placeInEditor
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11430170, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: origin.y
@@ -296,7 +296,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11472184, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: serverAddress
-      value: 192.168.1.98
+      value: 192.168.1.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 11472184, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
+      propertyPath: multicastAddress
+      value: 224.1.1.3
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11420818, guid: 957a810931a9c4b9a8423081101befd7, type: 2}

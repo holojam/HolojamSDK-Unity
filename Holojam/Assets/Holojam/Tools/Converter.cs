@@ -48,17 +48,17 @@ namespace Holojam.Tools{
       }
 
       void Update(){
-         //Update views
-         input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX,true);
-         output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
-
          //Editor debugging
          if(BuildManager.IsMasterPC()){
             if(placeInEditor){
                output.rawPosition = extraData.Localize(input.rawPosition);
                return;
-            }
+            }else if(!useTestIMU)return;
          }
+
+         //Update views
+         input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX,true);
+         output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
 
          //Get IMU data
          raw = useTestIMU?test.rawRotation:imu.localRotation;

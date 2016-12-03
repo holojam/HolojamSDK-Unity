@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a57d8f94b886f470e90844b3e54a06f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverAddress: 192.168.1.98
+  serverAddress: 192.168.1.97
   serverPort: 1612
   multicastAddress: 224.1.1.3
   multicastPort: 1611
