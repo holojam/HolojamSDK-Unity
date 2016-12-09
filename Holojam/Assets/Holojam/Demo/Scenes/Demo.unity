@@ -124,6 +124,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 177758, guid: 970dd4b9371394fb4890965f608d46fd, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 970dd4b9371394fb4890965f608d46fd, type: 2}
   m_IsPrefabParent: 0
@@ -268,7 +272,7 @@ Prefab:
       objectReference: {fileID: 1058832778}
     - target: {fileID: 11485254, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: placeInEditor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11430170, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: origin.y
@@ -288,7 +292,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11459870, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: runtimeIndexing
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11419408, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: trackingType
@@ -296,11 +300,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11472184, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: serverAddress
-      value: 192.168.1.97
+      value: 192.168.1.98
       objectReference: {fileID: 0}
     - target: {fileID: 11472184, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: multicastAddress
       value: 224.1.1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11485254, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
+      propertyPath: tmp
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11420818, guid: 957a810931a9c4b9a8423081101befd7, type: 2}

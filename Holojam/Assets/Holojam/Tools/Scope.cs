@@ -35,8 +35,8 @@ namespace Holojam.Tools{
          return transform.TransformPoint(position);
       }
       public Quaternion Localize(Quaternion rotation){
-         return rotation;
-         //return rotation*Quaternion.Inverse(transform.rotation); //
+         //return rotation;
+         return rotation*Quaternion.Inverse(transform.rotation); //
       }
    }
 }

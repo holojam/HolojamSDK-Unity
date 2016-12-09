@@ -11,10 +11,16 @@ namespace Holojam.Tools{
       public bool placeInEditor = false;
       public bool useTestIMU = false;
 
+      const bool SMOOTH = true;
+      const float POSITION_DAMPING = 5;
+      const float ROTATION_DAMPING = 60;
+
+      Vector3 lastPosition = Vector3.zero;
+
       [HideInInspector] public Network.View input, output;
       Transform imu;
       Network.View test;
-      Quaternion raw, fit, correction = Quaternion.identity;
+      Quaternion raw, correction, correctionTarget = Quaternion.identity;
 
       void Awake(){
          if(buildManager==null){
@@ -38,7 +44,7 @@ namespace Holojam.Tools{
 
          input = gameObject.AddComponent<Network.View>() as Network.View;
          input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX,true);
-         input.scope = "Holoscope"; //
+         input.scope = "Holoscope";
          input.sending = false;
 
          output = gameObject.AddComponent<Network.View>() as Network.View;
@@ -51,7 +57,8 @@ namespace Holojam.Tools{
          //Editor debugging
          if(BuildManager.IsMasterPC()){
             if(placeInEditor){
-               output.rawPosition = extraData.Localize(input.rawPosition);
+               output.rawPosition = extraData.Localize(SMOOTH?Smooth(
+                  input.rawPosition,ref lastPosition):input.rawPosition);
                return;
             }else if(!useTestIMU)return;
          }
@@ -60,42 +67,56 @@ namespace Holojam.Tools{
          input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX,true);
          output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
 
+         Vector3 inputPosition = SMOOTH?
+            Smooth(input.rawPosition,ref lastPosition):input.rawPosition;
+
          //Get IMU data
          raw = useTestIMU?test.rawRotation:imu.localRotation;
 
-         if(!input.tracked){
-            //Rely on old data in untracked case
-            output.rawRotation = extraData.Localize(raw*correction);
-            output.rawPosition = extraData.Localize(
-               input.rawPosition - output.rawRotation*Vector3.up*extraData.stem
-            );
-            return;
+         //Update target if tracked
+         if(input.tracked){
+            //Read in secondary vector
+            Vector3 left = new Vector3(
+               input.rawRotation.x,input.rawRotation.y,input.rawRotation.z
+            ).normalized;
+
+            Vector3 imuUp = raw*Vector3.up;
+            Vector3 imuForward = raw*Vector3.forward;
+            Vector3 imuRight = raw*Vector3.right;
+
+            //Compare orientations relative to gravity
+            Quaternion difference = Quaternion.LookRotation(-left,Vector3.up)
+               * Quaternion.Inverse(Quaternion.LookRotation(imuRight,Vector3.up));
+
+            Vector3 newForward = difference*imuForward;
+            Vector3 newUp = difference*imuUp;
+
+            //Ideal rotation
+            Quaternion target = Quaternion.LookRotation(newForward,newUp);
+            correctionTarget = target*Quaternion.Inverse(raw);
          }
 
-         Vector3 left = new Vector3(
-            input.rawRotation.x,input.rawRotation.y,input.rawRotation.z
-         );
+         //Smoothly interpolate correction
+         float delta = 0.5f*Quaternion.Dot(correction,correctionTarget)+0.5f;
+         delta*=delta;
+         correction = SMOOTH?
+            Quaternion.Slerp(correction,correctionTarget,delta*ROTATION_DAMPING):
+            correctionTarget;
 
-         Vector3 imuRight = raw*Vector3.right;
-         Vector3 imuUp = raw*Vector3.up;
-         Vector3 imuForward = raw*Vector3.forward;
-
-         //degenerate case, note
-
-         Quaternion lq = Quaternion.LookRotation(-left,Vector3.up);
-         Quaternion iq = Quaternion.LookRotation(imuRight,Vector3.up);
-
-         Quaternion difference = lq*Quaternion.Inverse(iq);
-         Vector3 newForward = difference*imuForward;
-         Vector3 newUp = difference*imuUp;
-
-         Quaternion fit = Quaternion.LookRotation(newForward,newUp);
-         correction = fit*Quaternion.Inverse(raw);
-
-         output.rawRotation = extraData.Localize(fit);
+         //Update output
+         output.rawRotation = extraData.Localize(correction*raw);
          output.rawPosition = extraData.Localize(
-            input.rawPosition - output.rawRotation*Vector3.up*extraData.stem
+            inputPosition - output.rawRotation*Vector3.up*extraData.stem
          );
+      }
+
+      //Smooth signal while minimizing perceived latency
+      Vector3 Smooth(Vector3 target, ref Vector3 last){
+         target = Vector3.Lerp(
+            target,last,(last-target).sqrMagnitude*POSITION_DAMPING
+         );
+         last = target;
+         return target;
       }
    }
 }

@@ -377,6 +377,7 @@ MonoBehaviour:
   extraData: {fileID: 11430170}
   placeInEditor: 0
   useTestIMU: 0
+  smooth: 1
   input: {fileID: 0}
   output: {fileID: 0}
 --- !u!1001 &100100000
