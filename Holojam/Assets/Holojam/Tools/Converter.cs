@@ -2,6 +2,8 @@
 //Created by Aaron C Gaudette on 11.11.16
 //
 
+#define SMOOTH
+
 using UnityEngine;
 
 namespace Holojam.Tools{
@@ -11,7 +13,6 @@ namespace Holojam.Tools{
       public bool placeInEditor = false;
       public bool useTestIMU = false;
 
-      const bool SMOOTH = true;
       const float POSITION_DAMPING = 5;
       const float ROTATION_DAMPING = 60;
 
@@ -54,11 +55,16 @@ namespace Holojam.Tools{
       }
 
       void Update(){
+         #if(SMOOTH)
+            Vector3 inputPosition = Smooth(input.rawPosition,ref lastPosition);
+         #else
+            Vector3 inputPosition = input.rawPosition;
+         #endif
+
          //Editor debugging
          if(BuildManager.IsMasterPC()){
             if(placeInEditor){
-               output.rawPosition = extraData.Localize(SMOOTH?Smooth(
-                  input.rawPosition,ref lastPosition):input.rawPosition);
+               output.rawPosition = inputPosition;
                return;
             }else if(!useTestIMU)return;
          }
@@ -66,9 +72,6 @@ namespace Holojam.Tools{
          //Update views
          input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX,true);
          output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
-
-         Vector3 inputPosition = SMOOTH?
-            Smooth(input.rawPosition,ref lastPosition):input.rawPosition;
 
          //Get IMU data
          raw = useTestIMU?test.rawRotation:imu.localRotation;
@@ -99,9 +102,14 @@ namespace Holojam.Tools{
          //Smoothly interpolate correction
          float delta = 0.5f*Quaternion.Dot(correction,correctionTarget)+0.5f;
          delta*=delta;
-         correction = SMOOTH?
-            Quaternion.Slerp(correction,correctionTarget,delta*ROTATION_DAMPING):
-            correctionTarget;
+
+         #if(SMOOTH)
+            correction = Quaternion.Slerp(
+               correction,correctionTarget,delta*ROTATION_DAMPING
+            );
+         #else
+            correction = correctionTarget;
+         #endif
 
          //Update output
          output.rawRotation = extraData.Localize(correction*raw);
