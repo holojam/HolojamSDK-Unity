@@ -64,7 +64,7 @@ namespace Holojam.Tools{
          //Editor debugging
          if(BuildManager.IsMasterPC()){
             if(placeInEditor){
-               output.rawPosition = inputPosition;
+               output.rawPosition = extraData.Localize(inputPosition);
                return;
             }else if(!useTestIMU)return;
          }
