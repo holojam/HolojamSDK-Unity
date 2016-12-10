@@ -55,19 +55,25 @@ namespace Holojam.Tools{
       }
 
       void Update(){
+         //Editor debugging
+         if(BuildManager.IsMasterPC()){
+            if(placeInEditor){
+               #if(SMOOTH)
+                  output.rawPosition = extraData.Localize(
+                     Smooth(input.rawPosition,ref lastPosition)
+                  );
+               #else
+                  output.rawPosition = extraData.Localize(input.rawPosition);
+               #endif
+               return;
+            }else if(!useTestIMU)return;
+         }
+
          #if(SMOOTH)
             Vector3 inputPosition = Smooth(input.rawPosition,ref lastPosition);
          #else
             Vector3 inputPosition = input.rawPosition;
          #endif
-
-         //Editor debugging
-         if(BuildManager.IsMasterPC()){
-            if(placeInEditor){
-               output.rawPosition = extraData.Localize(inputPosition);
-               return;
-            }else if(!useTestIMU)return;
-         }
 
          //Update views
          input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX,true);

@@ -292,7 +292,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11459870, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: runtimeIndexing
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11419408, guid: 957a810931a9c4b9a8423081101befd7, type: 2}
       propertyPath: trackingType
