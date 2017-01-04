@@ -7,14 +7,16 @@ using UnityEditor;
 namespace Holojam.Tools{
    [CustomEditor(typeof(Scope))]
    public class ScopeEditor : Editor{
-      SerializedProperty origin;
+      SerializedProperty origin, angle;
       void OnEnable(){
          origin = serializedObject.FindProperty("origin");
+         angle = serializedObject.FindProperty("angle");
       }
 
       public override void OnInspectorGUI(){
          serializedObject.Update();
          EditorGUILayout.PropertyField(origin);
+         EditorGUILayout.PropertyField(angle);
          serializedObject.ApplyModifiedProperties();
       }
    }

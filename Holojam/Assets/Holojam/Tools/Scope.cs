@@ -6,11 +6,12 @@ using UnityEngine;
 namespace Holojam.Tools{
    public class Scope : Controller{
       public Vector2 origin;
+      [Range(-90,90)] public float angle = 0;
 
       protected override ProcessDelegate Process{get{return UpdateFrustum;}}
 
       public float height{get{return view.rawPosition.x;}}
-      public float angle{get{return view.rawPosition.y;}}
+      //public float angle{get{return view.rawPosition.y;}}
       public float stem{get{return view.rawPosition.z;}}
 
       protected override void UpdateViewLabel(string label){

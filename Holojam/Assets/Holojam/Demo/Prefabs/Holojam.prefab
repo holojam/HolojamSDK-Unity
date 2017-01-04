@@ -227,17 +227,20 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
   m_Materials:
   - {fileID: 2100000, guid: 207ada5391e22427f87c6407b6385a06, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedWireframeHidden: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -309,6 +312,7 @@ MonoBehaviour:
   scope: Holoscope
   sending: 0
   origin: {x: 0, y: 0}
+  angle: 0
 --- !u!114 &11447992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -375,9 +379,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildManager: {fileID: 11459870}
   extraData: {fileID: 11430170}
+  device: 0
   placeInEditor: 0
   useTestIMU: 0
-  smooth: 1
   input: {fileID: 0}
   output: {fileID: 0}
 --- !u!1001 &100100000

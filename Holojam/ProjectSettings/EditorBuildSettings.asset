@@ -8,4 +8,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Holojam/Demo/Scenes/Demo.unity
   - enabled: 0
-    path: Assets/Holojam/Demo/Scenes/TestIMU.unity
+    path: Assets/Holojam/Demo/Scenes/Remote.unity

@@ -10,11 +10,18 @@ namespace Holojam.Tools{
    public class Converter : MonoBehaviour{
       public BuildManager buildManager;
       public Scope extraData;
+
+      public enum Device{
+         CARDBOARD,DAYDREAM
+      };
+      public const Device DEVICE_DEFAULT = Device.CARDBOARD;
+      public Device device = DEVICE_DEFAULT;
+
       public bool placeInEditor = false;
       public bool useTestIMU = false;
 
       const float POSITION_DAMPING = 5;
-      const float ROTATION_DAMPING = 60;
+      const float ROTATION_DAMPING = 0.1f; //0.001f;
 
       Vector3 lastPosition = Vector3.zero;
 
@@ -80,7 +87,18 @@ namespace Holojam.Tools{
          output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
 
          //Get IMU data
-         raw = useTestIMU?test.rawRotation:imu.localRotation;
+         if(useTestIMU)
+            raw = test.rawRotation;
+         else switch(device){
+            case Device.CARDBOARD:
+               raw = imu.localRotation;
+               break;
+            case Device.DAYDREAM:
+               raw = UnityEngine.VR.InputTracking.GetLocalRotation(
+                  UnityEngine.VR.VRNode.CenterEye
+               );
+               break;
+         }
 
          //Update target if tracked
          if(input.tracked){

@@ -56,7 +56,19 @@ namespace Holojam.Tools{
             if(BuildManager.IsMasterPC())
                transform.rotation = sourceRotation;
             else{
-               sourceRotation*=Quaternion.Inverse(transform.GetChild(0).localRotation); //Negate IMU
+               //Negate IMU
+               Quaternion raw = Quaternion.identity;
+               switch(converter.device){
+                  case Converter.Device.CARDBOARD:
+                     raw = transform.GetChild(0).localRotation;
+                     break;
+                  case Converter.Device.DAYDREAM:
+                     raw = UnityEngine.VR.InputTracking.GetLocalRotation(
+                        UnityEngine.VR.VRNode.CenterEye
+                     );
+                     break;
+               }
+               sourceRotation*=Quaternion.Inverse(raw);
                transform.rotation = sourceRotation;
             }
          }else if(BuildManager.IsMasterPC()) //Fall back to IMU

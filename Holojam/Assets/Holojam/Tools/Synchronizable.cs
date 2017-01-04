@@ -35,12 +35,11 @@ namespace Holojam.Tools{
       protected virtual void Sync(){
          //By default syncs transform data
          if(sending){
-            synchronizedVector3=transform.position;
-            synchronizedQuaternion=transform.rotation;
-         }
-         else{
-            transform.position=synchronizedVector3;
-            transform.rotation=synchronizedQuaternion;
+            synchronizedVector3 = transform.position;
+            synchronizedQuaternion = transform.rotation;
+         }else{
+            transform.position = synchronizedVector3;
+            transform.rotation = synchronizedQuaternion;
          }
       }
    }
