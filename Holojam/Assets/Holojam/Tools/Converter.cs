@@ -21,7 +21,7 @@ namespace Holojam.Tools{
       public bool useTestIMU = false;
 
       const float POSITION_DAMPING = 5;
-      const float ROTATION_DAMPING = 0.1f; //0.001f;
+      const float ROTATION_DAMPING = 0.01f; //0.001f;
 
       Vector3 lastPosition = Vector3.zero;
 
