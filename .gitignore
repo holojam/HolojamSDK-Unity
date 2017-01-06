@@ -1,5 +1,6 @@
 Temp/
 Library/
+Library.meta
 tmp/
 tmp.meta
 
@@ -31,11 +32,3 @@ sysinfo.txt
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-GoogleVR*
-Holojam/Assets/Plugins/Android/
-Holojam/Assets/Plugins/Android.meta
-Holojam/Assets/Plugins/iOS/
-Holojam/Assets/Plugins/iOS.meta
-Gvr*
-Google.ProtocolBuffers*
