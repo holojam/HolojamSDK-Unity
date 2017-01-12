@@ -42,7 +42,16 @@ namespace Holojam.Tools{
       }}
       public static Actor BUILD_ACTOR{get{return global.buildActor;}}
 
-      void OnValidate(){Index(true);} //Make sure settings are saved before a build
+      //Make sure settings are saved before a build
+      bool loaded = false;
+      void OnValidate(){
+         #if UNITY_EDITOR
+         if(!loaded)return;
+         #endif
+         Index(true);
+         loaded = true;
+      }
+
       /*
       public void Update(){
          Force index in case prefabs are updated (will increase logging!)

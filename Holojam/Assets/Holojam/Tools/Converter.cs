@@ -17,8 +17,8 @@ namespace Holojam.Tools{
       public const Device DEVICE_DEFAULT = Device.CARDBOARD;
       public Device device = DEVICE_DEFAULT;
 
-      public bool placeInEditor = false;
-      public bool useTestIMU = false;
+      public enum DebugMode{NONE,POSITION,REMOTE}
+      public DebugMode debugMode = DebugMode.NONE;
 
       const float POSITION_DAMPING = 5;
       const float ROTATION_DAMPING = 0.01f; //0.001f;
@@ -31,6 +31,10 @@ namespace Holojam.Tools{
       Quaternion raw, correction, correctionTarget = Quaternion.identity;
 
       void Awake(){
+         //Ignore debug flags on phones
+         if(!BuildManager.IsMasterPC())
+            debugMode = DebugMode.NONE;
+
          if(buildManager==null){
             Debug.LogWarning("Converter: Build Manager reference is null!");
             return;
@@ -39,11 +43,11 @@ namespace Holojam.Tools{
             Debug.LogWarning("Converter: Extra data reference is null!");
             return;
          }
-         if(BuildManager.IsMasterPC() && !placeInEditor && !useTestIMU)
+         if(BuildManager.IsMasterPC() && debugMode==DebugMode.NONE)
             return;
 
          imu = buildManager.viewer.transform.GetChild(0);
-         if(useTestIMU){
+         if(debugMode==DebugMode.REMOTE){
             test = gameObject.AddComponent<Network.View>() as Network.View;
             test.label = "IMU";
             test.scope = Network.Client.SEND_SCOPE;
@@ -64,7 +68,7 @@ namespace Holojam.Tools{
       void Update(){
          //Editor debugging
          if(BuildManager.IsMasterPC()){
-            if(placeInEditor){
+            if(debugMode==DebugMode.POSITION){
                #if(SMOOTH)
                   output.rawPosition = extraData.Localize(
                      Smooth(input.rawPosition,ref lastPosition)
@@ -73,7 +77,7 @@ namespace Holojam.Tools{
                   output.rawPosition = extraData.Localize(input.rawPosition);
                #endif
                return;
-            }else if(!useTestIMU)return;
+            }else if(debugMode==DebugMode.NONE)return;
          }
 
          #if(SMOOTH)
@@ -87,7 +91,7 @@ namespace Holojam.Tools{
          output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
 
          //Get IMU data
-         if(useTestIMU)
+         if(debugMode==DebugMode.REMOTE)
             raw = test.rawRotation;
          else switch(device){
             case Device.CARDBOARD:

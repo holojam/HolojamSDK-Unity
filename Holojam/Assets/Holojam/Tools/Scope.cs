@@ -6,12 +6,11 @@ using UnityEngine;
 namespace Holojam.Tools{
    public class Scope : Controller{
       public Vector2 origin;
-      [Range(-90,90)] public float angle = 0;
+      public float height = 1; //Meters
+      [Range(-90,90)] public float angle = 0; //Degrees
 
       protected override ProcessDelegate Process{get{return UpdateFrustum;}}
 
-      public float height{get{return view.rawPosition.x;}}
-      //public float angle{get{return view.rawPosition.y;}}
       public float stem{get{return view.rawPosition.z;}}
 
       protected override void UpdateViewLabel(string label){
@@ -36,8 +35,7 @@ namespace Holojam.Tools{
          return transform.TransformPoint(position);
       }
       public Quaternion Localize(Quaternion rotation){
-         //return rotation;
-         return rotation*Quaternion.Inverse(transform.rotation); //
+         return Quaternion.Inverse(transform.rotation)*rotation;
       }
    }
 }

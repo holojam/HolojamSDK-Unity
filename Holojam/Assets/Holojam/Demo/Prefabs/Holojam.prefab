@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 419806}
   - 114: {fileID: 11419408}
-  - 114: {fileID: 114000012272495140}
+  - 114: {fileID: 114000010400087830}
   m_Layer: 0
   m_Name: Viewer
   m_TagString: Untagged
@@ -277,7 +277,7 @@ MonoBehaviour:
   trackingType: 0
   converter: {fileID: 11485254}
   actor: {fileID: 0}
-  view: {fileID: 114000012272495140}
+  view: {fileID: 0}
   index: 0
   localSpace: 0
 --- !u!114 &11430170
@@ -295,6 +295,7 @@ MonoBehaviour:
   scope: Holoscope
   sending: 0
   origin: {x: 0, y: 1}
+  height: 1
   angle: -5
 --- !u!114 &11447992
 MonoBehaviour:
@@ -363,8 +364,7 @@ MonoBehaviour:
   buildManager: {fileID: 11459870}
   extraData: {fileID: 11430170}
   device: 1
-  placeInEditor: 0
-  useTestIMU: 0
+  debugMode: 0
   input: {fileID: 0}
   output: {fileID: 0}
 --- !u!1001 &100100000
@@ -378,6 +378,25 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 160812}
   m_IsPrefabParent: 1
+--- !u!114 &114000010400087830
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb380fb2ff0754e459bf9c7822a6b2bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scope: Unity
+  source: 
+  sending: 0
+  label: M1
+  rawPosition: {x: 0, y: 0, z: 0}
+  rawRotation: {x: 0, y: 0, z: 0, w: 0}
+  bits: 0
+  blob: 
 --- !u!114 &114000010446066798
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -401,22 +420,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d0e5238eb019499d868eb10951dd235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114000012272495140
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb380fb2ff0754e459bf9c7822a6b2bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scope: Unity
-  source: 
-  sending: 0
-  label: M1
-  rawPosition: {x: 0, y: 0, z: 0}
-  rawRotation: {x: 0, y: 0, z: 0, w: 0}
-  bits: 0
-  blob: 

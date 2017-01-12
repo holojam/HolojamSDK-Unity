@@ -19,11 +19,11 @@ namespace Holojam.Tools{
          serializedObject.Update();
 
          EditorGUILayout.PropertyField(viewer);
-         EditorGUILayout.PropertyField(preview);
+         EditorGUILayout.PropertyField(preview,new GUIContent("Force Preview"));
 
          BuildManager buildManager = (BuildManager)serializedObject.targetObject;
          if(buildManager.preview)
-            EditorGUILayout.PropertyField(previewIndex);
+            EditorGUILayout.PropertyField(previewIndex,new GUIContent("Actor Index"));
          EditorGUILayout.PropertyField(runtimeIndexing);
 
          GUIStyle bold = new GUIStyle(EditorStyles.boldLabel);
@@ -31,7 +31,7 @@ namespace Holojam.Tools{
             buildManager.buildActor.label;
          EditorGUILayout.LabelField("Status",
             buildManager.preview?
-               ("Preview ("+label+")"):"Ad-Hoc Server",
+               ("Preview ("+label+")"):"Master Client",
             bold
          );
 
