@@ -15,10 +15,10 @@ using System.Threading;
 namespace Holojam.Network{
    public class Client : Utility.Global<Client>{
       //Connection options
-      public string serverAddress = "192.168.1.97";
-      public int serverPort = 1612;
-      public string multicastAddress = "224.1.1.3";
-      public int multicastPort = 1611;
+      public string serverAddress = "0.0.0.0";
+      public int serverPort = 9592;
+      public string multicastAddress = "239.0.2.4";
+      public int multicastPort = 9591;
 
       public string sendScope = "Unity";
       //Global
@@ -261,7 +261,7 @@ namespace Holojam.Network{
                //Remove object from both dictionaries on timeout
                if(timers[key]>flakeTimeout){
                   timers.Remove(key);
-                  flakes.Remove(key);
+                  flakes.Remove(Client.SEND_SCOPE + "." + key);
                }
             }
          }
