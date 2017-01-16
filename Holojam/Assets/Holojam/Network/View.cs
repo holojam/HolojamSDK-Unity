@@ -15,6 +15,15 @@ namespace Holojam.Network{
       [HideInInspector] public string source;
       [HideInInspector] public bool sending;
 
+      /* TMP */
+      [HideInInspector] public Vector3[] triples;
+      [HideInInspector] public Quaternion[] quads;
+      [HideInInspector] public float[] floats;
+      [HideInInspector] public int[] ints;
+      [HideInInspector] public byte[] chars;
+      [HideInInspector] public string text;
+      /* TMP */
+
       [HideInInspector] public string label;
       bool isTracked = false;
       public bool tracked{

@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 419806}
   - 114: {fileID: 11419408}
-  - 114: {fileID: 114000010400087830}
+  - 114: {fileID: 114000010165739822}
   m_Layer: 0
   m_Name: Viewer
   m_TagString: Untagged
@@ -277,7 +277,7 @@ MonoBehaviour:
   trackingType: 0
   converter: {fileID: 11485254}
   actor: {fileID: 0}
-  view: {fileID: 0}
+  view: {fileID: 114000010165739822}
   index: 0
   localSpace: 0
 --- !u!114 &11430170
@@ -311,6 +311,12 @@ MonoBehaviour:
   scope: Holoscope
   source: 
   sending: 0
+  triples: []
+  quads: []
+  floats: []
+  ints: 
+  chars: 
+  text: 
   label: ExtraData
   rawPosition: {x: 0, y: 0, z: 0}
   rawRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -378,7 +384,7 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 160812}
   m_IsPrefabParent: 1
---- !u!114 &114000010400087830
+--- !u!114 &114000010165739822
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -392,6 +398,12 @@ MonoBehaviour:
   scope: Unity
   source: 
   sending: 0
+  triples: []
+  quads: []
+  floats: []
+  ints: 
+  chars: 
+  text: 
   label: M1
   rawPosition: {x: 0, y: 0, z: 0}
   rawRotation: {x: 0, y: 0, z: 0, w: 0}

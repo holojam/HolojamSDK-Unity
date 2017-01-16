@@ -1793,6 +1793,12 @@ MonoBehaviour:
   scope: Scope
   source: 
   sending: 0
+  triples: []
+  quads: []
+  floats: []
+  ints: 
+  chars: 
+  text: 
   label: Label
   rawPosition: {x: 0, y: 0, z: 0}
   rawRotation: {x: 0, y: 0, z: 0, w: 0}
