@@ -12,9 +12,9 @@ namespace Holojam.Tools{
       public Scope extraData;
 
       public enum Device{
-         CARDBOARD,DAYDREAM
+         CARDBOARD,DAYDREAM,VIVE
       };
-      public const Device DEVICE_DEFAULT = Device.CARDBOARD;
+      public const Device DEVICE_DEFAULT = Device.DAYDREAM;
       public Device device = DEVICE_DEFAULT;
 
       public enum DebugMode{NONE,POSITION,REMOTE}
@@ -44,6 +44,9 @@ namespace Holojam.Tools{
       public bool hasInput{get{return input.tracked;}}
 
       void Awake(){
+         if(device==Device.VIVE)
+            return;
+
          //Ignore debug flags on phones
          if(!BuildManager.IsMasterPC())
             debugMode = DebugMode.NONE;
@@ -84,6 +87,9 @@ namespace Holojam.Tools{
       }
 
       void Update(){
+         if(device==Device.VIVE)
+            return;
+
          //Editor debugging
          if(BuildManager.IsMasterPC()){
             if(debugMode==DebugMode.POSITION){

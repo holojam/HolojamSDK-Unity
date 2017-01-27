@@ -24,6 +24,9 @@ namespace Holojam.Tools{
             return;
          }
 
+         if(converter.device==Converter.Device.VIVE)
+            return;
+
          //Flush extra components if necessary
          Network.View[] views = GetComponents<Network.View>();
          if((view==null && views.Length>0) || (view!=null && (views.Length>1 || views.Length==0))){

@@ -19,26 +19,30 @@ namespace Holojam.Tools{
 
       public override void OnInspectorGUI(){
          serializedObject.Update();
-
-         EditorGUILayout.PropertyField(trackingType);
-         EditorGUILayout.PropertyField(converter);
-         EditorGUILayout.PropertyField(actor);
-
          Viewer v = serializedObject.targetObject as Viewer;
 
-         if(v.view!=null){
-            EditorGUILayout.PropertyField(index);
-            EditorGUILayout.PropertyField(localSpace);
-         }
+         if(v.converter.device!=Converter.Device.VIVE){
+            EditorGUILayout.PropertyField(trackingType);
+            EditorGUILayout.PropertyField(converter);
+            EditorGUILayout.PropertyField(actor);
 
-         if(!serializedObject.isEditingMultipleObjects){
-            EditorGUILayout.LabelField(
-               v.actor!=null?"Tracking data is being routed through \""+
-               v.actor.gameObject.name+".\" Remove reference to unlink.":
-               "No actor linked. Tracking data is being sourced from the view"+
-               (v.view!=null && v.view.label!=""?" ("+v.view.label+").":"."),
-               new GUIStyle(EditorStyles.wordWrappedMiniLabel)
-            );
+            if(v.view!=null){
+               EditorGUILayout.PropertyField(index);
+               EditorGUILayout.PropertyField(localSpace);
+            }
+
+            if(!serializedObject.isEditingMultipleObjects){
+               EditorGUILayout.LabelField(
+                  v.actor!=null?"Tracking data is being routed through \""+
+                  v.actor.gameObject.name+".\" Remove reference to unlink.":
+                  "No actor linked. Tracking data is being sourced from the view"+
+                  (v.view!=null && v.view.label!=""?" ("+v.view.label+").":"."),
+                  new GUIStyle(EditorStyles.wordWrappedMiniLabel)
+               );
+            }
+         }else{
+            EditorGUILayout.LabelField("Viewer disabled: Device is " + v.converter.device,
+               new GUIStyle(EditorStyles.wordWrappedMiniLabel));
          }
 
          serializedObject.ApplyModifiedProperties();
