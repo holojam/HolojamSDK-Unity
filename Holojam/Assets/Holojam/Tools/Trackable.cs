@@ -37,8 +37,7 @@ namespace Holojam.Tools{
       protected override ProcessDelegate Process{get{return UpdateTracking;}}
 
       protected override string labelField{get{return label;}}
-      //Empty scope defaults to client send scope
-      protected override string scopeField{get{return scope==""? Network.Client.SEND_SCOPE:scope;}}
+      protected override string scopeField{get{return scope;}}
       protected override bool isSending{get{return false;}}
 
       //Override in derived classes
