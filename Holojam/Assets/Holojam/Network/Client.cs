@@ -104,7 +104,7 @@ namespace Holojam.Network{
    }
 
    internal abstract class Exchange{
-      protected const int TIMEOUT = 1000; //ms
+      protected const int SOCKET_TIMEOUT = 1000; //ms
       protected const int PACKET_SIZE = 65507; //bytes
 
       protected byte[] buffer;
@@ -141,7 +141,7 @@ namespace Holojam.Network{
          //Initialize
          socket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp);
          socket.SetSocketOption(SocketOptionLevel.Socket,SocketOptionName.ReuseAddress,1);
-         socket.SendTimeout = TIMEOUT;
+         socket.SendTimeout = SOCKET_TIMEOUT;
 
          IPEndPoint endPoint = new IPEndPoint(ip,0);
          sendEndPoint = new IPEndPoint(IPAddress.Parse(address),port);
@@ -203,12 +203,15 @@ namespace Holojam.Network{
    }
 
    internal class Sink : Exchange{
+      const float UPDATE_TIMEOUT = 1; //s
+
       public bool running;
 
       Thread thread;
       UnityEngine.Object lockObject;
       Stack<Update> updates;
       Stack<Event> events;
+      float lastUpdate;
 
       public Sink(string address, int port):base(address,port){
          running = false;
@@ -216,11 +219,13 @@ namespace Holojam.Network{
          lockObject = new UnityEngine.Object();
          updates = new Stack<Update>();
          events = new Stack<Event>();
+         lastUpdate = 0;
       }
 
       //Apply updates to views
       public void Update(List<View> untracked){
          lock(lockObject){
+            bool updated = updates.Count>0; //Was there an update this tick?
             while(updates.Count>0){
                Update update = updates.Pop();
                #if UNITY_EDITOR
@@ -230,6 +235,12 @@ namespace Holojam.Network{
                for(int i=0;i<untracked.Count;++i)
                   if(update.Load(untracked[i]))
                      untracked.RemoveAt(i--);
+            }
+            //Set untracked if the update timed out or if the view was not found this update
+            if(updated || Time.time-lastUpdate>UPDATE_TIMEOUT){
+               foreach(View view in untracked)
+                  view.tracked = false;
+               lastUpdate = Time.time;
             }
          }
       }
@@ -248,7 +259,7 @@ namespace Holojam.Network{
          socket.SetSocketOption(SocketOptionLevel.IP,SocketOptionName.AddMembership, 
             new MulticastOption(IPAddress.Parse(address)));
          //Critical, otherwise the thread will never terminate
-         socket.ReceiveTimeout = TIMEOUT;
+         socket.ReceiveTimeout = SOCKET_TIMEOUT;
 
          //Receive loop
          while(running){

@@ -311,10 +311,10 @@ MonoBehaviour:
   sending: 0
   ignoreTracking: 0
   label: ExtraData
-  triples:
-  - {x: 0, y: 0, z: 0}
+  triples: []
   quads: []
-  floats: []
+  floats:
+  - 0
   ints: 
   chars: 
   text: 
