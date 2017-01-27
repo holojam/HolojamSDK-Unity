@@ -26,10 +26,7 @@ namespace Holojam.Tools{
       const float dropInterval = 1;
       bool lastTracked = false; float lastTime;
 
-      protected override void UpdateViewLabel(string label){
-         view.label = Network.Canon.IndexToLabel(index);
-         this.label = view.label;
-      }
+      protected override string labelField{get{return Network.Canon.IndexToLabel(index);}}
 
       void UpdateData(){
          //Update local instances dictionary
@@ -80,7 +77,7 @@ namespace Holojam.Tools{
          //(the user's actual head movement) unless you absolutely know what you're doing.
          //The Viewer (VR camera) uses a custom tracking algorithm and relies on the
          //orientation accessor below to provide absolute truth.
-         get{return view.rawRotation;}
+         get{return rawRotation;}
       }
       //TODO
 

@@ -70,7 +70,7 @@ namespace Holojam.Tools{
             Debug.LogWarning("Holobounds: Calibrator not set");
             return;
          }
-         Vector3 position = calibrator.rawPosition;
+         Vector3 position = calibrator.triples[0];
          if(i<4)bounds[i]=new Vector2(position.x,position.z);
          else if(i==4)floor=position.y;
          else ceiling=position.y;

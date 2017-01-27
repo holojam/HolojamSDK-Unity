@@ -23,12 +23,25 @@ namespace Holojam.Tools{
       const float POSITION_DAMPING = 5;
       const float ROTATION_DAMPING = 0.01f; //0.001f;
 
+      #if SMOOTH
       Vector3 lastPosition = Vector3.zero;
+      #endif
 
-      [HideInInspector] public Network.View input, output;
+      Network.View input, output;
       Transform imu;
       Network.View test;
       Quaternion raw, correction, correctionTarget = Quaternion.identity;
+
+      //Proxies
+      public Vector3 outputPosition{
+         get{return output.triples[0];}
+         set{output.triples[0] = value;}
+      }
+      public Quaternion outputRotation{
+         get{return output.quads[0];}
+         set{output.quads[0] = value;}
+      }
+      public bool hasInput{get{return input.tracked;}}
 
       void Awake(){
          //Ignore debug flags on phones
@@ -63,6 +76,11 @@ namespace Holojam.Tools{
          output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
          output.scope = Network.Client.SEND_SCOPE;
          output.sending = true;
+
+         //Allocate
+         input.triples = new Vector3[2];
+         output.triples = new Vector3[1];
+         output.quads = new Quaternion[1];
       }
 
       void Update(){
@@ -70,20 +88,20 @@ namespace Holojam.Tools{
          if(BuildManager.IsMasterPC()){
             if(debugMode==DebugMode.POSITION){
                #if(SMOOTH)
-                  output.rawPosition = extraData.Localize(
-                     Smooth(input.rawPosition,ref lastPosition)
+                  outputPosition = extraData.Localize(
+                     Smooth(input.triples[0],ref lastPosition)
                   );
                #else
-                  output.rawPosition = extraData.Localize(input.rawPosition);
+                  outputPosition = extraData.Localize(input.triples[0]);
                #endif
                return;
             }else if(debugMode==DebugMode.NONE)return;
          }
 
          #if(SMOOTH)
-            Vector3 inputPosition = Smooth(input.rawPosition,ref lastPosition);
+            Vector3 inputPosition = Smooth(input.triples[0],ref lastPosition);
          #else
-            Vector3 inputPosition = input.rawPosition;
+            Vector3 inputPosition = input.triples[0];
          #endif
 
          //Update views
@@ -92,7 +110,7 @@ namespace Holojam.Tools{
 
          //Get IMU data
          if(debugMode==DebugMode.REMOTE)
-            raw = test.rawRotation;
+            raw = test.quads[0];
          else switch(device){
             case Device.CARDBOARD:
                raw = imu.localRotation;
@@ -108,7 +126,7 @@ namespace Holojam.Tools{
          if(input.tracked){
             //Read in secondary vector
             Vector3 left = new Vector3(
-               input.rawRotation.x,input.rawRotation.y,input.rawRotation.z
+               input.triples[1].x,input.triples[1].y,input.triples[1].z
             ).normalized;
 
             Vector3 imuUp = raw*Vector3.up;
@@ -140,9 +158,9 @@ namespace Holojam.Tools{
          #endif
 
          //Update output
-         output.rawRotation = extraData.Localize(correction*raw);
-         output.rawPosition = extraData.Localize(
-            inputPosition - output.rawRotation*Vector3.up*extraData.stem
+         outputRotation = extraData.Localize(correction*raw);
+         outputPosition = extraData.Localize(
+            inputPosition - outputRotation*Vector3.up*extraData.stem
          );
       }
 

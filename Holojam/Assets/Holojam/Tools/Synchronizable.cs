@@ -4,43 +4,22 @@
 using UnityEngine;
 
 namespace Holojam.Tools{
-   public class Synchronizable : Controller{
-      public bool useMasterPC = false; //update
+   public abstract class Synchronizable : Controller{
+      public string label = "Synchronizable";
+      public string scope = "";
+      public bool sending = true;
+      public bool useMasterPC = false;
 
       protected override ProcessDelegate Process{get{return Sync;}}
 
-      protected override void UpdateViewSending(bool sending){
-         sending = sending && (BuildManager.IsMasterPC() || !useMasterPC);
-         view.sending = sending;
-      }
-
-      public Vector3 synchronizedVector3{
-         get{return view.rawPosition;}
-         set{if(sending)view.rawPosition=value;}
-      }
-      public Quaternion synchronizedQuaternion{
-         get{return view.rawRotation;}
-         set{if(sending)view.rawRotation=value;}
-      }
-      public int synchronizedInt{
-         get{return view.bits;}
-         set{if(sending)view.bits=value;}
-      }
-      public string synchronizedString{
-         get{return view.blob;}
-         set{if(sending)view.blob=value;}
-      }
+      protected override string labelField{get{return label;}}
+      //Empty scope defaults to client send scope
+      protected override string scopeField{get{return scope==""?Network.Client.SEND_SCOPE:scope;}}
+      protected override bool isSending{get{
+         return sending && (BuildManager.IsMasterPC() || !useMasterPC);
+      }}
 
       //Override this in derived classes
-      protected virtual void Sync(){
-         //By default syncs transform data
-         if(sending){
-            synchronizedVector3 = transform.position;
-            synchronizedQuaternion = transform.rotation;
-         }else{
-            transform.position = synchronizedVector3;
-            transform.rotation = synchronizedQuaternion;
-         }
-      }
+      protected abstract void Sync();
    }
 }

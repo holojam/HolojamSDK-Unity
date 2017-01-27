@@ -32,7 +32,11 @@ namespace Holojam.Tools{
          }
 
          //Automatically add a View component if not using a reference actor
-         if(actor==view)view=gameObject.AddComponent<Network.View>() as Network.View;
+         if(actor==view){
+            view = gameObject.AddComponent<Network.View>() as Network.View;
+            view.triples = new Vector3[1];
+            view.quads = new Quaternion[1];
+         }
          else if(actor!=null && view!=null)DestroyImmediate(view);
 
          if(view!=null){
@@ -84,21 +88,21 @@ namespace Holojam.Tools{
       //Get tracking data from desired source
       Vector3 GetPosition(){
          if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterPC())
-            return converter.output.rawPosition;
+            return converter.outputPosition;
          else{
             return actor!=null? actor.center:
             localSpace && transform.parent!=null?
-               transform.parent.TransformPoint(view.rawPosition) : view.rawPosition;
+               transform.parent.TransformPoint(view.triples[0]) : view.triples[0];
          }
       }
       Quaternion GetRotation(){
          if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterPC())
-            return converter.output.rawRotation;
-         else return actor!=null?actor.rawOrientation:view.rawRotation;
+            return converter.outputRotation;
+         else return actor!=null?actor.rawOrientation:view.quads[0];
       }
       bool GetTracked(){
          if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterPC())
-            return converter.input.tracked;
+            return converter.hasInput;
          else return actor!=null?actor.view.tracked:view.tracked;
       }
    }

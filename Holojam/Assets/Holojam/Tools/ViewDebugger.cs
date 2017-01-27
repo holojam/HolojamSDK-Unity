@@ -5,25 +5,33 @@ using UnityEngine;
 
 namespace Holojam.Tools{
    public class ViewDebugger : Controller{
-      void Reset(){
-         scope = "Scope";
-      }
+      public string label, scope, source;
+      public bool tracked, ignoreTracking;
+
       protected override ProcessDelegate Process{get{return UpdateData;}}
 
-      public Vector3 rawPosition;
-      public Quaternion rawRotation;
-      public int bits;
-      public string blob;
+      protected override string labelField{get{return label;}}
+      protected override string scopeField{get{return scope;}}
+      protected override bool isSending{get{return false;}}
 
-      protected override void UpdateViewScope(string scope){
-         view.scope = scope;
-      }
+      public Vector3[] triples;
+      public Quaternion[] quads;
+      public float[] floats;
+      public int[] ints;
+      public byte[] chars;
+      public string text;
 
       void UpdateData(){
-         rawPosition = view.rawPosition;
-         rawRotation = view.rawRotation;
-         bits = view.bits;
-         blob = view.blob;
+         source = view.source;
+         tracked = view.tracked;
+         ignoreTracking = view.ignoreTracking;
+
+         triples = view.triples;
+         quads = view.quads;
+         floats = view.floats;
+         ints = view.ints;
+         chars = view.chars;
+         text = view.text;
       }
    }
 }

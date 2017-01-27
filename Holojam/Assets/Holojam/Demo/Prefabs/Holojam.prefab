@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 419806}
   - 114: {fileID: 11419408}
-  - 114: {fileID: 114000010165739822}
   m_Layer: 0
   m_Name: Viewer
   m_TagString: Untagged
@@ -79,7 +78,9 @@ GameObject:
   - 4: {fileID: 437874}
   - 114: {fileID: 11459870}
   - 114: {fileID: 11472184}
-  - 114: {fileID: 114000010446066798}
+  - 114: {fileID: 114000013142514114}
+  - 114: {fileID: 114000014164576046}
+  - 114: {fileID: 114000013885288260}
   m_Layer: 0
   m_Name: Holojam
   m_TagString: Untagged
@@ -277,7 +278,7 @@ MonoBehaviour:
   trackingType: 0
   converter: {fileID: 11485254}
   actor: {fileID: 0}
-  view: {fileID: 114000010165739822}
+  view: {fileID: 0}
   index: 0
   localSpace: 0
 --- !u!114 &11430170
@@ -291,12 +292,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 109aacd3aa792458c98ff4b34f946200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  label: ExtraData
-  scope: Holoscope
-  sending: 0
-  origin: {x: 0, y: 1}
+  origin: {x: 0, y: 0}
   height: 1
-  angle: -5
+  angle: 0
 --- !u!114 &11447992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -311,17 +309,15 @@ MonoBehaviour:
   scope: Holoscope
   source: 
   sending: 0
-  triples: []
+  ignoreTracking: 0
+  label: ExtraData
+  triples:
+  - {x: 0, y: 0, z: 0}
   quads: []
   floats: []
   ints: 
   chars: 
   text: 
-  label: ExtraData
-  rawPosition: {x: 0, y: 0, z: 0}
-  rawRotation: {x: 0, y: 0, z: 0, w: 0}
-  bits: 0
-  blob: 
 --- !u!114 &11459870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -371,8 +367,6 @@ MonoBehaviour:
   extraData: {fileID: 11430170}
   device: 1
   debugMode: 0
-  input: {fileID: 0}
-  output: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -384,43 +378,6 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 160812}
   m_IsPrefabParent: 1
---- !u!114 &114000010165739822
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb380fb2ff0754e459bf9c7822a6b2bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scope: Unity
-  source: 
-  sending: 0
-  triples: []
-  quads: []
-  floats: []
-  ints: 
-  chars: 
-  text: 
-  label: M1
-  rawPosition: {x: 0, y: 0, z: 0}
-  rawRotation: {x: 0, y: 0, z: 0, w: 0}
-  bits: 0
-  blob: 
---- !u!114 &114000010446066798
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 160812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50587de784cb74c3b8571f277eb39874, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  disable: 0
 --- !u!114 &114000010653153686
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -432,3 +389,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d0e5238eb019499d868eb10951dd235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114000013142514114
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 160812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0834cb16856c94bcd82d142ac9a69827, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114000013885288260
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 160812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c979fbd37a1ea4fe48c3ce8df48da9cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disable: 0
+--- !u!114 &114000014164576046
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 160812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb380fb2ff0754e459bf9c7822a6b2bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scope: Holoscope
+  source: 
+  sending: 1
+  ignoreTracking: 1
+  label: MetricsACK
+  triples: []
+  quads: []
+  floats:
+  - 0
+  ints: 
+  chars: 
+  text: 

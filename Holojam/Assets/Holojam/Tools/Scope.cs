@@ -11,20 +11,13 @@ namespace Holojam.Tools{
 
       protected override ProcessDelegate Process{get{return UpdateFrustum;}}
 
-      public float stem{get{return view.rawPosition.z;}}
+      public float stem{get{return GetFloat(0);}}
 
-      protected override void UpdateViewLabel(string label){
-         view.label = "ExtraData";
-         this.label = view.label;
-      }
-      protected override void UpdateViewScope(string scope){
-         view.scope = "Holoscope";
-         this.scope = view.scope;
-      }
-      protected override void UpdateViewSending(bool sending){
-         view.sending = false;
-         this.sending = view.sending;
-      }
+      protected override string labelField{get{return "ExtraData";}}
+      protected override string scopeField{get{return "Holoscope";}}
+      protected override bool isSending{get{return false;}}
+
+      protected override int floatsCount{get{return 1;}}
 
       void UpdateFrustum(){
          transform.position = new Vector3(origin.x,height,origin.y);

@@ -7,24 +7,39 @@ using Holojam.Network;
 
 namespace Holojam.Tools{
    public class Trackable : Controller{
+      public string label = "Trackable";
+      public string scope = "";
       public bool localSpace = false;
+
+      //Allocation
+      protected override int triplesCount{get{return 1;}}
+      protected override int quadsCount{get{return 1;}}
+      //Proxies
+      public Vector3 rawPosition{
+         get{return GetTriple(0);}
+         set{UpdateTriple(0,value);}
+      }
+      public Quaternion rawRotation{
+         get{return GetQuad(0);}
+         set{UpdateQuad(0,value);}
+      }
 
       //Accessors in case modification needs to be made to the raw data (like smoothing)
       public Vector3 trackedPosition{get{
          return localSpace && transform.parent!=null?
-            transform.parent.TransformPoint(view.rawPosition): view.rawPosition;
+            transform.parent.TransformPoint(rawPosition):rawPosition;
       }}
       public Quaternion trackedRotation{get{
          return localSpace && transform.parent!=null?
-            transform.parent.rotation*view.rawRotation : view.rawRotation;
+            transform.parent.rotation*rawRotation:rawRotation;
       }}
 
       protected override ProcessDelegate Process{get{return UpdateTracking;}}
 
-      protected override void UpdateViewSending(bool sending){
-         view.sending = false;
-         this.sending = view.sending;
-      }
+      protected override string labelField{get{return label;}}
+      //Empty scope defaults to client send scope
+      protected override string scopeField{get{return scope==""? Network.Client.SEND_SCOPE:scope;}}
+      protected override bool isSending{get{return false;}}
 
       //Override in derived classes
       protected virtual void UpdateTracking(){
@@ -53,14 +68,14 @@ namespace Holojam.Tools{
          if(!localSpace || transform.parent==null)return;
          Gizmos.color = Color.gray;
          Gizmos.DrawLine(
-            view.rawPosition-0.03f*Vector3.left,
-            view.rawPosition+0.03f*Vector3.left
+            rawPosition-0.03f*Vector3.left,
+            rawPosition+0.03f*Vector3.left
          );
          Gizmos.DrawLine(
-            view.rawPosition-0.03f*Vector3.forward,
-            view.rawPosition+0.03f*Vector3.forward
+            rawPosition-0.03f*Vector3.forward,
+            rawPosition+0.03f*Vector3.forward
          );
-         Gizmos.DrawLine(view.rawPosition-0.03f*Vector3.up,view.rawPosition+0.03f*Vector3.up);  
+         Gizmos.DrawLine(rawPosition-0.03f*Vector3.up,rawPosition+0.03f*Vector3.up);  
       }
    }
 }

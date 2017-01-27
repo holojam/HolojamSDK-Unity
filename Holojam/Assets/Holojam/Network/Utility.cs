@@ -3,84 +3,137 @@
 
 using UnityEngine;
 using FlatBuffers;
+using System;
 using System.Collections.Generic;
 
 namespace Holojam.Network{
-   class Update{
-      public readonly bool valid;
-      readonly Dictionary<string,int> lookup;
-      readonly Protocol.Packet packet;
 
-      public Update(ref byte[] buffer){
-         packet = Protocol.Packet.GetRootAsPacket(new ByteBuffer(buffer));
-         lookup = new Dictionary<string,int>();
-         //Verify this is an update, not an event
-         if(packet.Type==Protocol.PacketType.Update){
-            valid = true;
-            //Initialize lookup
-            for(int i=0;i<packet.FlakesLength;++i)
-               lookup[packet.Flakes(i).Value.Label] = i;
-         }else valid = false;
+   internal class PacketWrapper{
+      public readonly Protocol.Packet data;
+
+      public PacketWrapper(ref byte[] buffer){
+         data = Protocol.Packet.GetRootAsPacket(new ByteBuffer(buffer));
       }
 
-      //Load flake data into view
-      public bool Load(View view){
-         if(view.scope!=packet.Scope && view.scope!="")return false;
-
-         if(lookup.ContainsKey(view.label)){
-            CopyToView(lookup[view.label],view);
-            return true;
-         }
-         return false;
-      }
       //Copy from flake struct to view component
-      void CopyToView(int i, View view){
-         view.triples = new Vector3[packet.Flakes(i).Value.TriplesLength];
-         for(int j=0;j<packet.Flakes(i).Value.TriplesLength;++j)
+      public void CopyToView(int i, View view){
+         view.scope = data.Scope;
+
+         view.label = data.Flakes(i).Value.Label;
+         view.triples = new Vector3[data.Flakes(i).Value.TriplesLength];
+         for(int j=0;j<data.Flakes(i).Value.TriplesLength;++j)
             view.triples[j] = new Vector3(
-               packet.Flakes(i).Value.Triples(j).Value.X,
-               packet.Flakes(i).Value.Triples(j).Value.Y,
-               packet.Flakes(i).Value.Triples(j).Value.Z
+               data.Flakes(i).Value.Triples(j).Value.X,
+               data.Flakes(i).Value.Triples(j).Value.Y,
+               data.Flakes(i).Value.Triples(j).Value.Z
             );
-         view.quads = new Quaternion[packet.Flakes(i).Value.QuadsLength];
-         for(int j=0;j<packet.Flakes(i).Value.QuadsLength;++j)
+         view.quads = new Quaternion[data.Flakes(i).Value.QuadsLength];
+         for(int j=0;j<data.Flakes(i).Value.QuadsLength;++j)
             view.quads[j] = new Quaternion(
-               packet.Flakes(i).Value.Quads(j).Value.X,
-               packet.Flakes(i).Value.Quads(j).Value.Y,
-               packet.Flakes(i).Value.Quads(j).Value.Z,
-               packet.Flakes(i).Value.Quads(j).Value.W
+               data.Flakes(i).Value.Quads(j).Value.X,
+               data.Flakes(i).Value.Quads(j).Value.Y,
+               data.Flakes(i).Value.Quads(j).Value.Z,
+               data.Flakes(i).Value.Quads(j).Value.W
             );
 
-         view.floats = new float[packet.Flakes(i).Value.FloatsLength];
-         for(int j=0;j<packet.Flakes(i).Value.FloatsLength;++j)
-            view.floats[j] = packet.Flakes(i).Value.Floats(j);
+         view.floats = new float[data.Flakes(i).Value.FloatsLength];
+         for(int j=0;j<data.Flakes(i).Value.FloatsLength;++j)
+            view.floats[j] = data.Flakes(i).Value.Floats(j);
 
-         view.ints = new int[packet.Flakes(i).Value.IntsLength];
-         for(int j=0;j<packet.Flakes(i).Value.IntsLength;++j)
-            view.ints[j] = packet.Flakes(i).Value.Ints(j);
+         view.ints = new int[data.Flakes(i).Value.IntsLength];
+         for(int j=0;j<data.Flakes(i).Value.IntsLength;++j)
+            view.ints[j] = data.Flakes(i).Value.Ints(j);
 
-         view.chars = new byte[packet.Flakes(i).Value.CharsLength];
-         for(int j=0;j<packet.Flakes(i).Value.CharsLength;++j)
-            view.chars[j] = (byte)packet.Flakes(i).Value.Chars(j); //FLAG
+         view.chars = new byte[data.Flakes(i).Value.CharsLength];
+         for(int j=0;j<data.Flakes(i).Value.CharsLength;++j)
+            view.chars[j] = (byte)data.Flakes(i).Value.Chars(j); //FLAG
 
-         view.text = packet.Flakes(i).Value.Text;
+         view.text = data.Flakes(i).Value.Text;
+      }
+   }
+
+   abstract internal class Nugget{
+      protected PacketWrapper packet;
+
+      protected Nugget(PacketWrapper packet){
+         this.packet = packet;
+      }
+
+      public abstract bool Load(View view);
+
+      public static Nugget Create(ref byte[] buffer){
+         PacketWrapper packet = new PacketWrapper(ref buffer);
+         switch(packet.data.Type){
+            case Protocol.PacketType.Update:
+               return new Update(packet);
+            case Protocol.PacketType.Event:
+               return new Event(packet);
+            default: return null;
+         }
       }
 
       #if UNITY_EDITOR
       public void UpdateDebug(Dictionary<string,string> debugData){
-         string scope = packet.Scope;
-         for(int i=0;i<packet.FlakesLength;++i)
-            debugData[scope + "." + packet.Flakes(i).Value.Label] = packet.Origin;
+         string scope = packet.data.Scope;
+         for(int i=0;i<packet.data.FlakesLength;++i)
+            debugData[scope + "."
+               + packet.data.Flakes(i).Value.Label] = packet.data.Origin;
       }
       #endif
    }
 
-   class Translator{
+   internal class Update : Nugget{
+      readonly Dictionary<string,int> lookup;
+
+      public Update(PacketWrapper packet):base(packet){
+         //Initialize lookup table
+         lookup = new Dictionary<string,int>();
+         for(int i=0;i<packet.data.FlakesLength;++i)
+            lookup[packet.data.Flakes(i).Value.Label] = i;
+      }
+
+      public override bool Load(View view){
+         if(view.scope!=packet.data.Scope && view.scope!="")return false;
+
+         if(lookup.ContainsKey(view.label)){
+            packet.CopyToView(lookup[view.label],view);
+            view.tracked = true;
+            return true;
+         }
+         return false;
+      }
+   }
+   internal class Event : Nugget{
+      public readonly string label;
+      public readonly bool notification;
+
+      public Event(PacketWrapper packet):base(packet){
+         label = packet.data.Flakes(0).Value.Label;
+         notification = packet.data.Flakes(0).Value.TriplesLength==0
+            && packet.data.Flakes(0).Value.QuadsLength==0
+            && packet.data.Flakes(0).Value.FloatsLength==0
+            && packet.data.Flakes(0).Value.IntsLength==0
+            && packet.data.Flakes(0).Value.CharsLength==0
+            && String.IsNullOrEmpty(packet.data.Flakes(0).Value.Text);
+      }
+
+      //
+      public override bool Load(View view){
+         //if(view.scope!=packet.data.Scope && view.scope!="")return false;
+         packet.CopyToView(0,view);
+         view.ignoreTracking = view.tracked = true;
+         return true;
+      }
+   }
+
+   internal class Translator{
       public static string Origin(){
          return System.Environment.UserName + "@" + System.Environment.MachineName;
       }
 
-      public static byte[] BuildUpdate(List<View> views, string sendScope){
+      static byte[] BuildPacket(
+         string sendScope, Protocol.PacketType type, List<View> views
+      ){
          FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
          StringOffset scope = builder.CreateString(sendScope);
@@ -99,7 +152,7 @@ namespace Holojam.Network{
             //Create the vectors
             if(views[i].triples!=null){
                Protocol.Flake.StartTriplesVector(builder,views[i].triples.Length);
-               for(int j=views[i].triples.Length-1;j>0;--j){
+               for(int j=views[i].triples.Length-1;j>=0;--j){
                   Protocol.Vector3.CreateVector3(builder,
                      views[i].triples[j].x,
                      views[i].triples[j].y,
@@ -110,7 +163,7 @@ namespace Holojam.Network{
             }
             if(views[i].quads!=null){
                Protocol.Flake.StartQuadsVector(builder,views[i].quads.Length);
-               for(int j=0;j<views[i].quads.Length;++j){
+               for(int j=views[i].quads.Length-1;j>=0;--j){
                   Protocol.Vector4.CreateVector4(builder,
                      views[i].quads[j].x,
                      views[i].quads[j].y,
@@ -156,7 +209,39 @@ namespace Holojam.Network{
 
          //Build packet
          Offset<Protocol.Packet> packet = Protocol.Packet.CreatePacket(
-            builder,scope,origin,Protocol.PacketType.Update,flakes
+            builder,scope,origin,type,flakes
+         );
+         builder.Finish(packet.Value);
+         //Return buffer
+         return builder.SizedByteArray();
+      }
+
+      public static byte[] BuildUpdate(string sendScope, List<View> views){
+         return BuildPacket(sendScope,Protocol.PacketType.Update,views);
+      }
+      public static byte[] BuildEvent(string sendScope, View view){
+         return BuildPacket(
+            sendScope,Protocol.PacketType.Event,new List<View>{view}
+         );
+      }
+
+      public static byte[] BuildNotification(string sendScope, string label){
+         FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+         StringOffset scope = builder.CreateString(sendScope);
+         StringOffset origin = builder.CreateString(Origin());
+
+         Offset<Protocol.Flake>[] offsets = new Offset<Protocol.Flake>[1];
+
+         StringOffset notificationLabel = builder.CreateString(label);
+         Protocol.Flake.StartFlake(builder);
+         Protocol.Flake.AddLabel(builder,notificationLabel);
+         offsets[0] = Protocol.Flake.EndFlake(builder);
+
+         var flakes = Protocol.Packet.CreateFlakesVector(builder,offsets);
+
+         //Build packet
+         Offset<Protocol.Packet> packet = Protocol.Packet.CreatePacket(
+            builder,scope,origin,Protocol.PacketType.Event,flakes
          );
          builder.Finish(packet.Value);
          //Return buffer

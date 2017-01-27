@@ -25,6 +25,14 @@ namespace Holojam.Network{
          get{return global.sendScope;}
       }
 
+      //Global event functions
+      public static void PushEvent(View view){
+         global.emitter.SendEvent(view);
+      }
+      public static void Notify(string label){
+         global.emitter.SendNotification(label);
+      }
+
       //Debug
       #if UNITY_EDITOR
       public int sentPPS, receivedPPS;
@@ -58,10 +66,12 @@ namespace Holojam.Network{
             if(string.IsNullOrEmpty(view.label)){
                Debug.LogWarning("Holojam.Network.Client: Invalid view label",view);
                continue;
-            }else if(view.sending)
+            }else if(view.ignoreTracking)
+               continue;
+            else if(view.sending)
                staged.Add(view);
             else{
-               view.tracked = false;
+               //view.tracked = false;
                untracked.Add(view);
             }
          }
@@ -69,6 +79,8 @@ namespace Holojam.Network{
          sink.Update(untracked);
          emitter.Send(staged);
       }
+      //Process events in realtime
+      void Update(){sink.PublishEvents();}
 
       //Debug
       #if UNITY_EDITOR
@@ -144,7 +156,7 @@ namespace Holojam.Network{
       public void Send(List<View> views){
          if(views.Count==0)return;
 
-         buffer = Translator.BuildUpdate(views,Client.SEND_SCOPE);
+         buffer = Translator.BuildUpdate(Client.SEND_SCOPE,views);
          socket.BeginSendTo(buffer,0,buffer.Length,0,sendEndPoint,
             (System.IAsyncResult r) => {socket.EndSendTo(r);},
          socket);
@@ -153,6 +165,27 @@ namespace Holojam.Network{
          debugData = "(" + Translator.Origin() + ")";
          foreach(View view in views)
             debugData+="\n   " + view.label;
+         packetCount++;
+         #endif
+      }
+
+      public void SendEvent(View view){
+         buffer = Translator.BuildEvent(Client.SEND_SCOPE,view);
+         socket.BeginSendTo(buffer,0,buffer.Length,0,sendEndPoint,
+            (System.IAsyncResult r) => {socket.EndSendTo(r);},
+         socket);
+
+         #if UNITY_EDITOR
+         packetCount++;
+         #endif
+      }
+      public void SendNotification(string label){
+         buffer = Translator.BuildNotification(Client.SEND_SCOPE,label);
+         socket.BeginSendTo(buffer,0,buffer.Length,0,sendEndPoint,
+            (System.IAsyncResult r) => {socket.EndSendTo(r);},
+         socket);
+
+         #if UNITY_EDITOR
          packetCount++;
          #endif
       }
@@ -175,12 +208,14 @@ namespace Holojam.Network{
       Thread thread;
       UnityEngine.Object lockObject;
       Stack<Update> updates;
+      Stack<Event> events;
 
       public Sink(string address, int port):base(address,port){
          running = false;
          thread = new Thread(listener);
          lockObject = new UnityEngine.Object();
          updates = new Stack<Update>();
+         events = new Stack<Event>();
       }
 
       //Apply updates to views
@@ -197,6 +232,11 @@ namespace Holojam.Network{
                      untracked.RemoveAt(i--);
             }
          }
+      }
+      //Publish events to the notifier
+      public void PublishEvents(){
+         while(events.Count>0)
+            Notifier.Publish(events.Pop());
       }
 
       ThreadStart listener{get{return () => {
@@ -222,12 +262,14 @@ namespace Holojam.Network{
                if(e.ErrorCode!=10035)
                   Debug.Log("Holojam.Client.Network: Socket error: " + e);
                #endif
+               Debug.Log("Holojam.Client.Network: Timeout");
                continue;
             }
 
-            Update update = new Update(ref buffer);
-            if(update.valid)lock(lockObject){updates.Push(update);}
-            else Debug.Log("Event"); //stub
+            Nugget nugget = Nugget.Create(ref buffer);
+            if(nugget is Update)
+               lock(lockObject){updates.Push(nugget as Update);}
+            else lock(lockObject){events.Push(nugget as Event);}
 
             #if UNITY_EDITOR
             packetCount++;
