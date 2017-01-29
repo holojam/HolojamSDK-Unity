@@ -251,7 +251,7 @@ namespace Holojam.Network{
 
    public class Canon{
       public static string IndexToLabel(int index, bool raw = false){
-         return "M"+(Mathf.Max(0,index)+1)+(raw?"-Raw":"");
+         return "M" + Mathf.Max(1,index) + (raw?"-Raw":"");
       }
    }
 }

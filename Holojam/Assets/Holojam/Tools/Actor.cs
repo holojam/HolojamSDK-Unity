@@ -17,7 +17,7 @@ namespace Holojam.Tools{
       void OnDisable(){instances.Remove(this);}
 
       public int index;
-      public bool isBuild{get{return index==BuildManager.BUILD_INDEX;}}
+      public bool isBuild{get{return BuildManager.BUILD_ACTOR==this;}}
       public bool isLocal{get{return localInstances.ContainsKey(brand);}}
 
       protected const Utility.Palette.Colors DEFAULT_COLOR = Utility.Palette.Colors.SEA_FOAM;
@@ -26,7 +26,7 @@ namespace Holojam.Tools{
       const float dropInterval = 1;
       bool lastTracked = false; float lastTime;
 
-      protected override string labelField{get{return Network.Canon.IndexToLabel(index);}}
+      public override string labelField{get{return Network.Canon.IndexToLabel(index);}}
 
       void UpdateData(){
          //Update local instances dictionary

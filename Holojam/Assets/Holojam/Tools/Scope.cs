@@ -13,11 +13,11 @@ namespace Holojam.Tools{
 
       public float stem{get{return GetFloat(0);}}
 
-      protected override string labelField{get{return "ExtraData";}}
-      protected override string scopeField{get{return "Holoscope";}}
-      protected override bool isSending{get{return false;}}
+      public override string labelField{get{return "ExtraData";}}
+      public override string scopeField{get{return "Holoscope";}}
+      public override bool isSending{get{return false;}}
 
-      protected override int floatsCount{get{return 1;}}
+      public override int floatCount{get{return 1;}}
 
       void UpdateFrustum(){
          transform.position = new Vector3(origin.x,height,origin.y);

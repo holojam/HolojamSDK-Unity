@@ -9,12 +9,12 @@ namespace Holojam.Tools{
 
       protected override ProcessDelegate Process{get{return UpdateMetrics;}}
 
-      protected override string labelField{get{return "MetricsACK";}}
-      protected override string scopeField{get{return "Holoscope";}}
-      protected override bool isSending{get{return true;}}
-      protected override bool isIgnoringTracking{get{return true;}} //Event
+      public override string labelField{get{return "MetricsACK";}}
+      public override string scopeField{get{return "Holoscope";}}
+      public override bool isSending{get{return true;}}
+      public override bool isIgnoringTracking{get{return true;}} //Event
 
-      protected override int floatsCount{get{return 1;}}
+      public override int floatCount{get{return 1;}}
 
       void Start(){
          if(disable)return;
@@ -32,7 +32,7 @@ namespace Holojam.Tools{
 
       //Send back the time to render
       void UpdateMetrics(){
-         UpdateFloat(0,Time.smoothDeltaTime*1000);
+         SetFloat(0,Time.smoothDeltaTime*1000);
       }
    }
 }

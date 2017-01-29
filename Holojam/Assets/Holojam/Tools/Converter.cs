@@ -65,7 +65,7 @@ namespace Holojam.Tools{
          imu = buildManager.viewer.transform.GetChild(0);
          if(debugMode==DebugMode.REMOTE){
             test = gameObject.AddComponent<Network.View>() as Network.View;
-            test.label = "IMU";
+            test.label = "Remote";
             test.scope = Network.Client.SEND_SCOPE;
             test.sending = false;
          }

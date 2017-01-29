@@ -9,15 +9,15 @@ public class Remote : Controller{
    public Converter.Device device = Converter.DEVICE_DEFAULT;
 
    protected override ProcessDelegate Process{get{return UpdateRemote;}}
-   protected override string labelField{get{return "Remote";}}
-   protected override string scopeField{get{return Holojam.Network.Client.SEND_SCOPE;}}
-   protected override bool isSending{get{return !BuildManager.IsMasterPC();}}
+   public override string labelField{get{return "Remote";}}
+   public override string scopeField{get{return Holojam.Network.Client.SEND_SCOPE;}}
+   public override bool isSending{get{return !BuildManager.IsMasterPC();}}
 
-   protected override int quadsCount{get{return 1;}}
+   public override int quadCount{get{return 1;}}
    //Proxy
-   Quaternion imu{set{UpdateQuad(0,value);}}
+   Quaternion imu{set{SetQuad(0,value);}}
 
-   protected void UpdateRemote(){
+   void UpdateRemote(){
       if(!isSending)return;
       switch(device){
          case Converter.Device.CARDBOARD:

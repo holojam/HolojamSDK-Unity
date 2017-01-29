@@ -12,16 +12,17 @@ namespace Holojam.Tools{
       public Viewer viewer;
 
       public bool preview = false;
-      public int previewIndex;
+      public int previewIndex = 1;
+      public bool spectator = false;
       public bool runtimeIndexing = true;
 
-      int buildIndex = 0;
+      int buildIndex = 1;
       //Global
       public static int BUILD_INDEX{
          get{
             return global.preview?global.previewIndex:
-               //Index -1 for spectator/ad-hoc server
-               IsMasterPC()?-1:global.buildIndex;
+               //Index 0 for spectator/ad-hoc server
+               IsMasterPC()?0:global.buildIndex;
          }
          //set{global.buildIndex = value;}
       }
@@ -33,11 +34,16 @@ namespace Holojam.Tools{
       //Get the current build actor (re-index if necessary)
       Actor ba;
       public Actor buildActor{get{
-         if(BUILD_INDEX==-1){
+         if(BUILD_INDEX==0){
             ba = null;
             return ba;
          }
-         if(ba==null && (!Application.isPlaying || runtimeIndexing))Index(true);
+         if(ba==null){
+            Index(true);
+            return ba;
+         }
+         if(runtimeIndexing || !Application.isPlaying)
+            Index();
          return ba;
       }}
       public static Actor BUILD_ACTOR{get{return global.buildActor;}}
@@ -51,14 +57,6 @@ namespace Holojam.Tools{
          Index(true);
          loaded = true;
       }
-
-      /*
-      public void Update(){
-         Force index in case prefabs are updated (will increase logging!)
-         if(!Application.isPlaying || runtimeIndexing)
-            Index(Application.isEditor && !Application.isPlaying);
-      }
-      */
 
       enum Result{INDEXED,PASSED,EMPTY,NOBUILD,NOVIEW};
       Result Index(bool force = false){
@@ -114,6 +112,8 @@ namespace Holojam.Tools{
       }
 
       public static bool IsMasterPC(){
+         if(global && global.preview)return false;
+
          switch(Application.platform){
             case RuntimePlatform.OSXEditor: return true;
             case RuntimePlatform.OSXPlayer: return true;

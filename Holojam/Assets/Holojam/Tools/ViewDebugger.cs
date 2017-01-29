@@ -10,9 +10,9 @@ namespace Holojam.Tools{
 
       protected override ProcessDelegate Process{get{return UpdateData;}}
 
-      protected override string labelField{get{return label;}}
-      protected override string scopeField{get{return scope;}}
-      protected override bool isSending{get{return false;}}
+      public override string labelField{get{return label;}}
+      public override string scopeField{get{return scope;}}
+      public override bool isSending{get{return false;}}
 
       public Vector3[] triples;
       public Quaternion[] quads;

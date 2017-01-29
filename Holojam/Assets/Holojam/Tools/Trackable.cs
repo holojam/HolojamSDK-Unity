@@ -12,16 +12,16 @@ namespace Holojam.Tools{
       public bool localSpace = false;
 
       //Allocation
-      protected override int triplesCount{get{return 1;}}
-      protected override int quadsCount{get{return 1;}}
+      public override int tripleCount{get{return 1;}}
+      public override int quadCount{get{return 1;}}
       //Proxies
       public Vector3 rawPosition{
          get{return GetTriple(0);}
-         set{UpdateTriple(0,value);}
+         set{SetTriple(0,value);}
       }
       public Quaternion rawRotation{
          get{return GetQuad(0);}
-         set{UpdateQuad(0,value);}
+         set{SetQuad(0,value);}
       }
 
       //Accessors in case modification needs to be made to the raw data (like smoothing)
@@ -36,9 +36,9 @@ namespace Holojam.Tools{
 
       protected override ProcessDelegate Process{get{return UpdateTracking;}}
 
-      protected override string labelField{get{return label;}}
-      protected override string scopeField{get{return scope;}}
-      protected override bool isSending{get{return false;}}
+      public override string labelField{get{return label;}}
+      public override string scopeField{get{return scope;}}
+      public override bool isSending{get{return false;}}
 
       //Override in derived classes
       protected virtual void UpdateTracking(){

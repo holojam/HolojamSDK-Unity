@@ -270,8 +270,8 @@ namespace Holojam.Network{
             }
             catch(SocketException e){
                #if UNITY_EDITOR
-               if(e.ErrorCode!=10035)
-                  Debug.Log("Holojam.Client.Network: Socket error: " + e);
+               if(e.ErrorCode!=10035 && e.ErrorCode!=10060)
+                  Debug.LogError("Holojam.Network.Client: Socket error: " + e);
                #endif
                Debug.Log("Holojam.Client.Network: Timeout");
                continue;
