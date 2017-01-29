@@ -11,7 +11,7 @@ namespace Holojam.Vive{
          get{return Network.Canon.IndexToLabel(Tools.BuildManager.BUILD_INDEX);}
       }
       public override string scopeField{get{return "HolojamVive";}}
-      public override bool isSending{get{return true;}}
+      public override bool isSending{get{return !Holojam.Tools.BuildManager.IsMasterPC();}}
 
       public override int tripleCount{get{return 1;}}
       public override int quadCount{get{return 1;}}
