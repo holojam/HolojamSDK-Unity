@@ -15,6 +15,7 @@ namespace Holojam.Tools{
       public override bool isIgnoringTracking{get{return true;}} //Event
 
       public override int floatCount{get{return 1;}}
+      public override int intCount{get{return 1;}}
 
       void Start(){
          if(disable)return;
@@ -27,6 +28,7 @@ namespace Holojam.Tools{
       }
 
       void Route(Network.View input){
+         SetInt(0,input.ints[0]); //Copy over tick
          Network.Client.PushEvent(view);
       }
 
