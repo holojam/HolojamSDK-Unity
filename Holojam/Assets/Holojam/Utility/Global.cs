@@ -14,7 +14,7 @@ namespace Holojam.Utility{
             if(t==null){
                T[] objects = FindObjectsOfType(typeof(T)) as T[];
                if(objects.Length==0){
-                  Debug.LogError("Global: "+
+                  Debug.LogWarning("Global: "+
                      "No instances of "+typeof(T)+" in scene! (static access failure)"
                   );
                   return null;

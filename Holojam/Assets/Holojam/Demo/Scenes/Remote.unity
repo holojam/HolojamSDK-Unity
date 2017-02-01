@@ -20,12 +20,12 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_AmbientMode: 3
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -119,11 +119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a57d8f94b886f470e90844b3e54a06f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverAddress: 0.0.0.0
+  serverAddress: 192.168.1.48
   serverPort: 9592
   multicastAddress: 239.0.2.4
   multicastPort: 9591
-  sendScope: Unity
+  sendScope: Holojam
   sentPPS: 0
   receivedPPS: 0
   threadData: []
@@ -148,10 +148,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 749510336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fa328ac88a3944a6b8dd34832fb2eae, type: 3}
+  m_Script: {fileID: 11500000, guid: c979fbd37a1ea4fe48c3ce8df48da9cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  device: 1
+  disable: 0
 --- !u!114 &749510340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,16 +163,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb380fb2ff0754e459bf9c7822a6b2bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scope: Unity
+  scope: Holoscope
   source: 
-  sending: 0
-  ignoreTracking: 0
-  label: Remote
+  sending: 1
+  ignoreTracking: 1
+  label: MetricsACK
   triples: []
-  quads:
-  - {x: 0, y: 0, z: 0, w: 0}
-  floats: []
-  ints: 
+  quads: []
+  floats:
+  - 0
+  ints: 00000000
   chars: 
   text: 
 --- !u!1 &1020556727
@@ -253,69 +253,6 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
---- !u!1 &1754538040
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1754538042}
-  - 108: {fileID: 1754538041}
-  m_Layer: 0
-  m_Name: Light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!108 &1754538041
-Light:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1754538040}
-  m_Enabled: 1
-  serializedVersion: 7
-  m_Type: 2
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
-  m_Range: 10
-  m_SpotAngle: 30
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_Lightmapping: 4
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
---- !u!4 &1754538042
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1754538040}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.4, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 0}
   m_RootOrder: 2
 --- !u!1 &1945290688
 GameObject:
@@ -327,6 +264,8 @@ GameObject:
   - 4: {fileID: 1945290693}
   - 20: {fileID: 1945290692}
   - 81: {fileID: 1945290691}
+  - 114: {fileID: 1945290690}
+  - 114: {fileID: 1945290689}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -334,6 +273,41 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1945290689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1945290688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa328ac88a3944a6b8dd34832fb2eae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  device: 1
+--- !u!114 &1945290690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1945290688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb380fb2ff0754e459bf9c7822a6b2bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scope: Holojam
+  source: 
+  sending: 0
+  ignoreTracking: 0
+  label: Remote
+  triples: []
+  quads:
+  - {x: 0, y: 0, z: 0, w: 0}
+  floats: []
+  ints: 
+  chars: 
+  text: 
 --- !u!81 &1945290691
 AudioListener:
   m_ObjectHideFlags: 0

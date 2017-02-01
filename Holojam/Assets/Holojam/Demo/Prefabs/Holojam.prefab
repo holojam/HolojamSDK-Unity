@@ -294,7 +294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   origin: {x: 0, y: 0}
   height: 1
-  angle: 0
+  angle: -15
 --- !u!114 &11447992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -367,7 +367,7 @@ MonoBehaviour:
   buildManager: {fileID: 11459870}
   extraData: {fileID: 11430170}
   device: 1
-  debugMode: 1
+  debugMode: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -433,6 +433,6 @@ MonoBehaviour:
   quads: []
   floats:
   - 0
-  ints: 
+  ints: 00000000
   chars: 
   text: 

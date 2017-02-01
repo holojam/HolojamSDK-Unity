@@ -66,7 +66,7 @@ namespace Holojam.Tools{
          if(debugMode==DebugMode.REMOTE){
             test = gameObject.AddComponent<Network.View>() as Network.View;
             test.label = "Remote";
-            test.scope = Network.Client.SEND_SCOPE;
+            test.scope = "Holojam";
             test.sending = false;
          }
 
