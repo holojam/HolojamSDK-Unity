@@ -21,7 +21,7 @@ namespace Holojam.Tools{
          serializedObject.Update();
          Viewer v = serializedObject.targetObject as Viewer;
 
-         if(v.converter.device!=Converter.Device.VIVE){
+         if(BuildManager.DEVICE!=BuildManager.Device.VIVE){
             EditorGUILayout.PropertyField(trackingType);
             EditorGUILayout.PropertyField(converter);
             EditorGUILayout.PropertyField(actor);
@@ -41,7 +41,7 @@ namespace Holojam.Tools{
                );
             }
          }else{
-            EditorGUILayout.LabelField("Viewer disabled: Device is " + v.converter.device,
+            EditorGUILayout.LabelField("Viewer disabled: Device is " + BuildManager.DEVICE,
                new GUIStyle(EditorStyles.wordWrappedMiniLabel));
          }
 

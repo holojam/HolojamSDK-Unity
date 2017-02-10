@@ -24,7 +24,7 @@ namespace Holojam.Tools{
             return;
          }
 
-         if(converter.device==Converter.Device.VIVE)
+         if(BuildManager.DEVICE==BuildManager.Device.VIVE)
             return;
 
          //Flush extra components if necessary
@@ -60,16 +60,16 @@ namespace Holojam.Tools{
             //Loops once through the network (Converter -> Server -> Actor -> Viewer)
 
             transform.position = sourcePosition;
-            if(BuildManager.IsMasterPC())
+            if(BuildManager.IsMasterClient())
                transform.rotation = sourceRotation;
             else{
                //Negate IMU
                Quaternion raw = Quaternion.identity;
-               switch(converter.device){
-                  case Converter.Device.CARDBOARD:
+               switch(BuildManager.DEVICE){
+                  case BuildManager.Device.CARDBOARD:
                      raw = transform.GetChild(0).localRotation;
                      break;
-                  case Converter.Device.DAYDREAM:
+                  case BuildManager.Device.DAYDREAM:
                      raw = UnityEngine.VR.InputTracking.GetLocalRotation(
                         UnityEngine.VR.VRNode.CenterEye
                      );
@@ -78,7 +78,7 @@ namespace Holojam.Tools{
                sourceRotation*=Quaternion.Inverse(raw);
                transform.rotation = sourceRotation;
             }
-         }else if(BuildManager.IsMasterPC()) //Fall back to IMU
+         }else if(BuildManager.IsMasterClient()) //Fall back to IMU
             transform.rotation = sourceRotation;
 
          //Apply local rotation if necessary
@@ -90,7 +90,7 @@ namespace Holojam.Tools{
 
       //Get tracking data from desired source
       Vector3 GetPosition(){
-         if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterPC())
+         if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterClient())
             return converter.outputPosition;
          else{
             return actor!=null? actor.center:
@@ -99,12 +99,12 @@ namespace Holojam.Tools{
          }
       }
       Quaternion GetRotation(){
-         if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterPC())
+         if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterClient())
             return converter.outputRotation;
          else return actor!=null?actor.rawOrientation:view.quads[0];
       }
       bool GetTracked(){
-         if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterPC())
+         if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterClient())
             return converter.hasInput;
          else return actor!=null?actor.view.tracked:view.tracked;
       }

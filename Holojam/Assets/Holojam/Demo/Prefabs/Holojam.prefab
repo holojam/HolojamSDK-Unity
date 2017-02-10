@@ -330,6 +330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewer: {fileID: 11419408}
+  device: 1
   preview: 0
   previewIndex: 1
   spectator: 0
@@ -366,7 +367,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildManager: {fileID: 11459870}
   extraData: {fileID: 11430170}
-  device: 1
   debugMode: 0
 --- !u!1001 &100100000
 Prefab:

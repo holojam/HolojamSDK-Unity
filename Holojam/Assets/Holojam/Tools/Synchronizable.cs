@@ -8,14 +8,14 @@ namespace Holojam.Tools{
       public string label = "Synchronizable";
       public string scope = "";
       public bool sending = true;
-      public bool useMasterPC = false;
+      public bool useMasterClient = false;
 
       protected override ProcessDelegate Process{get{return Sync;}}
 
       public override string labelField{get{return label;}}
       public override string scopeField{get{return scope;}}
       public override bool isSending{get{
-         return sending && (BuildManager.IsMasterPC() || !useMasterPC);
+         return sending && (BuildManager.IsMasterClient() || !useMasterClient);
       }}
 
       //Override this in derived classes

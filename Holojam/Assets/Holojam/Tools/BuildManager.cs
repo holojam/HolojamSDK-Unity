@@ -11,20 +11,43 @@ namespace Holojam.Tools{
    public class BuildManager : Utility.Global<BuildManager>{
       public Viewer viewer;
 
+      public enum Device{
+         CARDBOARD,DAYDREAM,VIVE
+      };
+      public const Device DEVICE_DEFAULT = Device.DAYDREAM;
+      public Device device = DEVICE_DEFAULT;
+      public static Device DEVICE{
+         get{return global.device;}
+      }
+
       public bool preview = false;
       public int previewIndex = 1;
       public bool spectator = false;
       public bool runtimeIndexing = true;
 
-      int buildIndex = 1;
-      //Global
+      int buildIndex = 0; //Defaults to master client
       public static int BUILD_INDEX{
          get{
-            return global.preview?global.previewIndex:
-               //Index 0 for spectator/ad-hoc server
-               IsMasterPC()?0:global.buildIndex;
+            return global.preview? global.previewIndex:
+               global.spectator? 0:global.buildIndex;
          }
+         //Nothing implements this yet
          //set{global.buildIndex = value;}
+      }
+
+      public static bool IsMasterClient(){
+         return global && BUILD_INDEX==0;
+      }
+
+      public static bool IsStandalone(){
+         switch(Application.platform){
+            case RuntimePlatform.OSXEditor: return true;
+            case RuntimePlatform.OSXPlayer: return true;
+            case RuntimePlatform.WindowsEditor: return true;
+            case RuntimePlatform.WindowsPlayer: return true;
+            case RuntimePlatform.LinuxPlayer: return true;
+         }
+         return false;
       }
 
       Actor[] actors = new Actor[0];
@@ -109,19 +132,6 @@ namespace Holojam.Tools{
          }
 
          return Result.INDEXED;
-      }
-
-      public static bool IsMasterPC(){
-         if(global && global.preview && !global.spectator)return false;
-
-         switch(Application.platform){
-            case RuntimePlatform.OSXEditor: return true;
-            case RuntimePlatform.OSXPlayer: return true;
-            case RuntimePlatform.WindowsEditor: return true;
-            case RuntimePlatform.WindowsPlayer: return true;
-            case RuntimePlatform.LinuxPlayer: return true;
-         }
-         return false;
       }
    }
 }

@@ -8,20 +8,14 @@ using UnityEngine;
 
 namespace Holojam.Tools{
    public class Converter : MonoBehaviour{
+      const float POSITION_DAMPING = 5;
+      const float ROTATION_DAMPING = 0.01f; //0.001f;
+
       public BuildManager buildManager;
       public Scope extraData;
 
-      public enum Device{
-         CARDBOARD,DAYDREAM,VIVE
-      };
-      public const Device DEVICE_DEFAULT = Device.DAYDREAM;
-      public Device device = DEVICE_DEFAULT;
-
       public enum DebugMode{NONE,POSITION,REMOTE}
       public DebugMode debugMode = DebugMode.NONE;
-
-      const float POSITION_DAMPING = 5;
-      const float ROTATION_DAMPING = 0.01f; //0.001f;
 
       #if SMOOTH
       Vector3 lastPosition = Vector3.zero;
@@ -44,11 +38,11 @@ namespace Holojam.Tools{
       public bool hasInput{get{return input.tracked;}}
 
       void Awake(){
-         if(device==Device.VIVE)
+         if(BuildManager.DEVICE==BuildManager.Device.VIVE)
             return;
 
          //Ignore debug flags on phones
-         if(!BuildManager.IsMasterPC())
+         if(!BuildManager.IsMasterClient())
             debugMode = DebugMode.NONE;
 
          if(buildManager==null){
@@ -59,7 +53,7 @@ namespace Holojam.Tools{
             Debug.LogWarning("Converter: Extra data reference is null!");
             return;
          }
-         if(BuildManager.IsMasterPC() && debugMode==DebugMode.NONE)
+         if(BuildManager.IsMasterClient() && debugMode==DebugMode.NONE)
             return;
 
          imu = buildManager.viewer.transform.GetChild(0);
@@ -87,11 +81,11 @@ namespace Holojam.Tools{
       }
 
       void Update(){
-         if(device==Device.VIVE)
+         if(BuildManager.DEVICE==BuildManager.Device.VIVE)
             return;
 
          //Editor debugging
-         if(BuildManager.IsMasterPC()){
+         if(BuildManager.IsMasterClient()){
             if(debugMode==DebugMode.POSITION){
                #if(SMOOTH)
                   outputPosition = extraData.Localize(
@@ -117,11 +111,11 @@ namespace Holojam.Tools{
          //Get IMU data
          if(debugMode==DebugMode.REMOTE)
             raw = test.quads[0];
-         else switch(device){
-            case Device.CARDBOARD:
+         else switch(BuildManager.DEVICE){
+            case BuildManager.Device.CARDBOARD:
                raw = imu.localRotation;
                break;
-            case Device.DAYDREAM:
+            case BuildManager.Device.DAYDREAM:
                raw = UnityEngine.VR.InputTracking.GetLocalRotation(
                   UnityEngine.VR.VRNode.CenterEye
                );

@@ -7,10 +7,11 @@ using UnityEditor;
 namespace Holojam.Tools{
    [CustomEditor(typeof(BuildManager))]
    public class BuildManagerEditor : Editor{
-      SerializedProperty viewer;
+      SerializedProperty viewer, device;
       SerializedProperty preview, previewIndex, spectator, runtimeIndexing;
       void OnEnable(){
          viewer = serializedObject.FindProperty("viewer");
+         device = serializedObject.FindProperty("device");
          preview = serializedObject.FindProperty("preview");
          previewIndex = serializedObject.FindProperty("previewIndex");
          spectator = serializedObject.FindProperty("spectator");
@@ -20,6 +21,7 @@ namespace Holojam.Tools{
          serializedObject.Update();
 
          EditorGUILayout.PropertyField(viewer);
+         EditorGUILayout.PropertyField(device);
          EditorGUILayout.PropertyField(preview,new GUIContent("Preview Actor",
             "Preview Unity build state for a specific actor"
          ));
@@ -39,8 +41,8 @@ namespace Holojam.Tools{
          EditorGUILayout.LabelField("Status",
             buildManager.preview?
                ("Preview (" + label + ")") + (buildManager.spectator?
-               ", Master Client":""):"Master Client",
-            bold
+               ", Master Client":""):BuildManager.IsMasterClient()?
+               "Master Client":label,bold
          );
 
          EditorGUILayout.Space();
