@@ -3,9 +3,9 @@
 
 using UnityEngine;
 
-public class DebugSphere : MonoBehaviour{
-	public float offset = 0;
-	public Holojam.Tools.Actor target;
-	
-	void Update(){transform.position=target.center+target.look*offset;}
+public class DebugSphere : MonoBehaviour {
+  public float offset = 0;
+  public Holojam.Tools.Actor target;
+
+  void Update() { transform.position = target.center + target.look * offset; }
 }
