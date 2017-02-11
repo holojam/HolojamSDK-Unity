@@ -4,6 +4,9 @@
 
 using UnityEngine;
 
+/// <summary>
+/// Shift to boilerplate.
+/// </summary>
 namespace Holojam.Tools{
    [ExecuteInEditMode]
    public class Holobounds : MonoBehaviour{

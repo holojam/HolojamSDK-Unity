@@ -5,31 +5,81 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Holojam.Network{
-   public class View : MonoBehaviour{
-      public static List<View> instances = new List<View>();
-      void OnEnable(){instances.Add(this);}
-      void OnDisable(){instances.Remove(this);}
+namespace Holojam.Network {
+  /// <summary>
+  /// 
+  /// </summary>
+  public class View : MonoBehaviour {
+    public static List<View> instances = new List<View>();
+    void OnEnable() { instances.Add(this); }
+    void OnDisable() { instances.Remove(this); }
 
-      [HideInInspector] public string scope;
-      [HideInInspector] public string source;
-      [HideInInspector] public bool sending;
-      [HideInInspector] public bool ignoreTracking;
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public string scope;
 
-      [HideInInspector] public string label;
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public string source;
 
-      [HideInInspector] public Vector3[] triples;
-      [HideInInspector] public Quaternion[] quads;
-      [HideInInspector] public float[] floats;
-      [HideInInspector] public int[] ints;
-      [HideInInspector] public byte[] chars;
-      [HideInInspector] public string text;
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public bool sending;
 
-      bool isTracked = false;
-      public bool tracked{
-         get{return Application.isPlaying && instances.Contains(this)
-            && (isTracked || sending);}
-         set{isTracked = value;}
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public bool ignoreTracking;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public string label;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public Vector3[] triples;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public Quaternion[] quads;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public float[] floats;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public int[] ints;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public byte[] chars;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [HideInInspector] public string text;
+
+
+    bool isTracked = false;
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool tracked {
+      get {
+        return Application.isPlaying && instances.Contains(this)
+       && (isTracked || sending);
       }
-   }
+      set { isTracked = value; }
+    }
+  }
 }

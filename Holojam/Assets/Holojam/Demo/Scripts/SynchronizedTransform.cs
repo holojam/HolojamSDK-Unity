@@ -23,7 +23,7 @@ public class SynchronizedTransform : Holojam.Tools.Synchronizable{
    }
 
    protected override void Sync(){
-      if(sending){
+      if(isSending){
          position = transform.position;
          rotation = transform.rotation;
          scale = transform.localScale;

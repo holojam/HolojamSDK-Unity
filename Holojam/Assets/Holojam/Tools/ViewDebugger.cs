@@ -3,8 +3,11 @@
 
 using UnityEngine;
 
+/// <summary>
+/// Readonly data dump of a View.
+/// </summary>
 namespace Holojam.Tools{
-   public class ViewDebugger : Controller{
+   public sealed class ViewDebugger : Controller{
       public string label, scope, source;
       public bool tracked, ignoreTracking;
 

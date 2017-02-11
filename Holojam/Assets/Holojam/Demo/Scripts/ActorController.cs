@@ -5,6 +5,9 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Change name. Misleading, as it is not following MVC naming conventions.
+/// </summary>
 public class ActorController : Holojam.Tools.Actor{
    const float BLINK_TIME = 0.085f;
    readonly Vector2 BLINK_DELAY = new Vector2(1,11);

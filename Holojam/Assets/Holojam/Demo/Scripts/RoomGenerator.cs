@@ -55,7 +55,7 @@ public class RoomGenerator : MonoBehaviour{
 		mesh.vertices = verts.ToArray();
 		mesh.subMeshCount=6;
 		for(int i=0;i<6;++i)mesh.SetTriangles(tris.GetRange(6*i,6),i);
-		mesh.Optimize();
+		;
 		mesh.RecalculateNormals();
 		
 		Material[] mats = new Material[6];

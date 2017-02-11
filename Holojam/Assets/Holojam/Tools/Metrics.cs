@@ -3,6 +3,9 @@
 
 using UnityEngine;
 
+/// <summary>
+/// Switch to internal use.
+/// </summary>
 namespace Holojam.Tools{
    public class Metrics : Controller{
       public bool disable = false;

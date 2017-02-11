@@ -3,22 +3,47 @@
 
 using UnityEngine;
 
-namespace Holojam.Tools{
-   public abstract class Synchronizable : Controller{
-      public string label = "Synchronizable";
-      public string scope = "";
-      public bool sending = true;
-      public bool useMasterClient = false;
+namespace Holojam.Tools {
+  public abstract class Synchronizable : Controller {
 
-      protected override ProcessDelegate Process{get{return Sync;}}
+    /// <summary>
+    /// 
+    /// </summary>
+    [SerializeField]
+    private string label = "Synchronizable";
 
-      public override string labelField{get{return label;}}
-      public override string scopeField{get{return scope;}}
-      public override bool isSending{get{
-         return sending && (BuildManager.IsMasterClient() || !useMasterClient);
-      }}
+    /// <summary>
+    /// 
+    /// </summary>
+    [SerializeField]
+    private string scope = "";
 
-      //Override this in derived classes
-      protected abstract void Sync();
-   }
+    /// <summary>
+    /// 
+    /// </summary>
+    [SerializeField]
+    private bool sending = true;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool useMasterClient = false;
+
+    protected override ProcessDelegate Process { get { return Sync; } }
+
+    public override string labelField { get { return label; } }
+    public override string scopeField { get { return scope; } }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public override bool isSending {
+      get {
+        return sending && (BuildManager.IsMasterClient() || !useMasterClient);
+      }
+    }
+
+    //Override this in derived classes
+    protected abstract void Sync();
+  }
 }

@@ -5,6 +5,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// Shift to boilerplate.
+/// </summary>
 namespace Holojam.Tools{
    [RequireComponent(typeof(Holobounds))]
    [RequireComponent(typeof(MeshFilter))]
@@ -85,7 +88,7 @@ namespace Holojam.Tools{
          mesh.triangles = tris.ToArray();
          mesh.uv = uvs.ToArray();
 
-         mesh.Optimize();
+         ;
          mesh.RecalculateNormals();
 
          r.material=material;

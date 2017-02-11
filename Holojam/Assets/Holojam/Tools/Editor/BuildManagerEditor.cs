@@ -36,8 +36,8 @@ namespace Holojam.Tools{
          EditorGUILayout.PropertyField(runtimeIndexing);
 
          GUIStyle bold = new GUIStyle(EditorStyles.boldLabel);
-         string label = !buildManager.buildActor?"None":
-            buildManager.buildActor.labelField;
+         string label = !buildManager.BuildActor?"None":
+            buildManager.BuildActor.labelField;
          EditorGUILayout.LabelField("Status",
             buildManager.preview?
                ("Preview (" + label + ")") + (buildManager.spectator?
