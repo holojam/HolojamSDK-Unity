@@ -8,8 +8,17 @@ using UnityEngine;
 
 namespace Holojam.Tools{
    public class Converter : MonoBehaviour{
-      const float POSITION_DAMPING = 5;
-      const float ROTATION_DAMPING = 0.01f; //0.001f;
+      [System.Serializable]
+      public class Smoothing{
+         public float cap, pow;
+         public Smoothing(float cap, float pow){
+            this.cap = cap;
+            this.pow = pow;
+         }
+      }
+      readonly Smoothing XY_SMOOTHING = new Smoothing(.05f,1.1f);
+      readonly Smoothing Z_SMOOTHING = new Smoothing(.15f,2);
+      const float R_SMOOTHING = .12f;
 
       public BuildManager buildManager;
       public Scope extraData;
@@ -18,7 +27,7 @@ namespace Holojam.Tools{
       public DebugMode debugMode = DebugMode.NONE;
 
       #if SMOOTH
-      Vector3 lastPosition = Vector3.zero;
+      Vector3 lastLeft = Vector3.zero, lastRight = Vector3.zero;
       #endif
 
       Network.View input, output;
@@ -41,7 +50,7 @@ namespace Holojam.Tools{
          if(BuildManager.DEVICE==BuildManager.Device.VIVE)
             return;
 
-         //Ignore debug flags on phones
+         //Ignore debug flags on builds
          if(!BuildManager.IsMasterClient())
             debugMode = DebugMode.NONE;
 
@@ -87,22 +96,25 @@ namespace Holojam.Tools{
          //Editor debugging
          if(BuildManager.IsMasterClient()){
             if(debugMode==DebugMode.POSITION){
-               #if(SMOOTH)
-                  outputPosition = extraData.Localize(
-                     Smooth(input.triples[0],ref lastPosition)
+               #if SMOOTH
+                  outputPosition = extraData.Localize((
+                     SmoothPosition(input.triples[0],ref lastLeft) +
+                     SmoothPosition(input.triples[1],ref lastRight))*.5f
                   );
                #else
-                  outputPosition = extraData.Localize(input.triples[0]);
+                  outputPosition = extraData.Localize(.5f*(input.triples[0]+input.triples[1]));
                #endif
                return;
             }else if(debugMode==DebugMode.NONE)return;
          }
 
-         #if(SMOOTH)
-            Vector3 inputPosition = Smooth(input.triples[0],ref lastPosition);
+         #if SMOOTH
+            Vector3 left = SmoothPosition(input.triples[0],ref lastLeft);
+            Vector3 right = SmoothPosition(input.triples[1],ref lastRight);
          #else
-            Vector3 inputPosition = input.triples[0];
+            Vector3 left = input.triples[0], right = input.triples[1];
          #endif
+         Vector3 inputPosition = .5f*(left+right);
 
          //Update views
          input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX,true);
@@ -125,16 +137,14 @@ namespace Holojam.Tools{
          //Update target if tracked
          if(input.tracked){
             //Read in secondary vector
-            Vector3 left = new Vector3(
-               input.triples[1].x,input.triples[1].y,input.triples[1].z
-            ).normalized;
+            Vector3 nbar = (right-left).normalized;
 
             Vector3 imuUp = raw*Vector3.up;
             Vector3 imuForward = raw*Vector3.forward;
             Vector3 imuRight = raw*Vector3.right;
 
             //Compare orientations relative to gravity
-            Quaternion difference = Quaternion.LookRotation(-left,Vector3.up)
+            Quaternion difference = Quaternion.LookRotation(-nbar,Vector3.up)
                * Quaternion.Inverse(Quaternion.LookRotation(imuRight,Vector3.up));
 
             Vector3 newForward = difference*imuForward;
@@ -145,13 +155,10 @@ namespace Holojam.Tools{
             correctionTarget = target*Quaternion.Inverse(raw);
          }
 
-         //Smoothly interpolate correction
-         float delta = 0.5f*Quaternion.Dot(correction,correctionTarget)+0.5f;
-         delta*=delta;
-
-         #if(SMOOTH)
+         #if SMOOTH
+            //Lazily interpolate correction (only has to be a baseline, not immediate)
             correction = Quaternion.Slerp(
-               correction,correctionTarget,delta*ROTATION_DAMPING
+               correction,correctionTarget,Time.deltaTime*R_SMOOTHING
             );
          #else
             correction = correctionTarget;
@@ -160,15 +167,25 @@ namespace Holojam.Tools{
          //Update output
          outputRotation = extraData.Localize(correction*raw);
          outputPosition = extraData.Localize(
-            inputPosition - outputRotation*Vector3.up*extraData.stem
+            //inputPosition - outputRotation*Vector3.up*extraData.stem
+            inputPosition
          );
       }
 
       //Smooth signal while minimizing perceived latency
-      Vector3 Smooth(Vector3 target, ref Vector3 last){
-         target = Vector3.Lerp(
-            target,last,(last-target).sqrMagnitude*POSITION_DAMPING
-         );
+      Vector3 SmoothPosition(Vector3 target, ref Vector3 last){
+         Vector2 xyLast = new Vector2(last.x,last.y);
+         Vector2 xyTarget = new Vector2(target.x,target.y);
+
+         Vector2 xy = Vector2.Lerp(xyLast,xyTarget,Mathf.Pow(
+            Mathf.Min(1,(xyLast-xyTarget).magnitude/XY_SMOOTHING.cap),XY_SMOOTHING.pow
+         ));
+         float z = Mathf.Lerp(last.z,target.z,Mathf.Pow(
+            Mathf.Min(1,Mathf.Abs(last.z-target.z)/Z_SMOOTHING.cap),Z_SMOOTHING.pow
+         ));
+
+         target = new Vector3(xy.x,xy.y,z);
+
          last = target;
          return target;
       }

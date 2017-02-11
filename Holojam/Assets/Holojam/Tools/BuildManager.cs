@@ -28,8 +28,8 @@ namespace Holojam.Tools{
       int buildIndex = 0; //Defaults to master client
       public static int BUILD_INDEX{
          get{
-            return global.preview? global.previewIndex:
-               global.spectator? 0:global.buildIndex;
+            return global.preview? global.spectator? 0:
+               global.previewIndex:global.buildIndex;
          }
          //Nothing implements this yet
          //set{global.buildIndex = value;}

@@ -90,7 +90,7 @@ namespace Holojam.Tools{
 
       //Get tracking data from desired source
       Vector3 GetPosition(){
-         if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterClient())
+         if(trackingType==TrackingType.DIRECT)
             return converter.outputPosition;
          else{
             return actor!=null? actor.center:
@@ -99,12 +99,12 @@ namespace Holojam.Tools{
          }
       }
       Quaternion GetRotation(){
-         if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterClient())
+         if(trackingType==TrackingType.DIRECT)
             return converter.outputRotation;
          else return actor!=null?actor.rawOrientation:view.quads[0];
       }
       bool GetTracked(){
-         if(trackingType==TrackingType.DIRECT && !BuildManager.IsMasterClient())
+         if(trackingType==TrackingType.DIRECT)
             return converter.hasInput;
          else return actor!=null?actor.view.tracked:view.tracked;
       }
