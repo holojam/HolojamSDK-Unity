@@ -15,9 +15,9 @@ namespace Holojam.Network{
    public class Client : Utility.Global<Client>{
       //Connection options
       public string serverAddress = "0.0.0.0";
-      public int serverPort = 9592;
+      public int upstreamPort = 9592;
       public string multicastAddress = "239.0.2.4";
-      public int multicastPort = 9591;
+      public int downstreamPort = 9591;
 
       public string sendScope = "Unity";
       //Global
@@ -46,8 +46,8 @@ namespace Holojam.Network{
          staged = new List<View>();
          untracked = new List<View>();
 
-         emitter = new Emitter(serverAddress,serverPort);
-         sink = new Sink(multicastAddress,multicastPort);
+         emitter = new Emitter(serverAddress,upstreamPort);
+         sink = new Sink(multicastAddress,downstreamPort);
          //Start receive thread
          sink.Start();
 
@@ -155,32 +155,27 @@ namespace Holojam.Network{
 
       public void Send(List<View> views){
          if(views.Count==0)return;
-
          buffer = Translator.BuildUpdate(Client.SEND_SCOPE,views);
-         socket.BeginSendTo(buffer,0,buffer.Length,0,sendEndPoint,
-            (System.IAsyncResult r) => {socket.EndSendTo(r);},
-         socket);
+         Send();
 
          #if UNITY_EDITOR
          debugData = "(" + Translator.Origin() + ")";
          foreach(View view in views)
             debugData+="\n   " + view.label;
-         packetCount++;
          #endif
       }
 
       public void SendEvent(View view){
          buffer = Translator.BuildEvent(Client.SEND_SCOPE,view);
-         socket.BeginSendTo(buffer,0,buffer.Length,0,sendEndPoint,
-            (System.IAsyncResult r) => {socket.EndSendTo(r);},
-         socket);
-
-         #if UNITY_EDITOR
-         packetCount++;
-         #endif
+         Send();
       }
       public void SendNotification(string label){
          buffer = Translator.BuildNotification(Client.SEND_SCOPE,label);
+         Send();
+      }
+
+      void Send(){
+         //Unicast
          socket.BeginSendTo(buffer,0,buffer.Length,0,sendEndPoint,
             (System.IAsyncResult r) => {socket.EndSendTo(r);},
          socket);

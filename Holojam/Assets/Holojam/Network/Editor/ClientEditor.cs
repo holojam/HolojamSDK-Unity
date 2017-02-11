@@ -10,13 +10,13 @@ namespace Holojam.Network{
    public class ClientEditor : Editor{
       static bool advanced = false;
 
-      SerializedProperty serverAddress, serverPort, multicastAddress, multicastPort;
+      SerializedProperty serverAddress, upstreamPort, multicastAddress, downstreamPort;
       SerializedProperty sendScope;
       void OnEnable(){
          serverAddress = serializedObject.FindProperty("serverAddress");
-         serverPort = serializedObject.FindProperty("serverPort");
+         upstreamPort = serializedObject.FindProperty("upstreamPort");
          multicastAddress = serializedObject.FindProperty("multicastAddress");
-         multicastPort = serializedObject.FindProperty("multicastPort");
+         downstreamPort = serializedObject.FindProperty("downstreamPort");
          sendScope = serializedObject.FindProperty("sendScope");
       }
 
@@ -68,9 +68,9 @@ namespace Holojam.Network{
          EditorGUIUtility.labelWidth = 0;
          advanced = EditorGUILayout.Foldout(advanced,"Advanced");
          if(advanced){
-            EditorGUILayout.PropertyField(serverPort);
+            EditorGUILayout.PropertyField(upstreamPort);
             EditorGUILayout.PropertyField(multicastAddress);
-            EditorGUILayout.PropertyField(multicastPort);
+            EditorGUILayout.PropertyField(downstreamPort);
          }
 
          serializedObject.ApplyModifiedProperties();
