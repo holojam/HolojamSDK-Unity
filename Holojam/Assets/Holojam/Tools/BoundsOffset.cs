@@ -3,21 +3,21 @@
 
 using UnityEngine;
 
-/// <summary>
-/// Automatically centers object to holobounds and offsets.
-/// Deprecated.
-/// </summary>
 namespace Holojam.Tools{
-	[ExecuteInEditMode]
-	public class BoundsOffset : MonoBehaviour{
-		public Holobounds holobounds;
-		public Vector3 offset = Vector3.zero;
-		
-		void LateUpdate(){
-			if(holobounds!=null){
-				transform.position=holobounds.Offset(offset);
-				transform.rotation=holobounds.rotation;
-			}
-		}
-	}
+  /// <summary>
+  /// Automatically centers object to holobounds and offsets.
+  /// Deprecated.
+  /// </summary>
+  [ExecuteInEditMode]
+  public class BoundsOffset : MonoBehaviour {
+    public Holobounds holobounds;
+    public Vector3 offset = Vector3.zero;
+
+    void LateUpdate() {
+      if (holobounds != null) {
+        transform.position = holobounds.Offset(offset);
+        transform.rotation = holobounds.rotation;
+      }
+    }
+  }
 }

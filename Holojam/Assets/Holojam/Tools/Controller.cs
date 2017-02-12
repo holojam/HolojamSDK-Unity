@@ -4,6 +4,7 @@
 using UnityEngine;
 
 namespace Holojam.Tools {
+
   /// <summary>
   /// Core, adaptive class for sending and receiving a single Holojam network flake.
   /// Extend to implement custom functionality. See examples.

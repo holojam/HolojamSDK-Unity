@@ -4,6 +4,7 @@
 using UnityEngine;
 
 namespace Holojam.Tools {
+
   /// <summary>
   /// Base class for trackable (read-only position and rotation) entities.
   /// </summary>
