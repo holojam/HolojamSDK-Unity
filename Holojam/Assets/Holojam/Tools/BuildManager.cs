@@ -7,6 +7,7 @@ using UnityEditor;
 #endif
 
 namespace Holojam.Tools {
+
   /// <summary>
   /// Indexes actors in the scene, updates the Viewer, and manages the build target.
   /// </summary>

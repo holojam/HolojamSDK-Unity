@@ -4,31 +4,58 @@
 using UnityEngine;
 
 namespace Holojam.Tools{
-   public class Tracker : Controller{
-      public Vector2 origin;
-      public float height = 1; //Meters
-      [Range(-90,90)] public float angle = 0; //Degrees
 
-      protected override ProcessDelegate Process{get{return UpdateFrustum;}}
+  /// <summary>
+  /// Unity representation of a tracking camera, used for placing a Martian Actor in the space.
+  /// Receives (extra) data from Holoscope.
+  /// </summary>
+  public sealed class Tracker : Controller{
 
-      public float Stem{get{return GetFloat(0);}}
+    /// <summary>
+    /// Position of the camera in the scene.
+    /// </summary>
+    public Vector2 origin;
 
-      public override string Label{get{return "ExtraData";}}
-      public override string Scope{get{return "Holoscope";}}
-      public override bool Sending{get{return false;}}
+    /// <summary>
+    /// Height of the camera in meters.
+    /// </summary>
+    public float height = 1;
 
-      public override int FloatCount{get{return 1;}}
+    /// <summary>
+    /// Up/down angle of the camera in degrees.
+    /// </summary>
+    [Range(-90, 90)] public float angle = 0; // Degrees
 
-      void UpdateFrustum(){
-         transform.position = new Vector3(origin.x,height,origin.y);
-         transform.rotation = Quaternion.AngleAxis(-angle,Vector3.right);
-      }
+    protected override ProcessDelegate Process { get { return UpdateFrustum; } }
 
-      public Vector3 Localize(Vector3 position){
-         return transform.TransformPoint(position);
-      }
-      public Quaternion Localize(Quaternion rotation){
-         return Quaternion.Inverse(transform.rotation)*rotation;
-      }
-   }
+    /// <summary>
+    /// Proxy for the first float (Martian stem).
+    /// </summary>
+    public float Stem { get { return GetFloat(0); } }
+
+    public override string Label {get { return "ExtraData"; } }
+    public override string Scope { get { return "Holoscope"; } }
+    public override bool Sending { get { return false; } }
+
+    public override int FloatCount { get { return 1; } }
+
+    void UpdateFrustum() {
+        transform.position = new Vector3(origin.x, height, origin.y);
+        transform.rotation = Quaternion.AngleAxis(-angle, Vector3.right);
+    }
+
+    /// <summary>
+    /// Localize an input position within this reference frame.
+    /// </summary>
+    public Vector3 Localize(Vector3 position) {
+        return transform.TransformPoint(position);
+    }
+
+    /// <summary>
+    /// Localize an input rotation within this reference frame.
+    /// </summary>
+    public Quaternion Localize(Quaternion rotation) {
+        return Quaternion.Inverse(transform.rotation) * rotation;
+    }
+  }
 }

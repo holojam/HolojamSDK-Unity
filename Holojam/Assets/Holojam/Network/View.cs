@@ -1,13 +1,14 @@
-﻿//View.cs
-//Created by Aaron C Gaudette on 11.11.16
-//Unity representation of flatbuffers object
+﻿// View.cs
+// Created by Holojam Inc. on 11.11.16
+// Unity representation of flatbuffers object
 
 using UnityEngine;
 using System.Collections.Generic;
 
 namespace Holojam.Network {
+
   /// <summary>
-  /// 
+  /// Deprecated.
   /// </summary>
   public class View : MonoBehaviour {
     public static List<View> instances = new List<View>();

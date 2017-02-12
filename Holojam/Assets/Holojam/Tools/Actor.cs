@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace Holojam.Tools {
+
   /// <summary>
   /// Umbrella class for accessing player (headset user) data in a generic manner,
   /// decoupled from the build process and VR camera setup. This barebones base-class

@@ -4,6 +4,7 @@
 using UnityEngine;
 
 namespace Holojam.Tools {
+
   /// <summary>
   /// IMU broadcaster for the Holojam Remote app (only runs on a phone).
   /// </summary>

@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Holojam.Network {
+
   /// <summary>
   /// Global Holojam event system manager.
   /// </summary>

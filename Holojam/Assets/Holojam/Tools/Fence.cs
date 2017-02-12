@@ -5,8 +5,9 @@ using UnityEngine;
 using System.Collections.Generic;
 
 namespace Holojam.Tools{
+
    /// <summary>
-   /// Procedural holobounds visualization for custom worlds
+   /// Procedural holobounds visualization for custom worlds.
    /// Deprecated.
    /// </summary>
    [RequireComponent(typeof(Holobounds))]
@@ -15,10 +16,10 @@ namespace Holojam.Tools{
    public class Fence : MonoBehaviour{
       public Material material;
 
-      public float minRange = 1.5f; //Distance to fade
+      public float minRange = 1.5f; // Distance to fade
       public float maxAlpha = 1;
 
-      //Mesh data
+      // Mesh data
       List<Vector3> verts = new List<Vector3>();
       List<int> tris = new List<int>();
       int quadIndex = 0;
@@ -28,13 +29,13 @@ namespace Holojam.Tools{
          Color newColor = material.color;
 
          if(BuildManager.BUILD_ACTOR!=null){
-            //Modulate transparency
+            // Modulate transparency
             newColor.a =
                maxAlpha * (1-holobounds.Distance(BuildManager.BUILD_ACTOR.Center)/minRange);
          }
          else newColor.a=maxAlpha;
 
-         //Update material
+         // Update material
          material.color=newColor;
       }
 
@@ -45,7 +46,7 @@ namespace Holojam.Tools{
          mesh=GetComponent<MeshFilter>().mesh;
          r=GetComponent<MeshRenderer>();
 
-         //Build mesh
+         // Build mesh
          GenerateMesh();
          ProcessMesh();
       }
@@ -57,21 +58,21 @@ namespace Holojam.Tools{
          Quad(holobounds.Corner(3),holobounds.Upper(3),holobounds.Upper(0),holobounds.Corner(0));
       }
       void Quad(Vector3 bl, Vector3 tl, Vector3 tr, Vector3 br){
-         //Set vertices (negate local offset)
+         // Set vertices (negate local offset)
          verts.Add(tl-transform.position);
          verts.Add(tr-transform.position);
          verts.Add(br-transform.position);
          verts.Add(bl-transform.position);
 
-         //Build triangles
+         // Build triangles
          int prefix = quadIndex*4;
          tris.Add(prefix+0); tris.Add(prefix+1); tris.Add(prefix+3);
          tris.Add(prefix+3); tris.Add(prefix+1); tris.Add(prefix+2);
 
-         //Update for next quad
+         // Update for next quad
          quadIndex++;
 
-         //Texture
+         // Texture
          float xScale = Vector3.Distance(tl,tr);
          float yScale = holobounds.ceiling-holobounds.floor;
 
@@ -80,7 +81,7 @@ namespace Holojam.Tools{
          uvs.Add(new Vector2(xScale,0));
          uvs.Add(new Vector2(0,0));
       }
-      //Update mesh to engine
+      // Update mesh to engine
       void ProcessMesh(){
          mesh.Clear();
 

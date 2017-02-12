@@ -116,7 +116,7 @@ namespace Holojam.Tools {
       if (BuildManager.DEVICE == BuildManager.Device.VIVE)
         return;
 
-      //Editor debugging
+      // Editor debugging
       if (BuildManager.IsMasterClient()) {
         if (debugMode == DebugMode.POSITION) {
           #if SMOOTH

@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Threading;
 
 namespace Holojam.Network {
+
   /// <summary>
   /// Native C# Holojam network client endpoint with optimized send/receive functionality.
   /// Incoming (downstream) packets are processed on a separate thread. Outgoing (upstream)
