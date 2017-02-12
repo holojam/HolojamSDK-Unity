@@ -1,5 +1,5 @@
-﻿//RoomGenerator.cs
-//Created by Aaron C Gaudette on 23.06.16
+﻿// RoomGenerator.cs
+// Created by Holojam Inc. on 23.06.16
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -29,27 +29,27 @@ public class RoomGenerator : MonoBehaviour {
   }
 
   void GenerateMesh() {
-    //Floor
+    // Floor
     Quad(holobounds.Corner(0), holobounds.Corner(1), holobounds.Corner(2), holobounds.Corner(3));
-    //Ceiling
+    // Ceiling
     Quad(holobounds.Upper(3), holobounds.Upper(2), holobounds.Upper(1), holobounds.Upper(0));
-    //Walls
+    // Walls
     Quad(holobounds.Corner(0), holobounds.Upper(0), holobounds.Upper(1), holobounds.Corner(1));
     Quad(holobounds.Corner(1), holobounds.Upper(1), holobounds.Upper(2), holobounds.Corner(2));
     Quad(holobounds.Corner(2), holobounds.Upper(2), holobounds.Upper(3), holobounds.Corner(3));
     Quad(holobounds.Corner(3), holobounds.Upper(3), holobounds.Upper(0), holobounds.Corner(0));
   }
   void Quad(Vector3 bl, Vector3 tl, Vector3 tr, Vector3 br) {
-    //Set vertices (duplicates added for flat shading)
+    // Set vertices (duplicates added for flat shading)
     verts.Add(bl); verts.Add(tl); verts.Add(tr);
     verts.Add(tr); verts.Add(br); verts.Add(bl);
-    //Build triangles
+    // Build triangles
     for (int i = 0; i < 6; ++i) tris.Add(quadIndex * 6 + i);
-    //Update for next quad
+    // Update for next quad
     quadIndex++;
   }
 
-  //Update mesh to engine
+  // Update mesh to engine
   void ProcessMesh() {
     mesh.Clear();
     mesh.vertices = verts.ToArray();

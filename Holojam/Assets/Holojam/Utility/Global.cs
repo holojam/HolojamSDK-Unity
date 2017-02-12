@@ -4,6 +4,7 @@
 using UnityEngine;
 
 namespace Holojam.Utility {
+
   /// <summary>
   /// Like a Singleton: enforces single instance, but no direct instance access
   /// (exposed through static functions and properties).

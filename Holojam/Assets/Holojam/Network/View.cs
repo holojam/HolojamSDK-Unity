@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Holojam.Network {
 
   /// <summary>
-  /// Deprecated.
+  /// 
   /// </summary>
   public class View : MonoBehaviour {
     public static List<View> instances = new List<View>();

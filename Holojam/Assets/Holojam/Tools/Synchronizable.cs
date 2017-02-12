@@ -4,6 +4,10 @@
 using UnityEngine;
 
 namespace Holojam.Tools {
+
+  /// <summary>
+  /// Base class for synchronizing network data between multiple clients.
+  /// </summary>
   public abstract class Synchronizable : Controller {
 
     [SerializeField] private bool sending = true;

@@ -4,6 +4,7 @@
 using UnityEngine;
 
 public class DebugSphere : MonoBehaviour {
+
   public float offset = 0;
   public Holojam.Tools.Actor target;
 

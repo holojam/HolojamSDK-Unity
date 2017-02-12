@@ -5,6 +5,7 @@
 using UnityEngine;
 
 public class SynchronizedTransform : Holojam.Tools.Synchronizable{
+
    [SerializeField] private string label = "Synchronizable";
    [SerializeField] private string scope = "";
 
