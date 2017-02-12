@@ -5,6 +5,8 @@ tmp/
 tmp.meta
 Builds/
 
+docs/
+
 ExportedObj/
 obj/
 *.svd
