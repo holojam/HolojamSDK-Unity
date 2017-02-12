@@ -6,6 +6,7 @@ tmp.meta
 Builds/
 
 docs/
+*.bak
 
 ExportedObj/
 obj/
