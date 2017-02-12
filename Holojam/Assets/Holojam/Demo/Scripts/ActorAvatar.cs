@@ -6,11 +6,12 @@ using UnityEngine;
 using System.Collections;
 
 public class ActorAvatar : Holojam.Tools.Actor {
+
   const float BLINK_TIME = 0.085f;
   readonly Vector2 BLINK_DELAY = new Vector2(1, 11);
 
   public Transform head;
-  public GameObject mask; //Disabled for build actors
+  public GameObject mask; // Disabled for build actors
 
   public Color motif = Holojam.Utility.Palette.Select(DEFAULT_COLOR);
   public Transform animatedEyes;

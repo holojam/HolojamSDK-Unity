@@ -4,6 +4,7 @@
 using UnityEngine;
 
 public abstract class SimpleEvent : Holojam.Tools.Controller {
+
   public string label = "Event";
   public string scope = "";
 

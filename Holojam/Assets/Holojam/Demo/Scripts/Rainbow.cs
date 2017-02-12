@@ -1,10 +1,11 @@
-//Rainbow.cs
-//Created by Aaron C Gaudette on 03.01.17
+// Rainbow.cs
+// Created by Holojam Inc. on 03.01.17
 
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer))]
 public class Rainbow : MonoBehaviour {
+
   public Gradient gradient;
   public Vector2 speedRange = new Vector2(0.25f, 0.75f);
 

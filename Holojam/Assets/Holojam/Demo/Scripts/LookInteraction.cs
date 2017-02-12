@@ -1,10 +1,10 @@
-//LookInteraction.cs
-//Created by Aaron C Gaudette on 03.01.17
-//
+// LookInteraction.cs
+// Created by Holojam Inc. on 03.01.17
 
 using UnityEngine;
 
 public class LookInteraction : MonoBehaviour {
+
   Spinnable lastSpinnable = null;
   RaycastHit hit;
 
