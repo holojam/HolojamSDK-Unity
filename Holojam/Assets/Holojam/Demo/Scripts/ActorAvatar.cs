@@ -32,10 +32,10 @@ public class ActorAvatar : Holojam.Tools.Actor {
 
     // Toggle mask
     if (mask != null)
-      mask.SetActive(!isBuild);
+      mask.SetActive(!IsBuild);
   }
   // The orientation accessor matches the rotation assignment above
-  public override Quaternion orientation {
+  public override Quaternion Orientation {
     get { return head != null ? head.rotation : Quaternion.identity; }
   }
 
