@@ -11,11 +11,10 @@ namespace Holojam.Tools{
       protected virtual void EnableDerived(){}
       protected virtual void DrawDerived(){}
 
-      SerializedProperty scope, index, localSpace;
+      SerializedProperty scope, index;
       void OnEnable(){
          scope = serializedObject.FindProperty("scope");
          index = serializedObject.FindProperty("index");
-         localSpace = serializedObject.FindProperty("localSpace");
 
          EnableDerived();
       }
@@ -29,8 +28,6 @@ namespace Holojam.Tools{
          EditorGUILayout.EndHorizontal();
 
          EditorGUIUtility.labelWidth = 0;
-         EditorGUILayout.PropertyField(localSpace);
-
          DrawDerived();
 
          if(!serializedObject.isEditingMultipleObjects){
@@ -42,11 +39,11 @@ namespace Holojam.Tools{
 
             GUIStyle style = new GUIStyle(EditorStyles.boldLabel);
             if(Application.isPlaying)
-               style.normal.textColor = a.isLocal?
+               style.normal.textColor = a.IsLocal?
                   new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
 
             EditorGUILayout.LabelField("Status",
-               (a.isLocal?"Local":"Not Local"),
+               (a.IsLocal?"Local":"Not Local"),
                style
             );
 

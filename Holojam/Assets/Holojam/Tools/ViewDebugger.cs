@@ -1,10 +1,10 @@
-﻿//ViewDebugger.cs
-//Created by Aaron C Gaudette on 13.07.16
+﻿// ViewDebugger.cs
+// Created by Holojam Inc. on 13.07.16
 
 using UnityEngine;
 
 /// <summary>
-/// Readonly data dump of a View.
+/// Read-only data dump of a View.
 /// </summary>
 namespace Holojam.Tools{
    public sealed class ViewDebugger : Controller{
@@ -13,9 +13,9 @@ namespace Holojam.Tools{
 
       protected override ProcessDelegate Process{get{return UpdateData;}}
 
-      public override string labelField{get{return label;}}
-      public override string scopeField{get{return scope;}}
-      public override bool isSending{get{return false;}}
+      public override string Label{get{return label;}}
+      public override string Scope{get{return scope;}}
+      public override bool Sending{get{return false;}}
 
       public Vector3[] triples;
       public Quaternion[] quads;

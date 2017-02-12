@@ -1,5 +1,5 @@
-//SimpleEvent.cs
-//Created by Aaron C Gaudette on 23.01.17
+// SimpleEvent.cs
+// Created by Holojam Inc. on 23.01.17
 
 using UnityEngine;
 
@@ -9,12 +9,12 @@ public abstract class SimpleEvent : Holojam.Tools.Controller{
 
    protected override sealed ProcessDelegate Process{get{return UpdateEvent;}}
 
-   public override string labelField{get{return label;}}
-   public override string scopeField{get{return scope;}}
-   public override sealed bool isSending{get{return true;}}
-   public override sealed bool isIgnoringTracking{get{return true;}}
+   public override string Label{get{return label;}}
+   public override string Scope{get{return scope;}}
+   public override sealed bool Sending{get{return true;}}
+   public override sealed bool IgnoringTracking{get{return true;}}
 
-   //Helper function
+   // Helper function
    public void Push(){Holojam.Network.Client.PushEvent(view);}
 
    protected abstract void UpdateEvent();

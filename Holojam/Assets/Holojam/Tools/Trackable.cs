@@ -1,99 +1,79 @@
-﻿//Trackable.cs
-//Created by Aaron C Gaudette on 09.07.16
-//Base class for trackable entities
+﻿// Trackable.cs
+// Created by Holojam Inc. on 09.07.16
 
 using UnityEngine;
 
 namespace Holojam.Tools {
   /// <summary>
-  /// 
+  /// Base class for trackable (read-only position and rotation) entities.
   /// </summary>
-  public class Trackable : Controller {
+  public abstract class Trackable : Controller {
 
     /// <summary>
-    /// 
+    /// Determines whether this object is affected by hierarchy.
+    /// Beta field. Should not be public.
     /// </summary>
-    [SerializeField]
-    private string label = "Trackable";
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [SerializeField]
-    public string scope = "";
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [SerializeField]
     public bool localSpace = false;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public override int tripleCount { get { return 1; } }
+    public override int TripleCount { get { return 1; } }
+    public override int QuadCount { get { return 1; } }
 
     /// <summary>
-    /// 
+    /// Proxy for the first triple (raw position).
     /// </summary>
-    public override int quadCount { get { return 1; } }
-
-    //Proxies
-    /// <summary>
-    /// 
-    /// </summary>
-    public Vector3 rawPosition {
+    public Vector3 RawPosition {
       get { return GetTriple(0); }
       protected set { SetTriple(0, value); }
     }
 
     /// <summary>
-    /// 
+    /// Proxy for the first quad (raw rotation).
     /// </summary>
-    public Quaternion rawRotation {
+    public Quaternion RawRotation {
       get { return GetQuad(0); }
       protected set { SetQuad(0, value); }
     }
 
     //Accessors in case modification needs to be made to the raw data (like smoothing)
     /// <summary>
-    /// 
+    /// Second layer accessor in case modification needs to be made to the raw data
+    /// (e.g. smoothing). In general, use this property.
     /// </summary>
-    public Vector3 trackedPosition {
+    public Vector3 TrackedPosition {
       get {
         return localSpace && transform.parent != null ?
-           transform.parent.TransformPoint(rawPosition) : rawPosition;
+           transform.parent.TransformPoint(RawPosition) : RawPosition;
       }
     }
 
     /// <summary>
-    /// 
+    /// Second layer accessor in case modification needs to be made to the raw data
+    /// (e.g. smoothing). In general, use this property.
     /// </summary>
-    public Quaternion trackedRotation {
+    public Quaternion TrackedRotation {
       get {
         return localSpace && transform.parent != null ?
-           transform.parent.rotation * rawRotation : rawRotation;
+           transform.parent.rotation * RawRotation : RawRotation;
       }
     }
 
     protected override ProcessDelegate Process { get { return UpdateTracking; } }
 
-    public override string labelField { get { return label; } }
-    public override string scopeField { get { return scope; } }
+    /// <summary>
+    /// Trackables are read-only.
+    /// </summary>
+    public override bool Sending { get { return false; } }
 
     /// <summary>
-    /// 
+    /// Override for more complex behavior.
+    /// By default, assigns position and rotation injectively.
+    /// Untracked maintains last known position and rotation.
     /// </summary>
-    public override bool isSending { get { return false; } }
-
-    //Override in derived classes
     protected virtual void UpdateTracking() {
-      //By default, assigns position and rotation injectively
       if (view.tracked) {
-        transform.position = trackedPosition;
-        transform.rotation = trackedRotation;
+        transform.position = TrackedPosition;
+        transform.rotation = TrackedRotation;
       }
-      //Untracked maintains last known position and rotation
     }
 
     void OnDrawGizmos() {
@@ -101,26 +81,26 @@ namespace Holojam.Tools {
     }
     void OnDrawGizmosSelected() {
       Gizmos.color = Color.gray;
-      //Pivot
+      // Pivot
       Utility.Drawer.Circle(transform.position, Vector3.up, Vector3.forward, 0.18f);
       Gizmos.DrawLine(transform.position - 0.03f * Vector3.left, transform.position + 0.03f * Vector3.left);
       Gizmos.DrawLine(transform.position - 0.03f * Vector3.forward, transform.position + 0.03f * Vector3.forward);
-      //Forward
+      // Forward
       Gizmos.DrawRay(transform.position, transform.forward * 0.18f);
     }
-    //Draw ghost (in world space) if in local space
+    // Draw ghost (in world space) if in local space
     protected void DrawGizmoGhost() {
       if (!localSpace || transform.parent == null) return;
       Gizmos.color = Color.gray;
       Gizmos.DrawLine(
-         rawPosition - 0.03f * Vector3.left,
-         rawPosition + 0.03f * Vector3.left
+         RawPosition - 0.03f * Vector3.left,
+         RawPosition + 0.03f * Vector3.left
       );
       Gizmos.DrawLine(
-         rawPosition - 0.03f * Vector3.forward,
-         rawPosition + 0.03f * Vector3.forward
+         RawPosition - 0.03f * Vector3.forward,
+         RawPosition + 0.03f * Vector3.forward
       );
-      Gizmos.DrawLine(rawPosition - 0.03f * Vector3.up, rawPosition + 0.03f * Vector3.up);
+      Gizmos.DrawLine(RawPosition - 0.03f * Vector3.up, RawPosition + 0.03f * Vector3.up);
     }
   }
 }

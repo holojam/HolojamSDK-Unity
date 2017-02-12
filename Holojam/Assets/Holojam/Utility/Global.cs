@@ -1,12 +1,12 @@
-//Global.cs
-//Created by Aaron C Gaudette on 11.11.16
-//
+// Global.cs
+// Created by Holojam Inc. on 11.11.16
 
 using UnityEngine;
 
 namespace Holojam.Utility {
   /// <summary>
-  /// Hidden Singleton class.
+  /// Like a Singleton: enforces single instance, but no direct instance access
+  /// (exposed through static functions and properties).
   /// </summary>
   /// <typeparam name="T"></typeparam>
   public abstract class Global<T> : MonoBehaviour where T : MonoBehaviour {

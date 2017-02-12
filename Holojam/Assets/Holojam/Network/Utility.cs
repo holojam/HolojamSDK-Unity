@@ -1,5 +1,5 @@
-﻿//Utility.cs
-//Created by Aaron C Gaudette
+﻿// Utility.cs
+// Created by Holojam Inc. on 13.11.16
 
 using UnityEngine;
 using FlatBuffers;
@@ -9,13 +9,14 @@ using System.Collections.Generic;
 namespace Holojam.Network {
 
   /// <summary>
-  /// 
+  /// Wrapper around a Holojam packet struct in order to prevent unwanted copying--provides
+  /// low-level functionality.
   /// </summary>
   internal class PacketWrapper {
     public readonly Protocol.Packet data;
 
     /// <summary>
-    /// 
+    /// Generate a packet from a raw buffer.
     /// </summary>
     /// <param name="buffer"></param>
     public PacketWrapper(ref byte[] buffer) {
@@ -24,7 +25,7 @@ namespace Holojam.Network {
 
 
     /// <summary>
-    /// Copy from flake struct to view component (reword).
+    /// Copy a flake from this wrapper's packet to a specified target View, given an index.
     /// </summary>
     /// <param name="i"></param>
     /// <param name="view"></param>
@@ -58,20 +59,21 @@ namespace Holojam.Network {
 
       view.chars = new byte[data.Flakes(i).Value.CharsLength];
       for (int j = 0; j < data.Flakes(i).Value.CharsLength; ++j)
-        view.chars[j] = (byte)data.Flakes(i).Value.Chars(j); //FLAG
+        view.chars[j] = (byte)data.Flakes(i).Value.Chars(j); //TODO
 
       view.text = data.Flakes(i).Value.Text;
     }
   }
 
   /// <summary>
-  /// 
+  /// Abstract base class for translation functionality around Holojam updates and
+  /// events/notifications (incoming). Contains a PacketWrapper.
   /// </summary>
   abstract internal class Nugget {
     protected PacketWrapper packet;
 
     /// <summary>
-    /// 
+    /// Protected constructor for factory method.
     /// </summary>
     /// <param name="packet"></param>
     protected Nugget(PacketWrapper packet) {
@@ -79,31 +81,31 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Load a raw flake from this Nugget into a View in Unity.
     /// </summary>
     /// <param name="view"></param>
-    /// <returns></returns>
+    /// <returns>True if successful.</returns>
     public abstract bool Load(View view);
 
     /// <summary>
-    /// 
+    /// Factory method for creating Nuggets of a specific derived type given a raw buffer.
     /// </summary>
     /// <param name="buffer"></param>
-    /// <returns></returns>
+    /// <returns>The derived Nugget.</returns>
     public static Nugget Create(ref byte[] buffer) {
       PacketWrapper packet = new PacketWrapper(ref buffer);
       switch (packet.data.Type) {
         case Protocol.PacketType.Update:
-        return new Update(packet);
+          return new Update(packet);
         case Protocol.PacketType.Event:
-        return new Event(packet);
+          return new Event(packet);
         default: return null;
       }
     }
 
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
     /// <summary>
-    /// 
+    /// Debug function for custom Client inspector.
     /// </summary>
     /// <param name="debugData"></param>
     public void UpdateDebug(Dictionary<string, string> debugData) {
@@ -112,31 +114,33 @@ namespace Holojam.Network {
         debugData[scope + "."
            + packet.data.Flakes(i).Value.Label] = packet.data.Origin;
     }
-#endif
+    #endif
   }
 
   /// <summary>
-  /// 
+  /// Nugget extension for Holojam updates (a collection of flakes).
   /// </summary>
-  internal class Update : Nugget {
+  internal sealed class Update : Nugget {
     readonly Dictionary<string, int> lookup;
 
     /// <summary>
-    /// 
+    /// Update constructor: initializes and populates lookup table.
     /// </summary>
     /// <param name="packet"></param>
-    public Update(PacketWrapper packet) : base(packet) {
-      //Initialize lookup table
+    internal Update(PacketWrapper packet) : base(packet) {
+      // Initialize lookup table
       lookup = new Dictionary<string, int>();
       for (int i = 0; i < packet.data.FlakesLength; ++i)
         lookup[packet.data.Flakes(i).Value.Label] = i;
     }
 
     /// <summary>
-    /// 
+    /// Load a raw flake from this Update into a specified View in Unity using the lookup table.
     /// </summary>
     /// <param name="view"></param>
-    /// <returns></returns>
+    /// <returns>
+    /// True if successful, false if the view was not present or there was a scope mismatch.
+    /// </returns>
     public override bool Load(View view) {
       if (view.scope != packet.data.Scope && view.scope != "") return false;
 
@@ -150,18 +154,19 @@ namespace Holojam.Network {
   }
 
   /// <summary>
-  /// 
+  /// Nugget extension for Holojam events (a single flake).
   /// </summary>
-  internal class Event : Nugget {
+  internal sealed class Event : Nugget {
 
     public readonly string label;
     public readonly bool notification;
 
     /// <summary>
-    /// 
+    /// Event constructor: assigns event label and determines whether or not
+    /// this is a notification.
     /// </summary>
     /// <param name="packet"></param>
-    public Event(PacketWrapper packet) : base(packet) {
+    internal Event(PacketWrapper packet) : base(packet) {
       label = packet.data.Flakes(0).Value.Label;
       notification = packet.data.Flakes(0).Value.TriplesLength == 0
          && packet.data.Flakes(0).Value.QuadsLength == 0
@@ -172,12 +177,12 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Loads the event data into a specified View in Unity.
     /// </summary>
     /// <param name="view"></param>
-    /// <returns></returns>
+    /// <returns>True if successful.</returns>
     public override bool Load(View view) {
-      //if(view.scope!=packet.data.Scope && view.scope!="")return false;
+      //if(view.scope!=packet.data.Scope && view.scope!="")return false; //TODO
       packet.CopyToView(0, view);
       view.ignoreTracking = view.tracked = true;
       return true;
@@ -185,30 +190,22 @@ namespace Holojam.Network {
   }
 
   /// <summary>
-  /// 
+  /// Translation class (outgoing) from data inside Unity to the Holojam protocol (FlatBuffers).
   /// </summary>
   internal class Translator {
 
     /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public static string Origin() {
-      return System.Environment.UserName + "@" + System.Environment.MachineName;
-    }
-
-    /// <summary>
-    /// 
+    /// Private function for building generic Holojam packets with FlatBuffers.
     /// </summary>
     /// <param name="sendScope"></param>
     /// <param name="type"></param>
     /// <param name="views"></param>
-    /// <returns></returns>
+    /// <returns>A raw buffer built using the Holojam FlatBuffers protocol schema.</returns>
     static byte[] BuildPacket(string sendScope, Protocol.PacketType type, List<View> views) {
       FlatBufferBuilder builder = new FlatBufferBuilder(1024);
 
       StringOffset scope = builder.CreateString(sendScope);
-      StringOffset origin = builder.CreateString(Origin());
+      StringOffset origin = builder.CreateString(Canon.Origin());
 
       Offset<Protocol.Flake>[] offsets = new Offset<Protocol.Flake>[views.Count];
 
@@ -220,7 +217,7 @@ namespace Holojam.Network {
       for (int i = 0; i < views.Count; ++i) {
         StringOffset label = builder.CreateString(views[i].label);
 
-        //Create the vectors
+        // Create the vectors
         if (views[i].triples != null) {
           Protocol.Flake.StartTriplesVector(builder, views[i].triples.Length);
           for (int j = views[i].triples.Length - 1; j >= 0; --j) {
@@ -251,13 +248,13 @@ namespace Holojam.Network {
         if (views[i].chars != null) {
           Protocol.Flake.StartCharsVector(builder, views[i].chars.Length);
           for (int j = views[i].chars.Length - 1; j > 0; --j)
-            builder.AddByte(views[i].chars[j]); //FLAG
+            builder.AddByte(views[i].chars[j]); //TODO
           chars = builder.EndVector();
         }
         if (views[i].text != null)
           text = builder.CreateString(views[i].text);
 
-        //Put it all together
+        // Put it all together
         Protocol.Flake.StartFlake(builder);
         Protocol.Flake.AddLabel(builder, label);
 
@@ -278,31 +275,31 @@ namespace Holojam.Network {
       }
       var flakes = Protocol.Packet.CreateFlakesVector(builder, offsets);
 
-      //Build packet
+      // Build packet
       Offset<Protocol.Packet> packet = Protocol.Packet.CreatePacket(
          builder, scope, origin, type, flakes
       );
       builder.Finish(packet.Value);
-      //Return buffer
+      // Return buffer
       return builder.SizedByteArray();
     }
 
     /// <summary>
-    /// 
+    /// Build Holojam update packet buffer with FlatBuffers.
     /// </summary>
     /// <param name="sendScope"></param>
     /// <param name="views"></param>
-    /// <returns></returns>
+    /// <returns>The buffer specified.</returns>
     public static byte[] BuildUpdate(string sendScope, List<View> views) {
       return BuildPacket(sendScope, Protocol.PacketType.Update, views);
     }
 
     /// <summary>
-    /// 
+    /// Build Holojam event packet buffer with FlatBuffers.
     /// </summary>
     /// <param name="sendScope"></param>
     /// <param name="view"></param>
-    /// <returns></returns>
+    /// <returns>The buffer specified.</returns>
     public static byte[] BuildEvent(string sendScope, View view) {
       return BuildPacket(
          sendScope, Protocol.PacketType.Event, new List<View> { view }
@@ -310,15 +307,15 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Build Holojam notification packet buffer with FlatBuffers.
     /// </summary>
     /// <param name="sendScope"></param>
     /// <param name="label"></param>
-    /// <returns></returns>
+    /// <returns>The buffer specified.</returns>
     public static byte[] BuildNotification(string sendScope, string label) {
       FlatBufferBuilder builder = new FlatBufferBuilder(1024);
       StringOffset scope = builder.CreateString(sendScope);
-      StringOffset origin = builder.CreateString(Origin());
+      StringOffset origin = builder.CreateString(Canon.Origin());
 
       Offset<Protocol.Flake>[] offsets = new Offset<Protocol.Flake>[1];
 
@@ -329,20 +326,35 @@ namespace Holojam.Network {
 
       var flakes = Protocol.Packet.CreateFlakesVector(builder, offsets);
 
-      //Build packet
+      // Build packet
       Offset<Protocol.Packet> packet = Protocol.Packet.CreatePacket(
          builder, scope, origin, Protocol.PacketType.Event, flakes
       );
       builder.Finish(packet.Value);
-      //Return buffer
+      // Return buffer
       return builder.SizedByteArray();
     }
   }
 
   /// <summary>
-  /// 
+  /// Class for canonical/reserved Holojam network identifiers.
   /// </summary>
   public class Canon {
+
+    /// <summary>
+    /// Returns a string representing the Holojam machine identifier.
+    /// </summary>
+    /// <returns>The string specified.</returns>
+    public static string Origin() {
+      return System.Environment.UserName + "@" + System.Environment.MachineName;
+    }
+
+    /// <summary>
+    /// Returns a string label given a build/actor index (Holojam standard).
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="raw"></param>
+    /// <returns>The string specified.</returns>
     public static string IndexToLabel(int index, bool raw = false) {
       return "M" + Mathf.Max(1, index) + (raw ? "-Raw" : "");
     }

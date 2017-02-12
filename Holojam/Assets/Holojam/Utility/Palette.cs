@@ -1,12 +1,12 @@
-//Palette.cs
-//Created by Aaron C Gaudette on 11.11.16
+// Palette.cs
+// Created by Holojam Inc. on 11.11.16
 
 using UnityEngine;
 
 namespace Holojam.Utility {
 
   /// <summary>
-  /// Palette colors for demos.
+  /// Color palette for demos and general usage.
   /// </summary>
   public class Palette {
     public enum Colors {

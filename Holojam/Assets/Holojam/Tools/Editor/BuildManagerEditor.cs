@@ -36,8 +36,8 @@ namespace Holojam.Tools{
          EditorGUILayout.PropertyField(runtimeIndexing);
 
          GUIStyle bold = new GUIStyle(EditorStyles.boldLabel);
-         string label = !buildManager.BuildActor?"None":
-            buildManager.BuildActor.labelField;
+         string label = !BuildManager.BUILD_ACTOR?"None":
+            BuildManager.BUILD_ACTOR.Label;
          EditorGUILayout.LabelField("Status",
             buildManager.preview?
                ("Preview (" + label + ")") + (buildManager.spectator?
@@ -51,8 +51,8 @@ namespace Holojam.Tools{
          GUIStyle style = new GUIStyle();
          foreach(Actor a in Actor.instances){
             style.normal.textColor = a.debugColor;
-            EditorGUILayout.LabelField("   "+a.gameObject.name+" ["+a.brand+"] "+
-               (a.isLocal?"(Local) ":"")+(a.isBuild?"(Build)":""),style
+            EditorGUILayout.LabelField("   "+a.gameObject.name+" ["+a.Brand+"] "+
+               (a.IsLocal?"(Local) ":"")+(a.IsBuild?"(Build)":""),style
             );
          }
 

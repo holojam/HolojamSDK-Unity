@@ -1,14 +1,11 @@
-﻿//ActorController.cs
-//Created by Aaron C Gaudette on 05.07.16
-//Example Actor extension
+﻿// ActorAvatar.cs
+// Created by Holojam Inc. on 05.07.16
+// Example Actor extension
 
 using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// Change name. Misleading, as it is not following MVC naming conventions.
-/// </summary>
-public class ActorController : Holojam.Tools.Actor{
+public class ActorAvatar : Holojam.Tools.Actor{
    const float BLINK_TIME = 0.085f;
    readonly Vector2 BLINK_DELAY = new Vector2(1,11);
 
@@ -23,22 +20,22 @@ public class ActorController : Holojam.Tools.Actor{
 
    protected override void UpdateTracking(){
       if(view.tracked){
-         transform.position = trackedPosition;
+         transform.position = TrackedPosition;
 
          //This example type uses a separate transform for rotation (a head) instead of itself
          if(head!=null){
             head.localPosition = Vector3.zero;
-            head.rotation = trackedRotation;
+            head.rotation = TrackedRotation;
          }
-         else Debug.LogWarning("ActorController: No head found for "+gameObject.name,this);
+         else Debug.LogWarning("ActorAvatar: No head found for "+gameObject.name,this);
       }
 
       //Toggle mask
       if(mask!=null)
-         mask.SetActive(!isBuild);
+         mask.SetActive(!IsBuild);
    }
    //The orientation accessor matches the rotation assignment above
-   public override Quaternion orientation{
+   public override Quaternion Orientation{
       get{return head!=null?head.rotation:Quaternion.identity;}
    }
 

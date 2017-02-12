@@ -1,11 +1,11 @@
-﻿//BoundsOffset.cs
-//Created by Aaron C Gaudette on 23.06.16
-//Automatically centers object to holobounds and offsets
+﻿// BoundsOffset.cs
+// Created by Holojam Inc. on 23.06.16
 
 using UnityEngine;
 
 /// <summary>
-/// Shift to boilerplate.
+/// Automatically centers object to holobounds and offsets.
+/// Deprecated.
 /// </summary>
 namespace Holojam.Tools{
 	[ExecuteInEditMode]

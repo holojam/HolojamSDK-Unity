@@ -1,11 +1,11 @@
-﻿//ActorControllerEditor.cs
-//Created by Aaron C Gaudette on 05.07.16
+﻿// ActorAvatarEditor.cs
+// Created by Holojam Inc. on 05.07.16
 
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(ActorController)), CanEditMultipleObjects]
-public class ActorControllerEditor : Holojam.Tools.ActorEditor{
+[CustomEditor(typeof(ActorAvatar)), CanEditMultipleObjects]
+public class ActorAvatarEditor : Holojam.Tools.ActorEditor{
    SerializedProperty head, mask;
    SerializedProperty motif, animatedEyes, skinMaterial;
    protected override void EnableDerived(){

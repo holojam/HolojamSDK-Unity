@@ -1,8 +1,7 @@
-﻿//Viewer.cs
-//Created by Aaron C Gaudette on 07.07.16
+﻿// Viewer.cs
+// Created by Holojam Inc. on 07.07.16
 
 using UnityEngine;
-
 
 namespace Holojam.Tools {
   [ExecuteInEditMode]
@@ -12,11 +11,11 @@ namespace Holojam.Tools {
 
     public Converter converter;
 
-    //Get tracking data from actor (recommended coupling), or from the view?
+    //Get tracking data from actor (recommended coupling), or from the View?
     public Actor actor = null;
     [HideInInspector]
     public Network.View view = null;
-    public int index = 0;
+    public int index = 1;
     public bool localSpace = false;
 
     //Update late to catch local space updates
@@ -33,7 +32,7 @@ namespace Holojam.Tools {
       Network.View[] views = GetComponents<Network.View>();
       if ((view == null && views.Length > 0) || (view != null && (views.Length > 1 || views.Length == 0))) {
         foreach (Network.View v in views) DestroyImmediate(v);
-        view = null; //In case the view has been set to a prefab value
+        view = null; //In case the View has been set to a prefab value
       }
 
       //Automatically add a View component if not using a reference actor
@@ -92,21 +91,21 @@ namespace Holojam.Tools {
     //Get tracking data from desired source
     Vector3 GetPosition() {
       if (trackingType == TrackingType.DIRECT)
-        return converter.outputPosition;
+        return converter.OutputPosition;
       else {
-        return actor != null ? actor.center :
+        return actor != null ? actor.Center :
         localSpace && transform.parent != null ?
            transform.parent.TransformPoint(view.triples[0]) : view.triples[0];
       }
     }
     Quaternion GetRotation() {
       if (trackingType == TrackingType.DIRECT)
-        return converter.outputRotation;
-      else return actor != null ? actor.rawOrientation : view.quads[0];
+        return converter.OutputRotation;
+      else return actor != null ? actor.RawOrientation : view.quads[0];
     }
     bool GetTracked() {
       if (trackingType == TrackingType.DIRECT)
-        return converter.hasInput;
+        return converter.HasInput;
       else return actor != null ? actor.view.tracked : view.tracked;
     }
   }

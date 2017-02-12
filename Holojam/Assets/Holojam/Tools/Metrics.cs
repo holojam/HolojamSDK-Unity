@@ -1,5 +1,5 @@
-//Metrics.cs
-//Created by Aaron C Gaudette on 10.01.16
+// Metrics.cs
+// Created by Holojam Inc. on 10.01.16
 
 using UnityEngine;
 
@@ -12,13 +12,13 @@ namespace Holojam.Tools{
 
       protected override ProcessDelegate Process{get{return UpdateMetrics;}}
 
-      public override string labelField{get{return "MetricsACK";}}
-      public override string scopeField{get{return "Holoscope";}}
-      public override bool isSending{get{return true;}}
-      public override bool isIgnoringTracking{get{return true;}} //Event
+      public override string Label{get{return "MetricsACK";}}
+      public override string Scope{get{return "Holoscope";}}
+      public override bool Sending{get{return true;}}
+      public override bool IgnoringTracking{get{return true;}} // Event
 
-      public override int floatCount{get{return 1;}}
-      public override int intCount{get{return 1;}}
+      public override int FloatCount{get{return 1;}}
+      public override int IntCount{get{return 1;}}
 
       void Start(){
          if(disable)return;
@@ -31,11 +31,11 @@ namespace Holojam.Tools{
       }
 
       void Route(Network.View input){
-         SetInt(0,input.ints[0]); //Copy over tick
+         SetInt(0,input.ints[0]); // Copy over tick
          Network.Client.PushEvent(view);
       }
 
-      //Send back the time to render
+      // Send back the time to render
       void UpdateMetrics(){
          SetFloat(0,Time.smoothDeltaTime*1000);
       }

@@ -1,14 +1,14 @@
-﻿//Fence.cs
-//Created by Aaron C Gaudette on 24.06.16
-//Procedural holobounds visualization for custom worlds
+﻿// Fence.cs
+// Created by Holojam Inc. on 24.06.16
 
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// Shift to boilerplate.
-/// </summary>
 namespace Holojam.Tools{
+   /// <summary>
+   /// Procedural holobounds visualization for custom worlds
+   /// Deprecated.
+   /// </summary>
    [RequireComponent(typeof(Holobounds))]
    [RequireComponent(typeof(MeshFilter))]
    [RequireComponent(typeof(MeshRenderer))]
@@ -30,7 +30,7 @@ namespace Holojam.Tools{
          if(BuildManager.BUILD_ACTOR!=null){
             //Modulate transparency
             newColor.a =
-               maxAlpha * (1-holobounds.Distance(BuildManager.BUILD_ACTOR.center)/minRange);
+               maxAlpha * (1-holobounds.Distance(BuildManager.BUILD_ACTOR.Center)/minRange);
          }
          else newColor.a=maxAlpha;
 

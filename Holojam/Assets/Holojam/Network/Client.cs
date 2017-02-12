@@ -1,5 +1,5 @@
-﻿//Client.cs
-//Created by Holojam Inc. on 11.11.16
+﻿// Client.cs
+// Created by Holojam Inc. on 11.11.16
 
 using UnityEngine;
 using System.Collections;
@@ -10,11 +10,13 @@ using System.Threading;
 
 namespace Holojam.Network {
   /// <summary>
-  /// 
+  /// Native C# Holojam network client endpoint with optimized send/receive functionality.
+  /// Incoming (downstream) packets are processed on a separate thread. Outgoing (upstream)
+  /// packets are processed asynchronously.
   /// </summary>
   public class Client : Utility.Global<Client> {
 
-    //Connection options
+    // Connection options
     public string serverAddress = "0.0.0.0";
     public int upstreamPort = 9592;
     public string multicastAddress = "239.0.2.4";
@@ -24,22 +26,21 @@ namespace Holojam.Network {
     List<View> staged, untracked;
     Emitter emitter; Sink sink;
 
-    //Debug
-#if UNITY_EDITOR
+    // Debug
+    #if UNITY_EDITOR
     public int sentPPS, receivedPPS;
     public List<string> threadData = new List<string>();
-#endif
+    #endif
 
     /// <summary>
-    /// 
+    /// Global scope (namespace) for packets coming out of the Unity project.
     /// </summary>
     public static string SEND_SCOPE {
       get { return global.sendScope; }
     }
 
-    //Global event functions
     /// <summary>
-    /// 
+    /// Push a (Holojam) event to the Holojam network from Unity.
     /// </summary>
     /// <param name="view"></param>
     public static void PushEvent(View view) {
@@ -47,39 +48,37 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Push a (Holojam) notification to the Holojam network from Unity.
     /// </summary>
     /// <param name="label"></param>
     public static void Notify(string label) {
       global.emitter.SendNotification(label);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     void Awake() {
       staged = new List<View>();
       untracked = new List<View>();
 
       emitter = new Emitter(serverAddress, upstreamPort);
       sink = new Sink(multicastAddress, downstreamPort);
-      //Start receive thread
+      // Start receive thread
       sink.Start();
 
-      //Debug
+      // Debug
       #if UNITY_EDITOR
       StartCoroutine(Display());
       #endif
     }
 
     /// <summary>
-    /// Core update loop (rate = Time.fixedDeltaTime)
+    /// Core update loop (update rate = Time.fixedDeltaTime).
+    /// Stages views for sending/receiving, updates the emitter and sink.
     /// </summary>
     void FixedUpdate() {
       staged.Clear(); untracked.Clear();
 
-      //Stage views
-      foreach (View view in View.instances) {
+      // Stage views
+      foreach (View view in View.instances) { // Grab all views in the scene
         if (string.IsNullOrEmpty(view.label)) {
           Debug.LogWarning("Holojam.Network.Client: Invalid view label", view);
           continue;
@@ -94,16 +93,16 @@ namespace Holojam.Network {
       }
 
       sink.Update(untracked);
-      emitter.Send(staged);
+      emitter.SendUpdate(staged);
     }
 
     /// <summary>
-    /// Process events in realtime
+    /// Process events in realtime (contrast with FixedUpdate).
     /// </summary>
     void Update() { sink.PublishEvents(); }
 
-    //Debug
-#if UNITY_EDITOR
+    // Debug
+    #if UNITY_EDITOR
     IEnumerator Display() {
       while (sink.running) {
         yield return new WaitForSeconds(1);
@@ -116,15 +115,16 @@ namespace Holojam.Network {
         receivedPPS = sink.ResetPacketCount();
       }
     }
-#endif
+    #endif
 
     void OnDestroy() {
       sink.Stop();
     }
   }
-  
+
   /// <summary>
-  /// 
+  /// Abstract base class for the emitter and sink.
+  /// Less of a design paradigm, more of a practical implementation.
   /// </summary>
   internal abstract class Exchange {
 
@@ -136,7 +136,7 @@ namespace Holojam.Network {
     protected int port;
 
     /// <summary>
-    /// 
+    /// Initialize with an address and port.
     /// </summary>
     /// <param name="address"></param>
     /// <param name="port"></param>
@@ -145,8 +145,8 @@ namespace Holojam.Network {
       this.port = port;
     }
 
-    //Debug
-#if UNITY_EDITOR
+    // Debug
+    #if UNITY_EDITOR
     protected int packetCount = 0;
     public int ResetPacketCount() {
       int count = packetCount;
@@ -154,27 +154,27 @@ namespace Holojam.Network {
       return count;
     }
     public abstract string ResetDebugData();
-#endif
+    #endif
   }
 
   /// <summary>
-  /// 
+  /// Asynchronously sends packets upstream.
   /// </summary>
-  internal class Emitter : Exchange {
+  internal sealed class Emitter : Exchange {
 
     IPAddress ip;
     Socket socket;
     IPEndPoint sendEndPoint;
 
     /// <summary>
-    /// 
+    /// Initializes upstream, unicast socket given server address and upstream port.
     /// </summary>
     /// <param name="address"></param>
     /// <param name="port"></param>
     internal Emitter(string address, int port) : base(address, port) {
       ip = IPAddress.Any;
 
-      //Initialize
+      // Initialize
       socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
       socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
       socket.SendTimeout = SOCKET_TIMEOUT;
@@ -189,23 +189,23 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Asynchronously pack and send a Holojam update given a list of Views.
     /// </summary>
     /// <param name="views"></param>
-    public void Send(List<View> views) {
+    public void SendUpdate(List<View> views) {
       if (views.Count == 0) return;
       buffer = Translator.BuildUpdate(Client.SEND_SCOPE, views);
       Send();
 
-#if UNITY_EDITOR
-      debugData = "(" + Translator.Origin() + ")";
+      #if UNITY_EDITOR
+      debugData = "(" + Canon.Origin() + ")";
       foreach (View view in views)
         debugData += "\n   " + view.label;
-#endif
+      #endif
     }
 
     /// <summary>
-    /// 
+    /// Asynchronously send a Holojam event given a single View.
     /// </summary>
     /// <param name="view"></param>
     public void SendEvent(View view) {
@@ -214,7 +214,7 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Asynchronously send a Holojam notification given a label (string).
     /// </summary>
     /// <param name="label"></param>
     public void SendNotification(string label) {
@@ -223,20 +223,21 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Asynchronously send a buffer upstream.
     /// </summary>
     void Send() {
-      //Unicast
+      // Unicast
       socket.BeginSendTo(buffer, 0, buffer.Length, 0, sendEndPoint,
          (System.IAsyncResult r) => { socket.EndSendTo(r); },
       socket);
 
-#if UNITY_EDITOR
+      #if UNITY_EDITOR
       packetCount++;
-#endif
+      #endif
     }
 
-#if UNITY_EDITOR
+    // Debug
+    #if UNITY_EDITOR
     string debugData = "";
     public override string ResetDebugData() {
       string data = "Port " + port + ":\n"
@@ -244,14 +245,14 @@ namespace Holojam.Network {
       debugData = "";
       return data;
     }
-#endif
+    #endif
 
   }
 
   /// <summary>
-  /// 
+  /// Receives/accumulates and processes packets via multicast (downstream) on a dedicated thread.
   /// </summary>
-  internal class Sink : Exchange {
+  internal sealed class Sink : Exchange {
     const float UPDATE_TIMEOUT = 1; //s
 
     public bool running;
@@ -263,11 +264,11 @@ namespace Holojam.Network {
     float lastUpdate;
 
     /// <summary>
-    /// 
+    /// Initializes downstream, multicast socket given server address and downstream port.
     /// </summary>
     /// <param name="address"></param>
     /// <param name="port"></param>
-    public Sink(string address, int port) : base(address, port) {
+    internal Sink(string address, int port) : base(address, port) {
       running = false;
       thread = new Thread(listener);
       lockObject = new UnityEngine.Object();
@@ -277,23 +278,26 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Given a persistent list of untracked views, pop updates off the stack
+    /// (processing them chronologically). Update the untracked view collection.
     /// </summary>
     /// <param name="untracked"></param>
     public void Update(List<View> untracked) {
       lock (lockObject) {
-        bool updated = updates.Count > 0; //Was there an update this tick?
+        bool updated = updates.Count > 0; // Was there an update this tick?
         while (updates.Count > 0) {
           Update update = updates.Pop();
-#if UNITY_EDITOR
+
+          #if UNITY_EDITOR
           update.UpdateDebug(debugData);
-#endif
-          //Look for tracked flakes in the most recent update
+          #endif
+
+          // Look for tracked flakes in the most recent update
           for (int i = 0; i < untracked.Count; ++i)
             if (update.Load(untracked[i]))
               untracked.RemoveAt(i--);
         }
-        //Set untracked if the update timed out or if the view was not found this update
+        // Set untracked if the update timed out or if the view was not found this update
         if (updated || Time.time - lastUpdate > UPDATE_TIMEOUT) {
           foreach (View view in untracked)
             view.tracked = false;
@@ -303,7 +307,7 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// Publish events to the notifier.
+    /// Publish accumulated events to the notifier.
     /// </summary>
     public void PublishEvents() {
       while (events.Count > 0)
@@ -311,46 +315,48 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Core receive loop, accumulating packets as quickly as possible. Raw buffers are translated
+    /// and pushed to the packet stack(s) for processing on the main thread.
     /// </summary>
     ThreadStart listener {
       get {
         return () => {
-          //Initialize
+          // Initialize
           Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
           socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
 
           socket.Bind(new IPEndPoint(IPAddress.Any, port));
           socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership,
              new MulticastOption(IPAddress.Parse(address)));
-          //Critical, otherwise the thread will never terminate
+          // Critical, otherwise the thread will never terminate
           socket.ReceiveTimeout = SOCKET_TIMEOUT;
 
-          //Receive loop
+          // Receive loop
           while (running) {
-            //Get packet (blocking)
+            // Get packet (blocking)
             try {
               buffer = new byte[PACKET_SIZE];
               if (socket.Receive(buffer) == 0) continue;
             } catch (SocketException e) {
-#if UNITY_EDITOR
-              if (e.ErrorCode != 10035 && e.ErrorCode != 10060)
+              #if UNITY_EDITOR
+              if (e.ErrorCode != 10035 && e.ErrorCode != 10060) // Timeouts
                 Debug.LogError("Holojam.Network.Client: Socket error: " + e);
-#endif
+              #endif
               Debug.Log("Holojam.Client.Network: Timeout");
               continue;
             }
 
             Nugget nugget = Nugget.Create(ref buffer);
-            if (nugget is Update) {
-              lock (lockObject) { updates.Push(nugget as Update); }
-            } else {
-              lock (lockObject) { events.Push(nugget as Event); }
-            }
 
-#if UNITY_EDITOR
+            // Push to stack(s)
+            if (nugget is Update)
+              lock (lockObject) { updates.Push(nugget as Update); }
+            else
+              lock (lockObject) { events.Push(nugget as Event); }
+
+            #if UNITY_EDITOR
             packetCount++;
-#endif
+            #endif
           }
           socket.Close();
         };
@@ -358,7 +364,7 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Start the receive thread.
     /// </summary>
     public void Start() {
       running = true;
@@ -366,13 +372,14 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// 
+    /// Stop the receive thread.
     /// </summary>
     public void Stop() {
       running = false;
     }
 
-#if UNITY_EDITOR
+    // Debug
+    #if UNITY_EDITOR
     Dictionary<string, string> debugData = new Dictionary<string, string>();
     public override string ResetDebugData() {
       string data = "Port " + port + ":"
@@ -382,6 +389,6 @@ namespace Holojam.Network {
       debugData.Clear();
       return data;
     }
-#endif
+    #endif
   }
 }

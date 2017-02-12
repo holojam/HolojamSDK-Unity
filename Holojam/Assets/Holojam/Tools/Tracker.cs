@@ -1,23 +1,23 @@
-﻿//Scope.cs
-//Created by Aaron C Gaudette on 11.11.16
+﻿// Tracker.cs
+// Created by Holojam Inc. on 11.11.16
 
 using UnityEngine;
 
 namespace Holojam.Tools{
-   public class Scope : Controller{
+   public class Tracker : Controller{
       public Vector2 origin;
       public float height = 1; //Meters
       [Range(-90,90)] public float angle = 0; //Degrees
 
       protected override ProcessDelegate Process{get{return UpdateFrustum;}}
 
-      public float stem{get{return GetFloat(0);}}
+      public float Stem{get{return GetFloat(0);}}
 
-      public override string labelField{get{return "ExtraData";}}
-      public override string scopeField{get{return "Holoscope";}}
-      public override bool isSending{get{return false;}}
+      public override string Label{get{return "ExtraData";}}
+      public override string Scope{get{return "Holoscope";}}
+      public override bool Sending{get{return false;}}
 
-      public override int floatCount{get{return 1;}}
+      public override int FloatCount{get{return 1;}}
 
       void UpdateFrustum(){
          transform.position = new Vector3(origin.x,height,origin.y);

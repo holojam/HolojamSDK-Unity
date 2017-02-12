@@ -35,7 +35,7 @@ namespace Holojam.Tools{
                EditorGUILayout.LabelField(
                   v.actor!=null?"Tracking data is being routed through \""+
                   v.actor.gameObject.name+".\" Remove reference to unlink.":
-                  "No actor linked. Tracking data is being sourced from the view"+
+                  "No actor linked. Tracking data is being sourced from the View"+
                   (v.view!=null && v.view.label!=""?" ("+v.view.label+").":"."),
                   new GUIStyle(EditorStyles.wordWrappedMiniLabel)
                );

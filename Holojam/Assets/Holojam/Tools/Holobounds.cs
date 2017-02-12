@@ -1,11 +1,11 @@
-﻿//Holobounds.cs
-//Created by Aaron C Gaudette on 22.06.16
-//Playspace manager and access point
+﻿// Holobounds.cs
+// Created by Holojam Inc. on 22.06.16
 
 using UnityEngine;
 
 /// <summary>
-/// Shift to boilerplate.
+/// Playspace manager and access point.
+/// Deprecated.
 /// </summary>
 namespace Holojam.Tools{
    [ExecuteInEditMode]
