@@ -136,7 +136,7 @@ namespace Holojam.Tools {
     bool GetTracked() {
       if (CanGetDirect)
         return converter.HasInput;
-      else return actor != null ? actor.view.tracked : view.tracked;
+      else return actor != null ? actor.Tracked : view.Tracked;
     }
   }
 }

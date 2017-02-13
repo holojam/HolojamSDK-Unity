@@ -14,16 +14,16 @@ namespace Holojam.Network{
 
          if(Application.isPlaying)
             style.normal.textColor=
-               view.ignoreTracking?new Color(0.5f,1,1):
-               view.tracked?new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
+               view.deaf?new Color(0.5f,1,1):
+               view.Tracked?new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
 
          bool noLabel = string.IsNullOrEmpty(view.label);
          EditorGUILayout.LabelField(noLabel?"No Label":view.scope+"."+view.label,
             noLabel?"":
-            view.ignoreTracking?"Event":
-            (view.sending && view.tracked)?"Sending":
+            view.deaf?"Event":
+            (view.sending && view.Tracked)?"Sending":
             view.sending?"Paused":
-            view.tracked?"Tracked":"Untracked",
+            view.Tracked?"Tracked":"Untracked",
             style
          );
 

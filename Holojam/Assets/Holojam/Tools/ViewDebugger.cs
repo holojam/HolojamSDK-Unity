@@ -3,39 +3,46 @@
 
 using UnityEngine;
 
-namespace Holojam.Tools{
-   /// <summary>
-   /// Read-only data dump of a View.
-   /// Deprecated.
-   /// </summary>
-   public sealed class ViewDebugger : Controller{
-      public string label, scope, source;
-      public bool tracked, ignoreTracking;
+namespace Holojam.Tools {
 
-      protected override ProcessDelegate Process{get{return UpdateData;}}
+  /// <summary>
+  /// Read-only data dump of a View for debugging.
+  /// </summary>
+  public sealed class ViewDebugger : MonoBehaviour {
 
-      public override string Label{get{return label;}}
-      public override string Scope{get{return scope;}}
-      public override bool Sending{get{return false;}}
+    public string label, scope;
+    public bool deaf;
 
-      public Vector3[] triples;
-      public Quaternion[] quads;
-      public float[] floats;
-      public int[] ints;
-      public byte[] chars;
-      public string text;
+    [Space(8)]
+    public string source;
+    public bool tracked;
 
-      void UpdateData(){
-         source = view.source;
-         tracked = view.tracked;
-         ignoreTracking = view.ignoreTracking;
+    public Vector3[] triples;
+    public Quaternion[] quads;
+    public float[] floats;
+    public int[] ints;
+    public byte[] chars;
+    public string text;
 
-         triples = view.triples;
-         quads = view.quads;
-         floats = view.floats;
-         ints = view.ints;
-         chars = view.chars;
-         text = view.text;
-      }
-   }
+    Network.View view;
+    void Awake() {
+      view = gameObject.AddComponent<Network.View>() as Network.View;
+    }
+
+    void Update() {
+      view.label = label;
+      view.scope = scope;
+
+      source = view.Source;
+      tracked = view.Tracked;
+      deaf = view.deaf;
+
+      triples = view.triples;
+      quads = view.quads;
+      floats = view.floats;
+      ints = view.ints;
+      chars = view.chars;
+      text = view.text;
+    }
+  }
 }

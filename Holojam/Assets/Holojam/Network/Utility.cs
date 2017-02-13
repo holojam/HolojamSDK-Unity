@@ -31,6 +31,7 @@ namespace Holojam.Network {
     /// <param name="view"></param>
     public void CopyToView(int i, View view) {
       view.scope = data.Scope;
+      view.Source = data.Origin;
 
       view.label = data.Flakes(i).Value.Label;
       view.triples = new Vector3[data.Flakes(i).Value.TriplesLength];
@@ -146,7 +147,7 @@ namespace Holojam.Network {
 
       if (lookup.ContainsKey(view.label)) {
         packet.CopyToView(lookup[view.label], view);
-        view.tracked = true;
+        view.Tracked = true;
         return true;
       }
       return false;
@@ -184,7 +185,7 @@ namespace Holojam.Network {
     public override bool Load(View view) {
       //if(view.scope!=packet.data.Scope && view.scope!="")return false; //TODO
       packet.CopyToView(0, view);
-      view.ignoreTracking = view.tracked = true;
+      view.deaf = view.Tracked = true;
       return true;
     }
   }

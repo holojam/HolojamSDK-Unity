@@ -68,7 +68,7 @@ namespace Holojam.Tools {
       set { output.quads[0] = value; }
     }
 
-    public bool HasInput { get { return input.tracked; } }
+    public bool HasInput { get { return input.Tracked; } }
 
     void Awake() {
       if (BuildManager.DEVICE == BuildManager.Device.VIVE)
@@ -158,7 +158,7 @@ namespace Holojam.Tools {
         }
 
       // Update target if tracked
-      if (input.tracked) {
+      if (input.Tracked) {
         // Read in secondary vector
         Vector3 nbar = (right - left).normalized;
 

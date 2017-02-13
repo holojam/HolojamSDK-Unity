@@ -10,15 +10,10 @@ public abstract class SimpleEvent : Holojam.Tools.Controller {
 
   protected override sealed ProcessDelegate Process { get { return UpdateEvent; } }
 
-   public override string Label { get { return label; } }
-   public override string Scope { get { return scope; } }
-   public override sealed bool Sending { get { return true; } }
-   public override sealed bool IgnoringTracking { get { return true; } }
-
-   // Helper function
-   public void Push() {
-      Holojam.Network.Client.PushEvent(view);
-   }
+  public override string Label { get { return label; } }
+  public override string Scope { get { return scope; } }
+  public override sealed bool Sending { get { return true; } }
+  public override sealed bool Deaf { get { return true; } }
 
   protected abstract void UpdateEvent();
 }

@@ -20,7 +20,7 @@ public class ActorAvatar : Holojam.Tools.Actor {
   float blinkDelay = 0, lastBlink = 0;
 
   protected override void UpdateTracking() {
-    if (view.tracked) {
+    if (Tracked) {
       transform.position = TrackedPosition;
 
       // This example type uses a separate transform for rotation (a head) instead of itself

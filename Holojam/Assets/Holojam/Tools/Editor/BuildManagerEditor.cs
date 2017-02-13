@@ -49,7 +49,7 @@ namespace Holojam.Tools{
          EditorGUILayout.LabelField("Actors",bold);
          EditorStyles.label.wordWrap = true;
          GUIStyle style = new GUIStyle();
-         foreach(Actor a in Actor.instances){
+         foreach(Actor a in Actor.All){
             style.normal.textColor = a.debugColor;
             EditorGUILayout.LabelField("   "+a.gameObject.name+" ["+a.Brand+"] "+
                (a.IsLocal?"(Local) ":"")+(a.IsBuild?"(Build)":""),style
