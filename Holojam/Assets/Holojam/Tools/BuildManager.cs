@@ -145,14 +145,14 @@ namespace Holojam.Tools {
     /// update the Viewer.
     /// </summary>
     Result Index(bool force = false) {
-      int count = Actor.instances.Count;
+      int count = Actor.All.Count;
       if (actors.Length != count) actors = new Actor[count];
       int[] indices = new int[count];
 
       bool equal = indexCache != null && indexCache.Length == indices.Length;
       // Build actor array and cache
       for (int i = 0; i < count; ++i) {
-        actors[i] = Actor.instances[i];
+        actors[i] = Actor.All[i];
         indices[i] = actors[i].index; // Cache indices for comparison
         equal = equal && indices[i] == indexCache[i];
       }

@@ -9,6 +9,6 @@ public class DebugSphere : MonoBehaviour {
   public Holojam.Tools.Actor target;
 
   void Update() {
-    transform.position = target.center + target.look * offset;
+    transform.position = target.Center + target.Look * offset;
   }
 }

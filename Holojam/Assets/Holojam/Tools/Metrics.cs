@@ -17,7 +17,7 @@ namespace Holojam.Tools{
       public override string Scope { get { return "Holoscope"; } }
 
       public override bool Sending { get { return true;}}
-      public override bool IgnoringTracking { get { return true; } } // Event
+      public override bool Deaf { get { return true; } } // Event
 
       public override int FloatCount { get{ return 1; } }
       public override int IntCount { get { return 1; } }
@@ -34,7 +34,7 @@ namespace Holojam.Tools{
 
       void Route(Network.View input) {
          SetInt(0, input.ints[0]); // Copy over tick
-         Network.Client.PushEvent(view);
+         PushEvent();
       }
 
       // Send back the time to render

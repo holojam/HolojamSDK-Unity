@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Holojam.Tools {
 
@@ -14,14 +15,20 @@ namespace Holojam.Tools {
   public class Actor : Trackable {
 
     /// <summary>
-    /// Static list of all Actors in the scene.
+    /// Static read-only list of all Actors in the scene.
     /// </summary>
-    public static List<Actor> instances = new List<Actor>();
+    public static ReadOnlyCollection<Actor> All {
+      get { return instances.AsReadOnly(); }
+    }
+    static List<Actor> instances = new List<Actor>();
 
     /// <summary>
-    /// Static table of all the actors from the current project.
+    /// Static read-only list of all the Actors in the current project.
     /// </summary>
-    public static Dictionary<string, Actor> localInstances = new Dictionary<string, Actor>();
+    public static Dictionary<string, Actor>.ValueCollection Local {
+      get { return localInstances.Values; }
+    }
+    static Dictionary<string, Actor> localInstances = new Dictionary<string, Actor>();
 
     /// <summary>
     /// The unique build index of the Actor, used in BuildManager.
@@ -63,7 +70,7 @@ namespace Holojam.Tools {
     /// </summary>
     void UpdateData() {
       // Update local instances dictionary
-      bool local = view.scope == Network.Client.SEND_SCOPE || string.IsNullOrEmpty(view.scope);
+      bool local = Scope == Network.Client.SEND_SCOPE || string.IsNullOrEmpty(Scope);
       if (local && !localInstances.ContainsKey(Brand))
         localInstances[Brand] = this;
       else if (!local && localInstances.ContainsKey(Brand))
@@ -71,11 +78,11 @@ namespace Holojam.Tools {
 
       // Call fade events
       if (Time.time > lastTime + dropInterval) {
-        if (view.tracked != lastTracked) {
-          if (view.tracked) FadeIn();
+        if (Tracked != lastTracked) {
+          if (Tracked) FadeIn();
           else FadeOut();
         }
-        lastTracked = view.tracked;
+        lastTracked = Tracked;
         lastTime = Time.time;
       }
     }

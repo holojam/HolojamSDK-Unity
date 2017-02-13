@@ -365,10 +365,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scope: Holoscope
-  source: 
-  sending: 0
-  ignoreTracking: 0
   label: ExtraData
+  sending: 0
+  deaf: 0
   triples: []
   quads: []
   floats:
@@ -425,10 +424,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scope: Holoscope
-  source: 
-  sending: 1
-  ignoreTracking: 1
   label: MetricsACK
+  sending: 1
+  deaf: 1
   triples: []
   quads: []
   floats:

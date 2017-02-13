@@ -108,9 +108,17 @@ namespace Holojam.Tools {
         transform.rotation = transform.parent.rotation * transform.rotation;
     }
 
+    // Is it possible to get data directly from the Converter?
+    bool CanGetDirect {
+      get {
+        return trackingType == TrackingType.DIRECT
+          && converter.debugMode != Converter.DebugMode.NONE == BuildManager.IsMasterClient();
+      }
+    }
+
     // Get tracking data from desired source
     Vector3 GetPosition() {
-      if (trackingType == TrackingType.DIRECT)
+      if (CanGetDirect)
         return converter.OutputPosition;
       else {
         return actor != null ? actor.Center :
@@ -120,15 +128,15 @@ namespace Holojam.Tools {
     }
 
     Quaternion GetRotation() {
-      if (trackingType == TrackingType.DIRECT)
+      if (CanGetDirect)
         return converter.OutputRotation;
       else return actor != null ? actor.RawOrientation : view.quads[0];
     }
 
     bool GetTracked() {
-      if (trackingType == TrackingType.DIRECT)
+      if (CanGetDirect)
         return converter.HasInput;
-      else return actor != null ? actor.view.tracked : view.tracked;
+      else return actor != null ? actor.Tracked : view.Tracked;
     }
   }
 }

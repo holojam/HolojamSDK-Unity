@@ -71,7 +71,7 @@ namespace Holojam.Tools {
     /// Untracked maintains last known position and rotation.
     /// </summary>
     protected virtual void UpdateTracking() {
-      if (view.tracked) {
+      if (Tracked) {
         transform.position = TrackedPosition;
         transform.rotation = TrackedRotation;
       }

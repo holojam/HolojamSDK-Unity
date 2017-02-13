@@ -79,11 +79,11 @@ namespace Holojam.Network {
       staged.Clear(); untracked.Clear();
 
       // Stage views
-      foreach (View view in View.instances) { // Grab all views in the scene
+      foreach (View view in View.All) { // Grab all views in the scene
         if (string.IsNullOrEmpty(view.label)) {
           Debug.LogWarning("Holojam.Network.Client: Invalid view label", view);
           continue;
-        } else if (view.ignoreTracking)
+        } else if (view.deaf)
           continue;
         else if (view.sending)
           staged.Add(view);
@@ -301,7 +301,7 @@ namespace Holojam.Network {
         // Set untracked if the update timed out or if the view was not found this update
         if (updated || Time.time - lastUpdate > UPDATE_TIMEOUT) {
           foreach (View view in untracked)
-            view.tracked = false;
+            view.Tracked = false;
           lastUpdate = Time.time;
         }
       }

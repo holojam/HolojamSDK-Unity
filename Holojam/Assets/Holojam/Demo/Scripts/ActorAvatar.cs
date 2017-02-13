@@ -20,7 +20,7 @@ public class ActorAvatar : Holojam.Tools.Actor {
   float blinkDelay = 0, lastBlink = 0;
 
   protected override void UpdateTracking() {
-    if (view.tracked) {
+    if (Tracked) {
       transform.position = TrackedPosition;
 
       // This example type uses a separate transform for rotation (a head) instead of itself
@@ -32,10 +32,10 @@ public class ActorAvatar : Holojam.Tools.Actor {
 
     // Toggle mask
     if (mask != null)
-      mask.SetActive(!isBuild);
+      mask.SetActive(!IsBuild);
   }
   // The orientation accessor matches the rotation assignment above
-  public override Quaternion orientation {
+  public override Quaternion Orientation {
     get { return head != null ? head.rotation : Quaternion.identity; }
   }
 

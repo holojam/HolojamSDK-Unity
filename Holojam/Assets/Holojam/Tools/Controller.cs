@@ -7,7 +7,7 @@ namespace Holojam.Tools {
 
   /// <summary>
   /// Core, adaptive class for sending and receiving a single Holojam network flake.
-  /// Extend to implement custom functionality. See examples.
+  /// Dependent on a Network.View. Extend to implement custom functionality. See examples.
   /// </summary>
   [ExecuteInEditMode, RequireComponent(typeof(Network.View))]
   public abstract class Controller : MonoBehaviour {
@@ -26,44 +26,36 @@ namespace Holojam.Tools {
     /// </summary>
     protected abstract ProcessDelegate Process { get; }
 
-    /// <summary>
-    /// Deprecated.
-    /// </summary>
-    public Network.View view {
-      //Undefined selection
-      get { return GetComponent<Network.View>(); }
-    }
-
-    // Override these to modify view behavior
+    Network.View view;
 
     /// <summary>
-    /// Override this to control the flake label (string identifier).
+    /// Override this to control the flake label (string identifier). See View.cs.
     /// </summary>
     public abstract string Label { get; }
 
     /// <summary>
-    /// Override this to control the flake scope (string namespace).
+    /// Override this to control the flake scope (string namespace). See View.cs.
     /// </summary>
     public abstract string Scope { get; }
 
     /// <summary>
     /// Override this to control whether or not this flake is being sent
-    /// upstream by Unity (true) or updated locally from the server (false).
+    /// upstream by Unity (true) or updated locally from the server (false). See View.cs.
     /// </summary>
     public abstract bool Sending { get; }
 
     /// <summary>
-    /// Is this an event?
+    /// Is this an event (events ignore updates). See View.cs.
     /// </summary>
-    public virtual bool IgnoringTracking { get { return false; } }
+    public virtual bool Deaf { get { return false; } }
 
     /// <summary>
-    /// Override to specify vector3 allocation amount (-1 = null/optional field) for this flake.
+    /// Override to specify Vector3 allocation amount (-1 = null/optional field) for this flake.
     /// </summary>
     public virtual int TripleCount { get { return -1; } }
 
     /// <summary>
-    /// Override to specify vector4 allocation amount (-1 = null/optional field) for this flake.
+    /// Override to specify Vector4 allocation amount (-1 = null/optional field) for this flake.
     /// </summary>
     public virtual int QuadCount { get { return -1; } }
 
@@ -83,9 +75,19 @@ namespace Holojam.Tools {
     public virtual int CharCount { get { return -1; } }
 
     /// <summary>
-    /// Override to specify whether or not this flake has a data string.
+    /// Override to specify whether or not this flake contains a string field.
     /// </summary>
     public virtual bool HasText { get { return false; } }
+
+    /// <summary>
+    /// Wrapper property from View: network origin. See View.cs.
+    /// </summary>
+    public string Source { get { return view.Source; } }
+
+    /// <summary>
+    /// Wrapper property from View: tracked flag. See View.cs.
+    /// </summary>
+    public bool Tracked { get { return view.Tracked; } }
 
     /// <summary>
     /// Force update the View (by default done on Update()).
@@ -94,7 +96,7 @@ namespace Holojam.Tools {
       view.label = Label;
       view.scope = Scope;
       view.sending = Sending;
-      view.ignoreTracking = IgnoringTracking;
+      view.deaf = Deaf;
     }
 
     /// <summary>
@@ -102,6 +104,8 @@ namespace Holojam.Tools {
     /// e.g. on a label change
     /// </summary>
     public void ResetView() {
+      view = GetComponent<Network.View>(); // Unsafe
+
       view.triples = TripleCount < 0 ? null : new Vector3[TripleCount];
       view.quads = QuadCount < 0 ? null : new Quaternion[QuadCount];
       view.floats = FloatCount < 0 ? null : new float[FloatCount];
@@ -111,14 +115,14 @@ namespace Holojam.Tools {
     }
 
     /// <summary>
-    /// Set a vector3 in the flake, given that it has been allocated (no bounds checks).
+    /// Set a Vector3 in the flake, given that it has been allocated (no bounds checks).
     /// </summary>
     /// <param name="index"></param>
     /// <param name="input"></param>
     protected void SetTriple(int index, Vector3 input) { view.triples[index] = input; }
 
     /// <summary>
-    /// Set a vector4 in the flake, given that it has been allocated (no bounds checks).
+    /// Set a Vector4 in the flake, given that it has been allocated (no bounds checks).
     /// </summary>
     /// <param name="index"></param>
     /// <param name="input"></param>
@@ -152,14 +156,14 @@ namespace Holojam.Tools {
     protected void SetText(string input) { view.text = input; }
 
     /// <summary>
-    /// Get a vector3 from the flake, given that it has been allocated (no bounds checks). 
+    /// Get a Vector3 from the flake, given that it has been allocated (no bounds checks). 
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
     protected Vector3 GetTriple(int index) { return view.triples[index]; }
 
     /// <summary>
-    /// Get a vector4 from the flake, given that it has been allocated (no bounds checks). 
+    /// Get a Vector4 from the flake, given that it has been allocated (no bounds checks). 
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
@@ -193,14 +197,22 @@ namespace Holojam.Tools {
     protected string GetText() { return view.text; }
 
     /// <summary>
-    /// Awake() is overriden, by default resetting the view.
+    /// Push the View to the Holojam network as an event.
     /// </summary>
-    protected virtual void Awake() {
-      ResetView(); // Mandatory call
+    protected void PushEvent(){
+      Network.Client.PushEvent(view);
     }
 
     /// <summary>
-    /// Update() is overriden. Instead of using this function, use the ProcessDelegate.
+    /// Awake() is overriden, by default resetting the View.
+    /// </summary>
+    protected virtual void Awake() {
+      ResetView();
+    }
+
+    /// <summary>
+    /// Update() is overriden, by default updating the View.
+    /// Instead of using this function, use the ProcessDelegate.
     /// </summary>
     protected virtual void Update() {
       UpdateView(); // Mandatory call
