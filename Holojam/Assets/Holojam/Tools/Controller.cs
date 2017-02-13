@@ -45,7 +45,7 @@ namespace Holojam.Tools {
     public abstract bool Sending { get; }
 
     /// <summary>
-    /// Is this an event (events ignore updates). See View.cs.
+    /// Is this an event (events ignore updates)? See View.cs.
     /// </summary>
     public virtual bool Deaf { get { return false; } }
 
