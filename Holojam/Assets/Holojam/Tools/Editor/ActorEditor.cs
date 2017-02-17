@@ -11,8 +11,9 @@ namespace Holojam.Tools{
       protected virtual void EnableDerived(){}
       protected virtual void DrawDerived(){}
 
-      SerializedProperty scope, index;
+      SerializedProperty view, scope, index;
       void OnEnable(){
+         view = serializedObject.FindProperty("view");
          scope = serializedObject.FindProperty("scope");
          index = serializedObject.FindProperty("index");
 
@@ -20,6 +21,8 @@ namespace Holojam.Tools{
       }
       public override void OnInspectorGUI(){
          serializedObject.Update();
+
+         EditorGUILayout.PropertyField(view);
 
          EditorGUIUtility.labelWidth = 64;
          EditorGUILayout.BeginHorizontal();

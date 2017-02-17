@@ -66,13 +66,14 @@ namespace Holojam.Martian {
       // Ignore debug flags on builds
       if (!BuildManager.IsMasterClient())
         debugMode = DebugMode.NONE;
+      // Don't do anything if this is a master client
+      else if (debugMode == DebugMode.NONE)
+        return;
 
       if (extraData == null) {
         Debug.LogWarning("Converter: Extra data reference is null!");
         return;
       }
-      if (BuildManager.IsMasterClient() && debugMode == DebugMode.NONE)
-        return;
 
       imu = viewer.transform.GetChild(0);
       if (debugMode == DebugMode.REMOTE)

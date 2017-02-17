@@ -4,6 +4,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using System.Collections;
+#endif
+
 namespace Holojam.Network {
 
   /// <summary>
@@ -15,6 +19,12 @@ namespace Holojam.Network {
     Dictionary<string, List<Callback>> subscriptions = new Dictionary<string, List<Callback>>();
 
     public delegate void Callback(string source, Flake data);
+
+    // Debug
+    #if UNITY_EDITOR
+    public const float FIRE_TIME = 1;
+    public List<string> eventData = new List<string>();
+    #endif
 
     /// <summary>
     /// Add a callback to the subscriptions table.
@@ -65,6 +75,10 @@ namespace Holojam.Network {
       string brand = e.scope + "." + e.label;
       string unscoped = "." + e.label; // Also call any subscribers to this label without scope
 
+      #if UNITY_EDITOR
+      global.StartCoroutine(global.FireDebug(brand + " (" + e.source + ")"));
+      #endif
+
       bool specific = global.subscriptions.ContainsKey(brand);
       bool general = global.subscriptions.ContainsKey(unscoped);
 
@@ -82,5 +96,13 @@ namespace Holojam.Network {
         foreach (Callback callback in global.subscriptions[unscoped])
           callback(e.source, flake);
     }
+
+    #if UNITY_EDITOR
+    IEnumerator FireDebug(string e) {
+      eventData.Add(e);
+      yield return new WaitForSeconds(FIRE_TIME);
+      eventData.Remove(e);
+    }
+    #endif
   }
 }

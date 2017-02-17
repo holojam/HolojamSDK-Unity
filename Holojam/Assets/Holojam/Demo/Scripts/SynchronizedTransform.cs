@@ -23,7 +23,7 @@ public class SynchronizedTransform : Holojam.Tools.Synchronizable {
   }
   public Vector3 Scale{
     get { return data.triples[1]; }
-    set { data.triples[0] = value; }
+    set { data.triples[1] = value; }
   }
 
   public override void ResetData() {

@@ -8,6 +8,10 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Holojam.Network {
 
   /// <summary>
@@ -89,6 +93,10 @@ namespace Holojam.Network {
         } else {
           untracked.Add(controller);
         }
+        // Update the View
+        #if UNITY_EDITOR
+        EditorUtility.SetDirty((UnityEngine.Object)controller);
+        #endif
       }
 
       sink.Update(untracked);
