@@ -16,6 +16,10 @@ namespace Holojam.Network {
   [ExecuteInEditMode]
   public abstract class Controller : FlakeComponent {
 
+    #if UNITY_EDITOR
+    [SerializeField] internal View view;
+    #endif
+
     /// <summary>
     /// Static read-only list of all the specified Controller subtypes in the scene.
     /// </summary>
@@ -87,7 +91,7 @@ namespace Holojam.Network {
     /// A single string combining the scope and label.
     /// </summary>
     public string Brand {
-      get { return Scope + "." + Label; }
+      get { return (Sending ? Client.SEND_SCOPE : Scope) + "." + Label; }
     }
 
     /// <summary>

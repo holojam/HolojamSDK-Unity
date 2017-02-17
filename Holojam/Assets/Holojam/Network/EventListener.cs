@@ -1,6 +1,11 @@
 // EventListener.cs
 // Created by Holojam Inc. on 16.02.17
 
+#if UNITY_EDITOR
+using System.Collections;
+using UnityEditor;
+#endif
+
 using UnityEngine;
 
 namespace Holojam.Network {
@@ -8,7 +13,12 @@ namespace Holojam.Network {
   /// <summary>
   /// Abstract base class (boilerplate) for subscribing to Holojam events in Unity.
   /// </summary>
-  public abstract class EventListener : MonoBehaviour {
+  public abstract class EventListener : MonoBehaviour, IEvent {
+
+    #if UNITY_EDITOR
+    [SerializeField] internal View view;
+    const float FIRE_TIME = .5f;
+    #endif
 
     /// <summary>
     /// Filter (string namespace) for incoming events.
@@ -22,6 +32,8 @@ namespace Holojam.Network {
     /// </summary>
     public abstract string Label { get; }
 
+    public string Brand { get { return Scope + "." + Label; } }
+
     string lastLabel;
 
     /// <summary>
@@ -31,20 +43,23 @@ namespace Holojam.Network {
       Unsubscribe();
       lastLabel = Label;
       Subscribe();
+      #if UNITY_EDITOR
+      EditorUtility.SetDirty((UnityEngine.Object)this);
+      #endif
     }
 
     /// <summary>
     /// Unsubscribe from the Notifier with this listener's data.
     /// </summary>
     public void Unsubscribe() {
-      Notifier.RemoveSubscriber(Callback, lastLabel, Scope);
+      Notifier.RemoveSubscriber(Intercept, lastLabel, Scope);
     }
 
     /// <summary>
     /// Subscribe to the Notifier with this listener's data.
     /// </summary>
     void Subscribe() {
-      Notifier.AddSubscriber(Callback, lastLabel, Scope);
+      Notifier.AddSubscriber(Intercept, lastLabel, Scope);
     }
 
     /// <summary>
@@ -65,5 +80,31 @@ namespace Holojam.Network {
     protected virtual void OnDisable() {
       Unsubscribe();
     }
+
+    #if UNITY_EDITOR
+    public bool Fired { get { return fired; } }
+    bool fired = false;
+    #endif
+
+    /// <summary>
+    /// Intercept function for display (View) purposes in the editor.
+    /// </summary>
+    void Intercept(string source, Flake input) {
+      #if UNITY_EDITOR
+      StartCoroutine(Fire());
+      #endif
+      Callback(source, input);
+    }
+
+    #if UNITY_EDITOR
+    IEnumerator Fire() {
+      if (fired) yield return null;
+      EditorUtility.SetDirty((UnityEngine.Object)this);
+      fired = true;
+      yield return new WaitForSeconds(FIRE_TIME);
+      fired = false;
+      EditorUtility.SetDirty((UnityEngine.Object)this);
+    }
+    #endif
   }
 }

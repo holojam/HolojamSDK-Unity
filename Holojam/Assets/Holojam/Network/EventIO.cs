@@ -35,11 +35,11 @@ namespace Holojam.Network {
     /// Initialize input and output components.
     /// </summary>
     protected void AddIO() {
-      output = gameObject.AddComponent<O>() as O;
-      // Wait to update the subscription until the input knows we're here
       input = gameObject.AddComponent<I>() as I;
+      // Wait to update the subscription until the input knows we're here
       input.io = this;
       input.UpdateSubscription();
+      output = gameObject.AddComponent<O>() as O;
     }
 
     /// <summary>
