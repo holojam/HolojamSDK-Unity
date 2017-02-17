@@ -14,19 +14,8 @@ namespace Holojam.Martian {
   /// </summary>
   public class Converter : MonoBehaviour {
 
-    /// <summary>
-    /// Serializable class container for positional smoothing variables.
-    /// </summary>
-    [System.Serializable]
-    public class Smoothing {
-      public float cap, pow;
-      public Smoothing(float cap, float pow) {
-        this.cap = cap;
-        this.pow = pow;
-      }
-    }
-    readonly Smoothing XY_SMOOTHING = new Smoothing(.05f, 1.1f);
-    readonly Smoothing Z_SMOOTHING = new Smoothing(.15f, 2);
+    readonly Utility.Smoothing XY_SMOOTHING = new Utility.Smoothing(.05f, 1.1f);
+    readonly Utility.Smoothing Z_SMOOTHING = new Utility.Smoothing(.15f, 2);
     const float R_SMOOTHING = .12f;
 
     [SerializeField] Tracker extraData;

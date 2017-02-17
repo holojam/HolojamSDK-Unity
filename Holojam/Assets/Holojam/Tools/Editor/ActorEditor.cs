@@ -11,9 +11,10 @@ namespace Holojam.Tools{
       protected virtual void EnableDerived(){}
       protected virtual void DrawDerived(){}
 
-      SerializedProperty view, scope, index;
+      SerializedProperty view, smooth, scope, index;
       void OnEnable(){
          view = serializedObject.FindProperty("view");
+         smooth = serializedObject.FindProperty("smooth");
          scope = serializedObject.FindProperty("scope");
          index = serializedObject.FindProperty("index");
 
@@ -29,6 +30,8 @@ namespace Holojam.Tools{
             EditorGUILayout.PropertyField(scope);
             EditorGUILayout.PropertyField(index);
          EditorGUILayout.EndHorizontal();
+
+         EditorGUILayout.PropertyField(smooth);
 
          EditorGUIUtility.labelWidth = 0;
          DrawDerived();
