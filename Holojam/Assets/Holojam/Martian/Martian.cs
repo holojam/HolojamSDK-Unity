@@ -16,6 +16,10 @@ namespace Holojam.Martian {
     }
     public override bool Sending { get { return false; } }
 
+    public override void ResetData() {
+      data = new Network.Flake(2);
+    }
+
     /// <summary>
     /// Holoscope raw input Vector3.
     /// </summary>

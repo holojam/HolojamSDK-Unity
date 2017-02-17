@@ -18,7 +18,7 @@ namespace Holojam.Network {
     internal protected Flake data = new Flake();
 
     /// <summary>
-    /// Reset the flake data. Override when sending to allocate the optional members beforehand.
+    /// Reset the flake data. A necessary override to allocate the optional members beforehand.
     /// </summary>
     public virtual void ResetData() {
       data = new Flake();
