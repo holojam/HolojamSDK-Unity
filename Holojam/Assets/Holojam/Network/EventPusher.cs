@@ -18,7 +18,6 @@ namespace Holojam.Network {
 
     #if UNITY_EDITOR
     [SerializeField] internal View view;
-    const float FIRE_TIME = .5f;
     #endif
 
     /// <summary>
@@ -47,7 +46,7 @@ namespace Holojam.Network {
     IEnumerator Fire() {
       if (fired) yield return null;
       fired = true;
-      yield return new WaitForSeconds(FIRE_TIME);
+      yield return new WaitForSeconds(Notifier.FIRE_TIME);
       fired = false;
     }
     #endif
