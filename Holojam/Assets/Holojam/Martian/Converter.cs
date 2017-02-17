@@ -4,8 +4,9 @@
 #define SMOOTH
 
 using UnityEngine;
+using Holojam.Tools;
 
-namespace Holojam.Tools {
+namespace Holojam.Martian {
 
   /// <summary>
   /// Converts raw Martian (Holoscope) data to a stable transform with
@@ -44,31 +45,19 @@ namespace Holojam.Tools {
     #endif
 
     /// <summary>
-    /// Input and output Views for conversion.
+    /// Input and output Controllers for conversion.
     /// </summary>
-    Network.View input, output;
+    Martian input;
+    Relay output;
 
     Transform imu;
-    Network.View test;
+    Remote remote;
     Quaternion raw, correction, correctionTarget = Quaternion.identity;
 
-    /// <summary>
-    /// Proxy for the first triple (output position).
-    /// </summary>
-    public Vector3 OutputPosition {
-      get { return output.triples[0]; }
-      set { output.triples[0] = value; }
-    }
-
-    /// <summary>
-    /// Proxy for the first quad (output rotation).
-    /// </summary>
-    public Quaternion OutputRotation {
-      get { return output.quads[0]; }
-      set { output.quads[0] = value; }
-    }
-
     public bool HasInput { get { return input.Tracked; } }
+
+    public Vector3 OutputPosition { get { return output.Position; } }
+    public Quaternion OutputRotation { get { return output.Rotation; } }
 
     void Awake() {
       if (BuildManager.DEVICE == BuildManager.Device.VIVE)
@@ -86,31 +75,15 @@ namespace Holojam.Tools {
         return;
 
       imu = viewer.transform.GetChild(0);
-      if (debugMode == DebugMode.REMOTE) {
-        test = gameObject.AddComponent<Network.View>() as Network.View;
-        test.label = "Remote";
-        test.scope = "Holojam";
-        test.sending = false;
-      }
+      if (debugMode == DebugMode.REMOTE)
+        remote = gameObject.AddComponent<Remote>() as Remote;
 
-      input = gameObject.AddComponent<Network.View>() as Network.View;
-      input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX, true);
-      input.scope = "Holoscope";
-      input.sending = false;
-
-      output = gameObject.AddComponent<Network.View>() as Network.View;
-      output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
-      output.scope = Network.Client.SEND_SCOPE;
-      output.sending = true;
-
-      // Allocate
-      input.triples = new Vector3[2];
-      output.triples = new Vector3[1];
-      output.quads = new Quaternion[1];
+      input = gameObject.AddComponent<Martian>() as Martian;
+      output = gameObject.AddComponent<Relay>() as Relay;
     }
 
     /// <summary>
-    /// Sensor fusion and smoothing between the input and output Views.
+    /// Sensor fusion and smoothing between the input and output Controllers.
     /// </summary>
     void Update() {
       if (BuildManager.DEVICE == BuildManager.Device.VIVE)
@@ -120,32 +93,28 @@ namespace Holojam.Tools {
       if (BuildManager.IsMasterClient()) {
         if (debugMode == DebugMode.POSITION) {
           #if SMOOTH
-            OutputPosition = extraData.Localize((
-               SmoothPosition(input.triples[0], ref lastLeft) +
-               SmoothPosition(input.triples[1], ref lastRight)) * .5f
+            output.Position = extraData.Localize((
+               SmoothPosition(input.Left, ref lastLeft) +
+               SmoothPosition(input.Right, ref lastRight)) * .5f
             );
           #else
-            OutputPosition = extraData.Localize(.5f*(input.triples[0]+input.triples[1]));
+            output.Position = extraData.Localize(.5f * (input.Left + input.Right));
           #endif
           return;
         } else if (debugMode == DebugMode.NONE) return;
       }
 
       #if SMOOTH
-        Vector3 left = SmoothPosition(input.triples[0], ref lastLeft);
-        Vector3 right = SmoothPosition(input.triples[1], ref lastRight);
+        Vector3 left = SmoothPosition(input.Left, ref lastLeft);
+        Vector3 right = SmoothPosition(input.Right, ref lastRight);
       #else
-        Vector3 left = input.triples[0], right = input.triples[1];
+        Vector3 left = input.Left, right = input.Right;
       #endif
       Vector3 inputPosition = .5f * (left + right);
 
-      // Update views
-      input.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX, true);
-      output.label = Network.Canon.IndexToLabel(BuildManager.BUILD_INDEX);
-
       // Get IMU data
       if (debugMode == DebugMode.REMOTE)
-        raw = test.quads[0];
+        raw = remote.Imu;
       else switch (BuildManager.DEVICE) {
           case BuildManager.Device.CARDBOARD:
           raw = imu.localRotation;
@@ -158,7 +127,7 @@ namespace Holojam.Tools {
         }
 
       // Update target if tracked
-      if (input.Tracked) {
+      if (HasInput) {
         // Read in secondary vector
         Vector3 nbar = (right - left).normalized;
 
@@ -188,9 +157,9 @@ namespace Holojam.Tools {
       #endif
 
       // Update output
-      OutputRotation = extraData.Localize(correction * raw);
-      OutputPosition = extraData.Localize(
-         //inputPosition - outputRotation*Vector3.up*extraData.Stem
+      output.Rotation = extraData.Localize(correction * raw);
+      output.Position = extraData.Localize(
+         //inputPosition - outputRotation * Vector3.up * extraData.Stem
          inputPosition
       );
     }

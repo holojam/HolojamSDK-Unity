@@ -15,17 +15,9 @@ namespace Holojam.Tools {
   public class Actor : Trackable {
 
     /// <summary>
-    /// Static read-only list of all Actors in the scene.
-    /// </summary>
-    public static ReadOnlyCollection<Actor> All {
-      get { return instances.AsReadOnly(); }
-    }
-    static List<Actor> instances = new List<Actor>();
-
-    /// <summary>
     /// Static read-only list of all the Actors in the current project.
     /// </summary>
-    public static Dictionary<string, Actor>.ValueCollection Local {
+    public static Dictionary<string, Actor>.ValueCollection AllLocal {
       get { return localInstances.Values; }
     }
     static Dictionary<string, Actor> localInstances = new Dictionary<string, Actor>();
@@ -61,9 +53,6 @@ namespace Holojam.Tools {
     /// An Actor's label is determined from its build index using the canon.
     /// </summary>
     public override string Label { get { return Network.Canon.IndexToLabel(index); } }
-
-    void OnEnable() { instances.Add(this); }
-    void OnDisable() { instances.Remove(this); }
 
     /// <summary>
     /// Update Actor registration information.

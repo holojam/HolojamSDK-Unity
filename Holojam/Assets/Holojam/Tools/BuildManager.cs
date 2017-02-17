@@ -1,10 +1,8 @@
 // BuildManager.cs
 // Created by Holojam Inc. on 11.11.16
 
+using System.Collections.ObjectModel;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Holojam.Tools {
 
@@ -13,8 +11,6 @@ namespace Holojam.Tools {
   /// </summary>
   [ExecuteInEditMode]
   public class BuildManager : Utility.Global<BuildManager> {
-
-    public Viewer viewer;
 
     public enum Device {
       CARDBOARD, DAYDREAM, VIVE
@@ -138,21 +134,23 @@ namespace Holojam.Tools {
       loaded = true;
     }
 
-    enum Result { INDEXED, PASSED, EMPTY, NOBUILD, NOVIEW };
+    enum Result { INDEXED, PASSED, EMPTY, NOBUILD };
 
     /// <summary>
     /// Intelligently index the Actors in the scene, determine the build Actor,
     /// update the Viewer.
     /// </summary>
     Result Index(bool force = false) {
-      int count = Actor.All.Count;
+      ReadOnlyCollection<Actor> allActors = Network.Controller.All<Actor>();
+
+      int count = allActors.Count;
       if (actors.Length != count) actors = new Actor[count];
       int[] indices = new int[count];
 
       bool equal = indexCache != null && indexCache.Length == indices.Length;
       // Build actor array and cache
       for (int i = 0; i < count; ++i) {
-        actors[i] = Actor.All[i];
+        actors[i] = allActors[i];
         indices[i] = actors[i].index; // Cache indices for comparison
         equal = equal && indices[i] == indexCache[i];
       }
@@ -180,17 +178,6 @@ namespace Holojam.Tools {
         Debug.LogWarning("BuildManager: No actor found with matching build index!");
         buildActor = null;
         return Result.NOBUILD;
-      }
-
-      // Update viewer
-      if (viewer == null) {
-        Debug.LogWarning("BuildManager: Viewer prefab reference is null");
-        return Result.NOVIEW;
-      } else {
-        viewer.actor = BuildActor;
-        #if UNITY_EDITOR
-          EditorUtility.SetDirty(viewer);
-        #endif
       }
 
       return Result.INDEXED;
