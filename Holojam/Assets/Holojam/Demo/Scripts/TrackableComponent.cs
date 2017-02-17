@@ -6,10 +6,9 @@ using UnityEngine;
 
 public class TrackableComponent : Holojam.Tools.Trackable {
 
-  [SerializeField] protected string label = "Trackable";
-  [SerializeField] protected string scope = ""; 
+  [SerializeField] string label = "Trackable";
+  [SerializeField] string scope = ""; 
 
   public override string Label { get { return label; } }
   public override string Scope { get { return scope; } }
-
 }

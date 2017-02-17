@@ -1,12 +1,12 @@
 ﻿// Client.cs
 // Created by Holojam Inc. on 11.11.16
 
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using UnityEngine;
 
 namespace Holojam.Network {
 
@@ -24,7 +24,7 @@ namespace Holojam.Network {
     public int downstreamPort = 9591;
     public string sendScope = "Unity";
 
-    List<View> staged, untracked;
+    List<Controller> staged, untracked;
     Emitter emitter; Sink sink;
 
     // Debug
@@ -41,14 +41,6 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// Push a (Holojam) event to the Holojam network from Unity.
-    /// </summary>
-    /// <param name="view"></param>
-    public static void PushEvent(View view) {
-      global.emitter.SendEvent(view);
-    }
-
-    /// <summary>
     /// Push a (Holojam) notification to the Holojam network from Unity.
     /// </summary>
     /// <param name="label"></param>
@@ -56,9 +48,18 @@ namespace Holojam.Network {
       global.emitter.SendNotification(label);
     }
 
+    /// <summary>
+    /// Push a (Holojam) event to the Holojam network from Unity.
+    /// </summary>
+    /// <param name="label"></param>
+    /// <param name="flake"></param>
+    internal static void PushEvent(string label, Flake flake) {
+      global.emitter.SendEvent(label, flake);
+    }
+
     void Awake() {
-      staged = new List<View>();
-      untracked = new List<View>();
+      staged = new List<Controller>();
+      untracked = new List<Controller>();
 
       emitter = new Emitter(serverAddress, upstreamPort);
       sink = new Sink(multicastAddress, downstreamPort);
@@ -73,23 +74,20 @@ namespace Holojam.Network {
 
     /// <summary>
     /// Core update loop (update rate = Time.fixedDeltaTime).
-    /// Stages views for sending/receiving, updates the emitter and sink.
+    /// Stages Controllers for sending/receiving, updates the emitter and sink.
     /// </summary>
     void FixedUpdate() {
       staged.Clear(); untracked.Clear();
 
-      // Stage views
-      foreach (View view in View.All) { // Grab all views in the scene
-        if (string.IsNullOrEmpty(view.label)) {
-          Debug.LogWarning("Holojam.Network.Client: Invalid view label", view);
+      // Stage Controllers
+      foreach (Controller controller in Controller.instances) { // Grab all Controllers in the scene
+        if (string.IsNullOrEmpty(controller.Label)) {
+          Debug.LogWarning("Holojam.Network.Client: Invalid Controller label", controller);
           continue;
-        } else if (view.deaf)
-          continue;
-        else if (view.sending)
-          staged.Add(view);
-        else {
-          //view.tracked = false;
-          untracked.Add(view);
+        } else if (controller.Sending) {
+          staged.Add(controller);
+        } else {
+          untracked.Add(controller);
         }
       }
 
@@ -190,27 +188,28 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// Asynchronously pack and send a Holojam update given a list of Views.
+    /// Asynchronously pack and send a Holojam update given a list of Controllers.
     /// </summary>
-    /// <param name="views"></param>
-    public void SendUpdate(List<View> views) {
-      if (views.Count == 0) return;
-      buffer = Translator.BuildUpdate(Client.SEND_SCOPE, views);
+    /// <param name="controllers"></param>
+    public void SendUpdate(List<Controller> controllers) {
+      if (controllers.Count == 0) return;
+      buffer = Translator.BuildUpdate(controllers);
       Send();
 
       #if UNITY_EDITOR
       debugData = "(" + Canon.Origin() + ")";
-      foreach (View view in views)
-        debugData += "\n   " + view.label;
+      foreach (Controller controller in controllers)
+        debugData += "\n   " + controller.Label;
       #endif
     }
 
     /// <summary>
-    /// Asynchronously send a Holojam event given a single View.
+    /// Asynchronously send a Holojam event given a single Flake.
     /// </summary>
-    /// <param name="view"></param>
-    public void SendEvent(View view) {
-      buffer = Translator.BuildEvent(Client.SEND_SCOPE, view);
+    /// <param name="label"></param>
+    /// <param name="flake"></param>
+    public void SendEvent(string label, Flake flake) {
+      buffer = Translator.BuildEvent(label, flake);
       Send();
     }
 
@@ -219,7 +218,7 @@ namespace Holojam.Network {
     /// </summary>
     /// <param name="label"></param>
     public void SendNotification(string label) {
-      buffer = Translator.BuildNotification(Client.SEND_SCOPE, label);
+      buffer = Translator.BuildNotification(label);
       Send();
     }
 
@@ -279,11 +278,11 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// Given a persistent list of untracked views, pop updates off the stack
-    /// (processing them chronologically). Update the untracked view collection.
+    /// Given a persistent list of untracked Controllers, pop updates off the stack
+    /// (processing them chronologically). Update the untracked Controller collection.
     /// </summary>
     /// <param name="untracked"></param>
-    public void Update(List<View> untracked) {
+    public void Update(List<Controller> untracked) {
       lock (lockObject) {
         bool updated = updates.Count > 0; // Was there an update this tick?
         while (updates.Count > 0) {
@@ -298,10 +297,10 @@ namespace Holojam.Network {
             if (update.Load(untracked[i]))
               untracked.RemoveAt(i--);
         }
-        // Set untracked if the update timed out or if the view was not found this update
+        // Set untracked if the update timed out or if the Controller was not found this update
         if (updated || Time.time - lastUpdate > UPDATE_TIMEOUT) {
-          foreach (View view in untracked)
-            view.Tracked = false;
+          foreach (Controller controller in untracked)
+            controller.Tracked = false;
           lastUpdate = Time.time;
         }
       }

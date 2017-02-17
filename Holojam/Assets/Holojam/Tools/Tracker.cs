@@ -9,7 +9,7 @@ namespace Holojam.Tools{
   /// Unity representation of a tracking camera, used for placing a Martian Actor in the space.
   /// Receives (extra) data from Holoscope.
   /// </summary>
-  public sealed class Tracker : Controller{
+  public sealed class Tracker : Network.Controller {
 
     /// <summary>
     /// Position of the camera in the scene.
@@ -31,31 +31,29 @@ namespace Holojam.Tools{
     /// <summary>
     /// Proxy for the first float (Martian stem).
     /// </summary>
-    public float Stem { get { return GetFloat(0); } }
+    public float Stem { get { return data.floats[0]; } }
 
     public override string Label {get { return "ExtraData"; } }
     public override string Scope { get { return "Holoscope"; } }
     public override bool Sending { get { return false; } }
 
-    public override int FloatCount { get { return 1; } }
-
     void UpdateFrustum() {
-        transform.position = new Vector3(origin.x, height, origin.y);
-        transform.rotation = Quaternion.AngleAxis(-angle, Vector3.right);
+      transform.position = new Vector3(origin.x, height, origin.y);
+      transform.rotation = Quaternion.AngleAxis(-angle, Vector3.right);
     }
 
     /// <summary>
     /// Localize an input position within this reference frame.
     /// </summary>
     public Vector3 Localize(Vector3 position) {
-        return transform.TransformPoint(position);
+      return transform.TransformPoint(position);
     }
 
     /// <summary>
     /// Localize an input rotation within this reference frame.
     /// </summary>
     public Quaternion Localize(Quaternion rotation) {
-        return Quaternion.Inverse(transform.rotation) * rotation;
+      return Quaternion.Inverse(transform.rotation) * rotation;
     }
   }
 }

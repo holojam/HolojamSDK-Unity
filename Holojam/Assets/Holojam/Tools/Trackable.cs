@@ -8,7 +8,7 @@ namespace Holojam.Tools {
   /// <summary>
   /// Base class for trackable (read-only position and rotation) entities.
   /// </summary>
-  public abstract class Trackable : Controller {
+  public abstract class Trackable : Network.Controller {
 
     /// <summary>
     /// Determines whether this object is affected by hierarchy.
@@ -16,23 +16,20 @@ namespace Holojam.Tools {
     /// </summary>
     public bool localSpace = false;
 
-    public override int TripleCount { get { return 1; } }
-    public override int QuadCount { get { return 1; } }
-
     /// <summary>
     /// Proxy for the first triple (raw position).
     /// </summary>
     public Vector3 RawPosition {
-      get { return GetTriple(0); }
-      protected set { SetTriple(0, value); }
+      get { return data.triples[0]; }
+      protected set { data.triples[0] = value; }
     }
 
     /// <summary>
     /// Proxy for the first quad (raw rotation).
     /// </summary>
     public Quaternion RawRotation {
-      get { return GetQuad(0); }
-      protected set { SetQuad(0, value); }
+      get { return data.quads[0]; }
+      protected set { data.quads[0] = value; }
     }
 
     //Accessors in case modification needs to be made to the raw data (like smoothing)
@@ -64,6 +61,10 @@ namespace Holojam.Tools {
     /// Trackables are read-only.
     /// </summary>
     public override bool Sending { get { return false; } }
+
+    public override void ResetData() {
+      data = new Network.Flake(1, 1);
+    }
 
     /// <summary>
     /// Override for more complex behavior.

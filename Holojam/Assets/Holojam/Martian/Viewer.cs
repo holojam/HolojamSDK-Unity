@@ -2,8 +2,9 @@
 // Created by Holojam Inc. on 07.07.16
 
 using UnityEngine;
+using Holojam.Tools;
 
-namespace Holojam.Tools {
+namespace Holojam.Martian {
 
   /// <summary>
   /// Core class for properly orienting the render camera to the build user.
@@ -17,29 +18,22 @@ namespace Holojam.Tools {
 
     /// <summary>
     /// The DIRECT tracking type sources data directly from Converter.
-    /// The ACTOR tracking type sources data from the associated generic Actor.
+    /// The ACTOR tracking type sources data from the associated generic Actor, and
+    /// therefore requires an extra loop through the network.
     /// </summary>
     public TrackingType trackingType = TrackingType.DIRECT;
 
     public Converter converter;
 
-    // Get tracking data from actor (recommended coupling), or from the View?
     /// <summary>
     /// Target Actor for tracking data.
     /// </summary>
-    public Actor actor = null;
-
-    [HideInInspector] public Network.View view = null;
-
-    /// <summary>
-    /// Target build index if target Actor is null.
-    /// </summary>
-    public int index = 1;
-
-    public bool localSpace = false;
+    [HideInInspector] public Actor actor = null;
 
     // Update late to catch local space updates
     void LateUpdate() {
+      actor = BuildManager.BUILD_ACTOR;
+
       if (converter == null) {
         Debug.LogWarning("Viewer: Converter is null!");
         return;
@@ -48,24 +42,6 @@ namespace Holojam.Tools {
       if (BuildManager.DEVICE == BuildManager.Device.VIVE)
         return;
 
-      // Flush extra components if necessary
-      Network.View[] views = GetComponents<Network.View>();
-      if ((view == null && views.Length > 0) || (view != null && (views.Length > 1 || views.Length == 0))) {
-        foreach (Network.View v in views) DestroyImmediate(v);
-        view = null; // In case the View has been set to a prefab value
-      }
-
-      // Automatically add a View component if not using a reference actor
-      if (actor == view) {
-        view = gameObject.AddComponent<Network.View>() as Network.View;
-        view.triples = new Vector3[1];
-        view.quads = new Quaternion[1];
-      } else if (actor != null && view != null) DestroyImmediate(view);
-
-      if (view != null) {
-        view.label = Network.Canon.IndexToLabel(index);
-        view.scope = Network.Client.SEND_SCOPE;
-      }
       if (!Application.isPlaying) return;
 
       Vector3 sourcePosition = GetPosition();
@@ -104,8 +80,6 @@ namespace Holojam.Tools {
       // Apply local rotation if necessary
       if (actor != null && actor.localSpace && actor.transform.parent != null)
         transform.rotation = actor.transform.parent.rotation * transform.rotation;
-      else if (actor == null && localSpace && transform.parent != null)
-        transform.rotation = transform.parent.rotation * transform.rotation;
     }
 
     // Is it possible to get data directly from the Converter?
@@ -120,23 +94,20 @@ namespace Holojam.Tools {
     Vector3 GetPosition() {
       if (CanGetDirect)
         return converter.OutputPosition;
-      else {
-        return actor != null ? actor.Center :
-        localSpace && transform.parent != null ?
-           transform.parent.TransformPoint(view.triples[0]) : view.triples[0];
-      }
+      else
+        return actor != null ? actor.Center : Vector3.zero;
     }
 
     Quaternion GetRotation() {
       if (CanGetDirect)
         return converter.OutputRotation;
-      else return actor != null ? actor.RawOrientation : view.quads[0];
+      else return actor != null ? actor.RawOrientation : Quaternion.identity;
     }
 
     bool GetTracked() {
       if (CanGetDirect)
         return converter.HasInput;
-      else return actor != null ? actor.Tracked : view.Tracked;
+      else return actor != null ? actor.Tracked : false;
     }
   }
 }

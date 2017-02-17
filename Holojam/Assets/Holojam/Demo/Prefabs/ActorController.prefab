@@ -89,7 +89,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 462518}
-  - 114: {fileID: 11412328}
   - 114: {fileID: 11412888}
   m_Layer: 0
   m_Name: ActorController
@@ -290,30 +289,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 131024}
   m_Mesh: {fileID: 4300002, guid: 14ec31b65366e4f5f8b9f8242f66b5ae, type: 3}
---- !u!114 &11412328
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 186756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb380fb2ff0754e459bf9c7822a6b2bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scope: 
-  source: 
-  sending: 0
-  ignoreTracking: 0
-  label: M1
-  triples:
-  - {x: 0, y: 0, z: 0}
-  quads:
-  - {x: 0, y: 0, z: 0, w: 0}
-  floats: []
-  ints: 
-  chars: 
-  text: 
 --- !u!114 &11412888
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -322,19 +297,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 186756}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8c2c2d21c7614b688aced0e3482aed0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d710e024fb284015a76b96f2139ab53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  label: Label
-  scope: 
   localSpace: 0
   index: 1
+  scope: 
   debugColor: {r: 0.26, g: 0.86, b: 0.6, a: 1}
   head: {fileID: 442768}
   mask: {fileID: 185116}
   motif: {r: 0.26, g: 0.86, b: 0.6, a: 1}
   animatedEyes: {fileID: 476410}
-  skinMaterial: {fileID: 2100000, guid: fa9da0c938550447cac2c605f3b17d6b, type: 2}
+  skinMaterial: {fileID: 2100000, guid: 1a2223d6c2ec2416e93d2d473a91d084, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -7,8 +7,9 @@ namespace Holojam.Tools {
 
   /// <summary>
   /// Base class for synchronizing network data between multiple clients.
+  /// When extending this class, don't forget to override ResetData()!
   /// </summary>
-  public abstract class Synchronizable : Controller {
+  public abstract class Synchronizable : Network.Controller {
 
     [SerializeField] private bool sending = true;
 

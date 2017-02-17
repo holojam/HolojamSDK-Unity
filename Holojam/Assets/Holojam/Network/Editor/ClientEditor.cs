@@ -45,7 +45,7 @@ namespace Holojam.Network{
          EditorGUILayout.LabelField("Received",client.receivedPPS.ToString(),style);
 
          EditorGUILayout.Space();
-         EditorGUILayout.LabelField("Views",bold);
+         EditorGUILayout.LabelField("Flakes",bold);
          EditorStyles.label.wordWrap = true;
          foreach(string s in client.threadData)
             EditorGUILayout.LabelField(s);
@@ -54,13 +54,13 @@ namespace Holojam.Network{
 
          /*
          EditorGUILayout.Space();
-         EditorGUILayout.LabelField("Views",bold);
+         EditorGUILayout.LabelField("Controllers",bold);
          style = new GUIStyle();
-         foreach(HolojamView v in HolojamView.instances){
+         foreach(Controller c in Controller.All){
             if(Application.isPlaying)
-               style.normal.textColor = v.IsTracked?
+               style.normal.textColor = c.Tracked?
                   new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
-            EditorGUILayout.LabelField("  "+v.Label+(v.IsMine?" (S)":""),style);
+            EditorGUILayout.LabelField("  "+c.Label+(c.Sending?" (S)":""),style);
          }
          */
 
