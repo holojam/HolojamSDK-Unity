@@ -3,7 +3,7 @@
 
 using UnityEngine;
 
-namespace Holojam.Tools{
+namespace Holojam.Martian {
 
   /// <summary>
   /// Unity representation of a tracking camera, used for placing a Martian Actor in the space.
