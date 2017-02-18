@@ -32,7 +32,7 @@ namespace Holojam.Tools {
     /// </summary>
     public Vector3 Position {
       get { return data.vector3s[0]; }
-      protected set { data.vector3s[0] = value; }
+      set { data.vector3s[0] = value; }
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ namespace Holojam.Tools {
     /// </summary>
     public Quaternion Rotation {
       get { return data.vector4s[0]; }
-      protected set { data.vector4s[0] = value; }
+      set { data.vector4s[0] = value; }
     }
 
     protected override ProcessDelegate Process { get { return Load; } }
