@@ -72,7 +72,7 @@ namespace Holojam.Network {
     /// <summary>
     /// Override this to control the data scope (string namespace).
     /// When receiving, this string is used as a filter for incoming data.
-    /// An empty scope is parsed as a "whitelist all".
+    /// Empty by default. An empty scope is parsed as a "whitelist all".
     /// </summary>
     public virtual string Scope { get { return ""; } }
 
@@ -88,20 +88,27 @@ namespace Holojam.Network {
     public abstract bool Sending { get; }
 
     /// <summary>
+    /// Override this to control whether or not this Controller will be updated
+    /// by incoming data. False by default. If this is true, no data will be routed
+    /// into this Controller.
+    /// </summary>
+    public virtual bool Deaf { get { return false; } }
+
+    /// <summary>
     /// A single string combining the scope and label.
     /// </summary>
     public string Brand {
       get { return (Sending ? Client.SEND_SCOPE : Scope) + "." + Label; }
     }
 
-    /// <summary>
     // Custom update function delegate.
     protected delegate void ProcessDelegate();
 
     /// <summary>
-    /// Override this delegate--will be called on Update().
+    /// Override this delegate to specify a custom update method--will be called on Update().
+    /// Does nothing by default.
     /// </summary>
-    protected abstract ProcessDelegate Process { get; }
+    protected virtual ProcessDelegate Process { get { return () => {}; } }
 
     /// <summary>
     /// Update() is overriden. Instead of overriding this function, use the ProcessDelegate.

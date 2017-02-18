@@ -17,7 +17,10 @@ namespace Holojam.Martian {
 
     protected override ProcessDelegate Process { get { return UpdateRemote; } }
 
+    /// <summary>"Holoscope"</summary>
     public override string Scope { get { return "Holoscope"; } }
+
+    /// <summary>"Remote"</summary>
     public override string Label { get { return "Remote"; } }
 
     /// <summary>
@@ -25,18 +28,23 @@ namespace Holojam.Martian {
     /// </summary>
     public override bool Sending { get { return Tools.BuildManager.IsStandalone(); } }
 
-    // Proxy
+    /// <summary>
+    /// The phone's IMU, as a Quaternion.
+    /// </summary>
     public Quaternion Imu {
       get { return data.vector4s[0]; }
-      set { data.vector4s[0] = value; }
+      private set { data.vector4s[0] = value; }
     }
 
+    /// <summary>
+    /// Data descriptor is initialized with one Quaternion.
+    /// </summary>
     public override void ResetData() {
       data = new Network.Flake(0, 1);
     }
 
     /// <summary>
-    /// If sending, send IMU data.
+    /// If sending, broadcast IMU data.
     /// </summary>
     void UpdateRemote() {
         if (!Sending) return;

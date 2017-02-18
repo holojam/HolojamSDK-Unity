@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FlatBuffers;
 
-namespace Holojam.Network {
+namespace Holojam.Network.Translation {
 
   /// <summary>
   /// Wrapper around a Holojam nugget struct in order to prevent unwanted copying--provides
@@ -25,11 +25,10 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// Copy a raw flake from this wrapper's nugget to a specified target Controller,
-    /// given an index.
+    /// Copy a raw flake from this wrapper's nugget to a specified target Controller.
     /// </summary>
-    /// <param name="i"></param>
-    /// <param name="controller"></param>
+    /// <param name="i">Index of the Protocol.Flake in this nugget to copy.</param>
+    /// <param name="controller">Target Controller.</param>
     public void CopyToController(int i, Controller controller) {
       controller.Source = data.Origin;
       CopyToFlake(i, controller.data);

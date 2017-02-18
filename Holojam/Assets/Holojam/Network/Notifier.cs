@@ -71,7 +71,7 @@ namespace Holojam.Network {
     /// Does nothing if no subscribers care about the specified event.
     /// </summary>
     /// <param name="e"></param>
-    static internal void Publish(Event e) {
+    static internal void Publish(Translation.Event e) {
       string brand = e.scope + "." + e.label;
       string unscoped = "." + e.label; // Also call any subscribers to this label without scope
 

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Holojam.Tools {
 
   /// <summary>
-  /// Indexes actors in the scene, updates the Viewer, and manages the build target.
+  /// Indexes actors in the scene and manages the build target.
   /// </summary>
   [ExecuteInEditMode]
   public class BuildManager : Utility.Global<BuildManager> {
@@ -17,7 +17,7 @@ namespace Holojam.Tools {
     };
 
     /// <summary>
-    /// Default build device in editor.
+    /// Default build device in the editor.
     /// </summary>
     public const Device DEVICE_DEFAULT = Device.DAYDREAM;
 
@@ -81,7 +81,7 @@ namespace Holojam.Tools {
     }
 
     /// <summary>
-    /// Is this a standalone build or editor?
+    /// Is this an editor/standalone build?
     /// </summary>
     /// <returns>True if the machine is running on a desktop environment.</returns>
     public static bool IsStandalone() {
@@ -103,7 +103,7 @@ namespace Holojam.Tools {
     /// <summary>
     /// Determine the build Actor, re-indexing if necessary.
     /// </summary>
-    internal Actor BuildActor {
+    Actor BuildActor {
       get {
         if (BUILD_INDEX == 0) { // Don't use IsMasterClient() here
           buildActor = null;

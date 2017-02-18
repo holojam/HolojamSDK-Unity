@@ -30,12 +30,13 @@ namespace Holojam.Utility {
     }
 
     /// <summary>
-    /// Smooth a Vector3.
+    /// Smooth a Vector3 given a reference to its last state. Generally this is called
+    /// within an update function.
     /// </summary>
-    /// <returns>A smoothed vector.</returns>
     /// <param name="target"></param>
     /// <param name="last"></param>
     /// <param name="smoothing"></param>
+    /// <returns>A smoothed version of the input.</returns>
     public static Vector3 Smooth(Vector3 target, ref Vector3 last, Smoothing smoothing) {
       target = Vector3.Lerp(last, target, Mathf.Pow(
         Mathf.Min(1, (last - target).magnitude / smoothing.cap), smoothing.pow
@@ -45,12 +46,13 @@ namespace Holojam.Utility {
     }
 
     /// <summary>
-    /// Smooth a Quaternion.
+    /// Smooth a Quaternion given a reference to its last state. Generally this is called
+    /// within an update function.
     /// </summary>
-    /// <returns>A smoothed Quaternion.</return>
     /// <param name="target"></param>
     /// <param name="last"></param>
     /// <param name="smoothing"></param>
+    /// <returns>A smoothed version of the input.</returns>
     public static Quaternion Smooth(Quaternion target, ref Quaternion last, Smoothing smoothing) {
       float difference = .5f * Quaternion.Dot(last, target) + .5f;
       target = Quaternion.Slerp(last, target, Mathf.Pow(

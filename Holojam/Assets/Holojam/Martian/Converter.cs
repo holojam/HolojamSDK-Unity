@@ -34,17 +34,23 @@ namespace Holojam.Martian {
     #endif
 
     /// <summary>
-    /// Input and output Controllers for conversion.
+    /// Input Controller (Martian) for conversion.
     /// </summary>
     Martian input;
+    /// <summary>
+    /// Output Controller (Relay) for conversion.
+    /// </summary>
     Relay output;
 
-    Transform imu;
+    /// <summary>
+    /// Remote Controller for testing with the Holojam Remote app.
+    /// </summary>
     Remote remote;
+
+    Transform imu;
     Quaternion raw, correction, correctionTarget = Quaternion.identity;
 
     public bool HasInput { get { return input.Tracked; } }
-
     public Vector3 OutputPosition { get { return output.Position; } }
     public Quaternion OutputRotation { get { return output.Rotation; } }
 

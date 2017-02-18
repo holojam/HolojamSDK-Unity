@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Holojam.Tools {
 
   /// <summary>
-  /// Read-only data dump of a View for debugging.
+  /// Read-only data dump of a Controller for debugging.
   /// </summary>
   public sealed class FlakeDebugger : Network.Controller {
 

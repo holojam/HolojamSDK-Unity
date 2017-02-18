@@ -29,14 +29,23 @@ namespace Holojam.Tools{
     protected override ProcessDelegate Process { get { return UpdateFrustum; } }
 
     /// <summary>
-    /// Proxy for the first float (Martian stem).
+    /// Holoscope raw input float.
     /// </summary>
     public float Stem { get { return data.floats[0]; } }
 
+    /// <summary>"ExtraData"</summary>
     public override string Label {get { return "ExtraData"; } }
+    /// <summary>"Holoscope"</summary>
     public override string Scope { get { return "Holoscope"; } }
+
+    /// <summary>
+    /// Input-only.
+    /// </summary>
     public override bool Sending { get { return false; } }
 
+    /// <summary>
+    /// Updates position and rotation in scene.
+    /// </summary>
     void UpdateFrustum() {
       transform.position = new Vector3(origin.x, height, origin.y);
       transform.rotation = Quaternion.AngleAxis(-angle, Vector3.right);

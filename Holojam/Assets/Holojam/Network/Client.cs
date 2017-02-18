@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
+using Holojam.Network.Translation;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -87,6 +88,8 @@ namespace Holojam.Network {
       foreach (Controller controller in Controller.instances) { // Grab all Controllers in the scene
         if (string.IsNullOrEmpty(controller.Label)) {
           Debug.LogWarning("Holojam.Network.Client: Invalid Controller label", controller);
+          continue;
+        } else if (controller.Deaf) { // Ignore deaf controllers
           continue;
         } else if (controller.Sending) {
           staged.Add(controller);
@@ -267,8 +270,8 @@ namespace Holojam.Network {
 
     Thread thread;
     UnityEngine.Object lockObject;
-    Stack<Update> updates;
-    Stack<Event> events;
+    Stack<Translation.Update> updates;
+    Stack<Translation.Event> events;
     float lastUpdate;
 
     /// <summary>
@@ -280,13 +283,13 @@ namespace Holojam.Network {
       running = false;
       thread = new Thread(listener);
       lockObject = new UnityEngine.Object();
-      updates = new Stack<Update>();
-      events = new Stack<Event>();
+      updates = new Stack<Translation.Update>();
+      events = new Stack<Translation.Event>();
       lastUpdate = 0;
     }
 
     /// <summary>
-    /// Given a persistent list of untracked Controllers, pop updates off the stack
+    /// Given a list of untracked Controllers, pop updates off the stack
     /// (processing them chronologically). Update the untracked Controller collection.
     /// </summary>
     /// <param name="untracked"></param>
@@ -358,9 +361,9 @@ namespace Holojam.Network {
 
             // Push to stack(s)
             if (nugget is Update)
-              lock (lockObject) { updates.Push(nugget as Update); }
+              lock (lockObject) { updates.Push(nugget as Translation.Update); }
             else
-              lock (lockObject) { events.Push(nugget as Event); }
+              lock (lockObject) { events.Push(nugget as Translation.Event); }
 
             #if UNITY_EDITOR
             packetCount++;

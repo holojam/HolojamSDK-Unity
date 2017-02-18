@@ -11,6 +11,9 @@ namespace Holojam.Vive {
   /// </summary>
   public sealed class ViveRelay : Tools.Relay {
 
+    /// <summary>
+    /// The ViveRelay doesn't send on master clients.
+    /// </summary>
     public override bool Sending { get { return !Holojam.Tools.BuildManager.IsMasterClient(); } }
 
     /// <summary>
