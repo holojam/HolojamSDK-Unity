@@ -25,7 +25,7 @@ namespace Holojam.Tools {
     [SerializeField] bool smooth = false;
 
     /// <summary>
-    /// Proxy for the first Vector3 (raw position).
+    /// The raw position data (from the network), before localization/smoothing.
     /// </summary>
     public Vector3 RawPosition {
       get { return data.vector3s[0]; }
@@ -33,7 +33,7 @@ namespace Holojam.Tools {
     }
 
     /// <summary>
-    /// Proxy for the first Vector4 (raw rotation).
+    /// The raw rotation data (from the network), before localization/smoothing.
     /// </summary>
     public Quaternion RawRotation {
       get { return data.vector4s[0]; }
@@ -79,6 +79,9 @@ namespace Holojam.Tools {
     /// </summary>
     public override bool Sending { get { return false; } }
 
+    /// <summary>
+    /// Data descriptor is initialized with one Vector3 and one Quaternion.
+    /// </summary>
     public override void ResetData() {
       data = new Network.Flake(1, 1);
     }

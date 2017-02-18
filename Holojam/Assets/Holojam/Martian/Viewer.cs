@@ -9,7 +9,7 @@ namespace Holojam.Martian {
   /// <summary>
   /// Core class for properly orienting the render camera to the build user.
   /// Operates behind the scenes for the most part, making sure there are no
-  /// conflicts between the tracking system and the phone.
+  /// conflicts between the tracking system (position, rotation) and the phone.
   /// </summary>
   [ExecuteInEditMode]
   public class Viewer : MonoBehaviour {
@@ -74,7 +74,7 @@ namespace Holojam.Martian {
           sourceRotation *= Quaternion.Inverse(raw);
           transform.rotation = sourceRotation;
         }
-      } else if (BuildManager.IsMasterClient()) //Fall back to IMU
+      } else if (BuildManager.IsMasterClient()) // Fall back to IMU
         transform.rotation = sourceRotation;
 
       // Apply local rotation if necessary
@@ -91,6 +91,7 @@ namespace Holojam.Martian {
     }
 
     // Get tracking data from desired source
+
     Vector3 GetPosition() {
       if (CanGetDirect)
         return converter.OutputPosition;
