@@ -89,10 +89,10 @@ namespace Holojam.Network {
         if (string.IsNullOrEmpty(controller.Label)) {
           Debug.LogWarning("Holojam.Network.Client: Invalid Controller label", controller);
           continue;
-        } else if (controller.Deaf) { // Ignore deaf controllers
-          continue;
         } else if (controller.Sending) {
           staged.Add(controller);
+        } else if (controller.Deaf) { // Ignore deaf Controllers
+          continue;
         } else {
           untracked.Add(controller);
         }
