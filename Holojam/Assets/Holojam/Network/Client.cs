@@ -130,6 +130,11 @@ namespace Holojam.Network {
     void OnDestroy() {
       sink.Stop();
     }
+
+    // Editor
+    void OnDrawGizmos() {
+      Gizmos.DrawIcon(transform.position, "holojam.png", true);
+    }
   }
 
   /// <summary>
