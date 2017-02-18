@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 422736}
-  - 114: {fileID: 114000013533107446}
+  - 114: {fileID: 114000013692782970}
   m_Layer: 0
   m_Name: Tracker
   m_TagString: Untagged
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec85a68e79c0d4871a4e90b227595b09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  extraData: {fileID: 114000013533107446}
+  extraData: {fileID: 114000013692782970}
   viewer: {fileID: 11419408}
   debugMode: 0
 --- !u!1001 &100100000
@@ -358,7 +358,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0834cb16856c94bcd82d142ac9a69827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114000013533107446
+  eventData: []
+--- !u!114 &114000013692782970
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -366,7 +367,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 131634}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b10446ac51204ef8b1082fe4ea13314, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a404911eb07c41079a4815432461dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   origin: {x: 0, y: 0}
