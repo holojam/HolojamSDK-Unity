@@ -3,10 +3,10 @@
 namespace Holojam.Protocol
 {
 
-public enum PacketType : sbyte
+public enum NuggetType : sbyte
 {
- Update = 0,
- Event = 1,
+ UPDATE = 0,
+ EVENT = 1,
 };
 
 

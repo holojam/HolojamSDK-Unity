@@ -13,12 +13,12 @@ namespace Holojam.Network {
     /// <summary>
     /// An optional array of Vector3s for storing/staging data.
     /// </summary>
-    public Vector3[] triples;
+    public Vector3[] vector3s;
 
     /// <summary>
     /// An optional array of Quaternions for storing/staging data.
     /// </summary>
-    public Quaternion[] quads;
+    public Quaternion[] vector4s;
 
     /// <summary>
     /// An optional array of floats for storing/staging data.
@@ -33,7 +33,7 @@ namespace Holojam.Network {
     /// <summary>
     /// An optional array of bytes for storing/staging data.
     /// </summary>
-    public byte[] chars;
+    public byte[] bytes;
 
     /// <summary>
     /// An optional string for storing/staging data.
@@ -46,23 +46,23 @@ namespace Holojam.Network {
     /// specific size. This is for convenience--tampering with the members
     /// outside of the constructor is allowed.
     /// </summary>
-    /// <param name="tripleCount"></param>
-    /// <param name="quadCount"></param>
+    /// <param name="vector3Count"></param>
+    /// <param name="vector4Count"></param>
     /// <param name="floatCount"></param>
     /// <param name="intCount"></param>
-    /// <param name="charCount"></param>
+    /// <param name="byteCount"></param>
     /// <param name="hasText"></param>
     public Flake(
-      int tripleCount = 0, int quadCount = 0,
-      int floatCount = 0, int intCount = 0, int charCount = 0,
+      int vector3Count = 0, int vector4Count = 0,
+      int floatCount = 0, int intCount = 0, int byteCount = 0,
       bool hasText = false
     ) {
       // Allocate
-      triples = tripleCount > 0 ? new Vector3[tripleCount] : null;
-      quads = quadCount > 0 ? new Quaternion[quadCount] : null;
+      vector3s = vector3Count > 0 ? new Vector3[vector3Count] : null;
+      vector4s = vector4Count > 0 ? new Quaternion[vector4Count] : null;
       floats = floatCount > 0 ? new float[floatCount] : null;
       ints = intCount > 0 ? new int[intCount] : null;
-      chars = charCount > 0 ? new byte[charCount] : null;
+      bytes = byteCount > 0 ? new byte[byteCount] : null;
       text = hasText ? "" : null;
     }
   }

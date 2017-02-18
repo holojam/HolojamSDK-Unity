@@ -16,11 +16,11 @@ namespace Holojam.Tools {
     public string origin;
     public bool isTracked;
 
-    public Vector3[] triples;
-    public Quaternion[] quads;
+    public Vector3[] vector3s;
+    public Quaternion[] vector4s;
     public float[] floats;
     public int[] ints;
-    public byte[] chars;
+    public byte[] bytes;
     public string text;
 
     public override string Scope { get { return scope; } }
@@ -33,11 +33,11 @@ namespace Holojam.Tools {
       origin = Source;
       isTracked = Tracked;
 
-      triples = data.triples;
-      quads = data.quads;
+      vector3s = data.vector3s;
+      vector4s = data.vector4s;
       floats = data.floats;
       ints = data.ints;
-      chars = data.chars;
+      bytes = data.bytes;
       text = data.text;
     }
   }

@@ -14,16 +14,16 @@ public class SynchronizedTransform : Holojam.Tools.Synchronizable {
 
   // Proxies
   public Vector3 Position {
-    get { return data.triples[0]; }
-    set { data.triples[0] = value; }
+    get { return data.vector3s[0]; }
+    set { data.vector3s[0] = value; }
   }
   public Quaternion Rotation {
-    get { return data.quads[0]; }
-    set { data.quads[0] = value; }
+    get { return data.vector4s[0]; }
+    set { data.vector4s[0] = value; }
   }
   public Vector3 Scale{
-    get { return data.triples[1]; }
-    set { data.triples[1] = value; }
+    get { return data.vector3s[1]; }
+    set { data.vector3s[1] = value; }
   }
 
   public override void ResetData() {

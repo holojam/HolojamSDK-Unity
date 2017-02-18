@@ -6,49 +6,49 @@ namespace Holojam.Protocol
 using System;
 using FlatBuffers;
 
-public struct Packet : IFlatbufferObject
+public struct Nugget : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static Packet GetRootAsPacket(ByteBuffer _bb) { return GetRootAsPacket(_bb, new Packet()); }
-  public static Packet GetRootAsPacket(ByteBuffer _bb, Packet obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static Nugget GetRootAsNugget(ByteBuffer _bb) { return GetRootAsNugget(_bb, new Nugget()); }
+  public static Nugget GetRootAsNugget(ByteBuffer _bb, Nugget obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-  public Packet __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public Nugget __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string Scope { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
   public ArraySegment<byte>? GetScopeBytes() { return __p.__vector_as_arraysegment(4); }
   public string Origin { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
   public ArraySegment<byte>? GetOriginBytes() { return __p.__vector_as_arraysegment(6); }
-  public PacketType Type { get { int o = __p.__offset(8); return o != 0 ? (PacketType)__p.bb.GetSbyte(o + __p.bb_pos) : PacketType.Update; } }
+  public NuggetType Type { get { int o = __p.__offset(8); return o != 0 ? (NuggetType)__p.bb.GetSbyte(o + __p.bb_pos) : NuggetType.UPDATE; } }
   public Flake? Flakes(int j) { int o = __p.__offset(10); return o != 0 ? (Flake?)(new Flake()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int FlakesLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
 
-  public static Offset<Packet> CreatePacket(FlatBufferBuilder builder,
+  public static Offset<Nugget> CreateNugget(FlatBufferBuilder builder,
       StringOffset scopeOffset = default(StringOffset),
       StringOffset originOffset = default(StringOffset),
-      PacketType type = PacketType.Update,
+      NuggetType type = NuggetType.UPDATE,
       VectorOffset flakesOffset = default(VectorOffset)) {
     builder.StartObject(4);
-    Packet.AddFlakes(builder, flakesOffset);
-    Packet.AddOrigin(builder, originOffset);
-    Packet.AddScope(builder, scopeOffset);
-    Packet.AddType(builder, type);
-    return Packet.EndPacket(builder);
+    Nugget.AddFlakes(builder, flakesOffset);
+    Nugget.AddOrigin(builder, originOffset);
+    Nugget.AddScope(builder, scopeOffset);
+    Nugget.AddType(builder, type);
+    return Nugget.EndNugget(builder);
   }
 
-  public static void StartPacket(FlatBufferBuilder builder) { builder.StartObject(4); }
+  public static void StartNugget(FlatBufferBuilder builder) { builder.StartObject(4); }
   public static void AddScope(FlatBufferBuilder builder, StringOffset scopeOffset) { builder.AddOffset(0, scopeOffset.Value, 0); }
   public static void AddOrigin(FlatBufferBuilder builder, StringOffset originOffset) { builder.AddOffset(1, originOffset.Value, 0); }
-  public static void AddType(FlatBufferBuilder builder, PacketType type) { builder.AddSbyte(2, (sbyte)type, 0); }
+  public static void AddType(FlatBufferBuilder builder, NuggetType type) { builder.AddSbyte(2, (sbyte)type, 0); }
   public static void AddFlakes(FlatBufferBuilder builder, VectorOffset flakesOffset) { builder.AddOffset(3, flakesOffset.Value, 0); }
   public static VectorOffset CreateFlakesVector(FlatBufferBuilder builder, Offset<Flake>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartFlakesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static Offset<Packet> EndPacket(FlatBufferBuilder builder) {
+  public static Offset<Nugget> EndNugget(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     builder.Required(o, 10);  // flakes
-    return new Offset<Packet>(o);
+    return new Offset<Nugget>(o);
   }
-  public static void FinishPacketBuffer(FlatBufferBuilder builder, Offset<Packet> offset) { builder.Finish(offset.Value); }
+  public static void FinishNuggetBuffer(FlatBufferBuilder builder, Offset<Nugget> offset) { builder.Finish(offset.Value); }
 };
 
 

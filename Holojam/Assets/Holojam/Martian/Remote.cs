@@ -27,8 +27,8 @@ namespace Holojam.Martian {
 
     // Proxy
     public Quaternion Imu {
-      get { return data.quads[0]; }
-      set { data.quads[0] = value; }
+      get { return data.vector4s[0]; }
+      set { data.vector4s[0] = value; }
     }
 
     public override void ResetData() {

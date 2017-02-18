@@ -25,19 +25,19 @@ namespace Holojam.Tools {
     [SerializeField] bool smooth = false;
 
     /// <summary>
-    /// Proxy for the first triple (raw position).
+    /// Proxy for the first Vector3 (raw position).
     /// </summary>
     public Vector3 RawPosition {
-      get { return data.triples[0]; }
-      protected set { data.triples[0] = value; }
+      get { return data.vector3s[0]; }
+      protected set { data.vector3s[0] = value; }
     }
 
     /// <summary>
-    /// Proxy for the first quad (raw rotation).
+    /// Proxy for the first Vector4 (raw rotation).
     /// </summary>
     public Quaternion RawRotation {
-      get { return data.quads[0]; }
-      protected set { data.quads[0] = value; }
+      get { return data.vector4s[0]; }
+      protected set { data.vector4s[0] = value; }
     }
 
     /// <summary>
