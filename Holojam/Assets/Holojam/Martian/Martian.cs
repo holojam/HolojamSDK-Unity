@@ -23,12 +23,12 @@ namespace Holojam.Martian {
     /// <summary>
     /// Holoscope raw input Vector3.
     /// </summary>
-    public Vector3 Left { get { return data.triples[0]; } }
+    public Vector3 Left { get { return data.vector3s[0]; } }
 
     /// <summary>
     /// Holoscope raw input Vector3.
     /// </summary>
-    public Vector3 Right { get { return data.triples[1]; } }
+    public Vector3 Right { get { return data.vector3s[1]; } }
 
     protected override ProcessDelegate Process {
       get { return () => { }; }

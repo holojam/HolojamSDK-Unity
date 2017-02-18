@@ -10,6 +10,9 @@ namespace Holojam.Tools {
   /// </summary>
   public abstract class Trackable : Network.Controller {
 
+    readonly Utility.Smoothing POS_SMOOTHING = new Utility.Smoothing(.1f,1.4f);
+    readonly Utility.Smoothing ROT_SMOOTHING = new Utility.Smoothing(1.6f,1.1f);
+
     /// <summary>
     /// Determines whether this object is affected by hierarchy.
     /// Beta field. Should not be public.
@@ -17,43 +20,57 @@ namespace Holojam.Tools {
     public bool localSpace = false;
 
     /// <summary>
-    /// Proxy for the first triple (raw position).
+    /// Apply a subtle smoothing function to level out any minor rough edges.
+    /// </summary>
+    [SerializeField] bool smooth = false;
+
+    /// <summary>
+    /// Proxy for the first Vector3 (raw position).
     /// </summary>
     public Vector3 RawPosition {
-      get { return data.triples[0]; }
-      protected set { data.triples[0] = value; }
+      get { return data.vector3s[0]; }
+      protected set { data.vector3s[0] = value; }
     }
 
     /// <summary>
-    /// Proxy for the first quad (raw rotation).
+    /// Proxy for the first Vector4 (raw rotation).
     /// </summary>
     public Quaternion RawRotation {
-      get { return data.quads[0]; }
-      protected set { data.quads[0] = value; }
+      get { return data.vector4s[0]; }
+      protected set { data.vector4s[0] = value; }
     }
 
-    //Accessors in case modification needs to be made to the raw data (like smoothing)
     /// <summary>
-    /// Second layer accessor in case modification needs to be made to the raw data
-    /// (e.g. smoothing). In general, use this property.
+    /// Second layer accessor in case modification needs to be made to the raw data.
+    /// Here, both smoothing and local space offset is being applied. In general, use
+    /// this property over RawPosition.
     /// </summary>
     public Vector3 TrackedPosition {
       get {
-        return localSpace && transform.parent != null ?
-           transform.parent.TransformPoint(RawPosition) : RawPosition;
+        Vector3 position = localSpace && transform.parent != null ?
+          transform.parent.TransformPoint(RawPosition) : RawPosition;
+        return smooth ?
+          Utility.Smoothing.Smooth(position, ref lastPosition, POS_SMOOTHING) :
+          position;
       }
     }
+    Vector3 lastPosition;
 
     /// <summary>
-    /// Second layer accessor in case modification needs to be made to the raw data
-    /// (e.g. smoothing). In general, use this property.
+    /// Second layer accessor in case modification needs to be made to the raw data.
+    /// Here, both smoothing and local space offset is being applied. In general, use
+    /// use this property over RawRotation.
     /// </summary>
     public Quaternion TrackedRotation {
       get {
-        return localSpace && transform.parent != null ?
+        Quaternion rotation = localSpace && transform.parent != null ?
            transform.parent.rotation * RawRotation : RawRotation;
+        return smooth ?
+          Utility.Smoothing.Smooth(rotation, ref lastRotation, ROT_SMOOTHING) :
+          rotation;
       }
     }
+    Quaternion lastRotation;
 
     protected override ProcessDelegate Process { get { return UpdateTracking; } }
 

@@ -23,16 +23,16 @@ namespace Holojam.Tools {
     /// Position is sent over the first Vector3.
     /// </summary>
     public Vector3 Position {
-      get { return data.triples[0]; }
-      set { data.triples[0] = value; }
+      get { return data.vector3s[0]; }
+      set { data.vector3s[0] = value; }
     }
 
     /// <summary>
     /// Rotation is sent over the first Quaternion.
     /// </summary>
     public Quaternion Rotation {
-      get { return data.quads[0]; }
-      set { data.quads[0] = value; }
+      get { return data.vector4s[0]; }
+      set { data.vector4s[0] = value; }
     }
 
     protected override ProcessDelegate Process { get { return Load; } }

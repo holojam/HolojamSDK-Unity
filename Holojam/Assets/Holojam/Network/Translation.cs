@@ -10,22 +10,22 @@ using FlatBuffers;
 namespace Holojam.Network {
 
   /// <summary>
-  /// Wrapper around a Holojam packet struct in order to prevent unwanted copying--provides
+  /// Wrapper around a Holojam nugget struct in order to prevent unwanted copying--provides
   /// low-level functionality.
   /// </summary>
-  internal class PacketWrapper {
-    public readonly Protocol.Packet data;
+  internal class NuggetWrapper {
+    public readonly Protocol.Nugget data;
 
     /// <summary>
-    /// Generate a packet from a raw buffer.
+    /// Generate a nugget from a raw buffer.
     /// </summary>
     /// <param name="buffer"></param>
-    public PacketWrapper(ref byte[] buffer) {
-      data = Protocol.Packet.GetRootAsPacket(new ByteBuffer(buffer));
+    public NuggetWrapper(ref byte[] buffer) {
+      data = Protocol.Nugget.GetRootAsNugget(new ByteBuffer(buffer));
     }
 
     /// <summary>
-    /// Copy a raw flake from this wrapper's packet to a specified target Controller,
+    /// Copy a raw flake from this wrapper's nugget to a specified target Controller,
     /// given an index.
     /// </summary>
     /// <param name="i"></param>
@@ -36,25 +36,25 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// Copy a raw flake from this wrapper's packet to a specified Flake in Unity.
+    /// Copy a raw flake from this wrapper's nugget to a specified Flake in Unity.
     /// </summary>
-    /// <param name="i">Index of the Protocol.Flake in this packet to copy.</param>
+    /// <param name="i">Index of the Protocol.Flake in this nugget to copy.</param>
     /// <param name="flake">Target Flake.</param>
     public void CopyToFlake(int i, Flake flake) {
-      flake.triples = new Vector3[data.Flakes(i).Value.TriplesLength];
-      for (int j = 0; j < data.Flakes(i).Value.TriplesLength; ++j)
-        flake.triples[j] = new Vector3(
-           data.Flakes(i).Value.Triples(j).Value.X,
-           data.Flakes(i).Value.Triples(j).Value.Y,
-           data.Flakes(i).Value.Triples(j).Value.Z
+      flake.vector3s = new Vector3[data.Flakes(i).Value.Vector3sLength];
+      for (int j = 0; j < data.Flakes(i).Value.Vector3sLength; ++j)
+        flake.vector3s[j] = new Vector3(
+           data.Flakes(i).Value.Vector3s(j).Value.X,
+           data.Flakes(i).Value.Vector3s(j).Value.Y,
+           data.Flakes(i).Value.Vector3s(j).Value.Z
         );
-      flake.quads = new Quaternion[data.Flakes(i).Value.QuadsLength];
-      for (int j = 0; j < data.Flakes(i).Value.QuadsLength; ++j)
-        flake.quads[j] = new Quaternion(
-           data.Flakes(i).Value.Quads(j).Value.X,
-           data.Flakes(i).Value.Quads(j).Value.Y,
-           data.Flakes(i).Value.Quads(j).Value.Z,
-           data.Flakes(i).Value.Quads(j).Value.W
+      flake.vector4s = new Quaternion[data.Flakes(i).Value.Vector4sLength];
+      for (int j = 0; j < data.Flakes(i).Value.Vector4sLength; ++j)
+        flake.vector4s[j] = new Quaternion(
+           data.Flakes(i).Value.Vector4s(j).Value.X,
+           data.Flakes(i).Value.Vector4s(j).Value.Y,
+           data.Flakes(i).Value.Vector4s(j).Value.Z,
+           data.Flakes(i).Value.Vector4s(j).Value.W
         );
 
       flake.floats = new float[data.Flakes(i).Value.FloatsLength];
@@ -65,9 +65,9 @@ namespace Holojam.Network {
       for (int j = 0; j < data.Flakes(i).Value.IntsLength; ++j)
         flake.ints[j] = data.Flakes(i).Value.Ints(j);
 
-      flake.chars = new byte[data.Flakes(i).Value.CharsLength];
-      for (int j = 0; j < data.Flakes(i).Value.CharsLength; ++j)
-        flake.chars[j] = (byte)data.Flakes(i).Value.Chars(j); //TODO
+      flake.bytes = new byte[data.Flakes(i).Value.BytesLength];
+      for (int j = 0; j < data.Flakes(i).Value.BytesLength; ++j)
+        flake.bytes[j] = (byte)data.Flakes(i).Value.Bytes(j);
 
       flake.text = data.Flakes(i).Value.Text;
     }
@@ -75,17 +75,17 @@ namespace Holojam.Network {
 
   /// <summary>
   /// Abstract base class for translation functionality around Holojam updates and
-  /// events/notifications (incoming). Contains a PacketWrapper.
+  /// events/notifications (incoming). Contains a NuggetWrapper.
   /// </summary>
   abstract internal class Nugget {
-    protected PacketWrapper packet;
+    protected NuggetWrapper nugget;
 
     /// <summary>
     /// Protected constructor for factory method.
     /// </summary>
-    /// <param name="packet"></param>
-    protected Nugget(PacketWrapper packet) {
-      this.packet = packet;
+    /// <param name="nugget"></param>
+    protected Nugget(NuggetWrapper nugget) {
+      this.nugget = nugget;
     }
 
     /// <summary>
@@ -94,12 +94,12 @@ namespace Holojam.Network {
     /// <param name="buffer"></param>
     /// <returns>The derived Nugget.</returns>
     public static Nugget Create(ref byte[] buffer) {
-      PacketWrapper packet = new PacketWrapper(ref buffer);
-      switch (packet.data.Type) {
-        case Protocol.PacketType.Update:
-          return new Update(packet);
-        case Protocol.PacketType.Event:
-          return new Event(packet);
+      NuggetWrapper nugget = new NuggetWrapper(ref buffer);
+      switch (nugget.data.Type) {
+        case Protocol.NuggetType.UPDATE:
+          return new Update(nugget);
+        case Protocol.NuggetType.EVENT:
+          return new Event(nugget);
         default: return null;
       }
     }
@@ -110,10 +110,10 @@ namespace Holojam.Network {
     /// </summary>
     /// <param name="debugData"></param>
     public void UpdateDebug(Dictionary<string, string> debugData) {
-      string scope = packet.data.Scope;
-      for (int i = 0; i < packet.data.FlakesLength; ++i)
+      string scope = nugget.data.Scope;
+      for (int i = 0; i < nugget.data.FlakesLength; ++i)
         debugData[scope + "."
-           + packet.data.Flakes(i).Value.Label] = packet.data.Origin;
+           + nugget.data.Flakes(i).Value.Label] = nugget.data.Origin;
     }
     #endif
   }
@@ -127,12 +127,12 @@ namespace Holojam.Network {
     /// <summary>
     /// Update constructor: initializes and populates lookup table.
     /// </summary>
-    /// <param name="packet"></param>
-    internal Update(PacketWrapper packet) : base(packet) {
+    /// <param name="nugget"></param>
+    internal Update(NuggetWrapper nugget) : base(nugget) {
       // Initialize lookup table
       lookup = new Dictionary<string, int>();
-      for (int i = 0; i < packet.data.FlakesLength; ++i)
-        lookup[packet.data.Flakes(i).Value.Label] = i;
+      for (int i = 0; i < nugget.data.FlakesLength; ++i)
+        lookup[nugget.data.Flakes(i).Value.Label] = i;
     }
 
     /// <summary>
@@ -145,12 +145,12 @@ namespace Holojam.Network {
     /// </returns>
     public bool Load(Controller controller) {
       // An empty scope is parsed as a "whitelist all"
-      if (controller.Scope != packet.data.Scope && controller.Scope != ""
+      if (controller.Scope != nugget.data.Scope && controller.Scope != ""
         || controller.data == null)
         return false;
 
       if (lookup.ContainsKey(controller.Label)) {
-        packet.CopyToController(lookup[controller.Label], controller);
+        nugget.CopyToController(lookup[controller.Label], controller);
         controller.Tracked = true;
         return true;
       }
@@ -170,18 +170,18 @@ namespace Holojam.Network {
     /// Event constructor: assigns event label and determines whether or not
     /// this is a notification.
     /// </summary>
-    /// <param name="packet"></param>
-    internal Event(PacketWrapper packet) : base(packet) {
-      scope = packet.data.Scope;
-      label = packet.data.Flakes(0).Value.Label;
-      source = packet.data.Origin;
+    /// <param name="nugget"></param>
+    internal Event(NuggetWrapper nugget) : base(nugget) {
+      scope = nugget.data.Scope;
+      label = nugget.data.Flakes(0).Value.Label;
+      source = nugget.data.Origin;
 
-      notification = packet.data.Flakes(0).Value.TriplesLength == 0
-         && packet.data.Flakes(0).Value.QuadsLength == 0
-         && packet.data.Flakes(0).Value.FloatsLength == 0
-         && packet.data.Flakes(0).Value.IntsLength == 0
-         && packet.data.Flakes(0).Value.CharsLength == 0
-         && String.IsNullOrEmpty(packet.data.Flakes(0).Value.Text);
+      notification = nugget.data.Flakes(0).Value.Vector3sLength == 0
+         && nugget.data.Flakes(0).Value.Vector4sLength == 0
+         && nugget.data.Flakes(0).Value.FloatsLength == 0
+         && nugget.data.Flakes(0).Value.IntsLength == 0
+         && nugget.data.Flakes(0).Value.BytesLength == 0
+         && String.IsNullOrEmpty(nugget.data.Flakes(0).Value.Text);
     }
 
     /// <summary>
@@ -193,7 +193,7 @@ namespace Holojam.Network {
     /// </returns>
     public bool Load(Flake flake) {
       if (notification || flake == null) return false;
-      packet.CopyToFlake(0, flake);
+      nugget.CopyToFlake(0, flake);
       return true;
     }
   }
@@ -210,54 +210,54 @@ namespace Holojam.Network {
     /// <param name="flake"></param>
     /// <param name="builder"></param>
     /// <param name="offset"></param>
-    /// <param name="triples"></param>
-    /// <param name="quads"></param>
+    /// <param name="vector3s"></param>
+    /// <param name="vector4s"></param>
     /// <param name="floats"></param>
     /// <param name="ints"></param>
-    /// <param name="chars"></param>
+    /// <param name="bytes"></param>
     /// <param name="text"></param>
 
     static void BuildFlake(
       string label, Flake flake, ref FlatBufferBuilder builder, ref Offset<Protocol.Flake> offset,
-      ref VectorOffset triples, ref VectorOffset quads,
-      ref VectorOffset floats, ref VectorOffset ints, ref VectorOffset chars,
+      ref VectorOffset vector3s, ref VectorOffset vector4s,
+      ref VectorOffset floats, ref VectorOffset ints, ref VectorOffset bytes,
       ref StringOffset text
     ) {
       StringOffset labelOffset = builder.CreateString(label);
 
       // Create the vectors
-      if (flake.triples != null) {
-        Protocol.Flake.StartTriplesVector(builder, flake.triples.Length);
-        for (int j = flake.triples.Length - 1; j >= 0; --j) {
+      if (flake.vector3s != null) {
+        Protocol.Flake.StartVector3sVector(builder, flake.vector3s.Length);
+        for (int j = flake.vector3s.Length - 1; j >= 0; --j) {
           Protocol.Vector3.CreateVector3(builder,
-             flake.triples[j].x,
-             flake.triples[j].y,
-             flake.triples[j].z
+             flake.vector3s[j].x,
+             flake.vector3s[j].y,
+             flake.vector3s[j].z
           );
         }
-        triples = builder.EndVector();
+        vector3s = builder.EndVector();
       }
-      if (flake.quads != null) {
-        Protocol.Flake.StartQuadsVector(builder, flake.quads.Length);
-        for (int j = flake.quads.Length - 1; j >= 0; --j) {
+      if (flake.vector4s != null) {
+        Protocol.Flake.StartVector4sVector(builder, flake.vector4s.Length);
+        for (int j = flake.vector4s.Length - 1; j >= 0; --j) {
           Protocol.Vector4.CreateVector4(builder,
-             flake.quads[j].x,
-             flake.quads[j].y,
-             flake.quads[j].z,
-             flake.quads[j].w
+             flake.vector4s[j].x,
+             flake.vector4s[j].y,
+             flake.vector4s[j].z,
+             flake.vector4s[j].w
           );
         }
-        quads = builder.EndVector();
+        vector4s = builder.EndVector();
       }
       if (flake.floats != null)
         floats = Protocol.Flake.CreateFloatsVector(builder, flake.floats);
       if (flake.ints != null)
         ints = Protocol.Flake.CreateIntsVector(builder, flake.ints);
-      if (flake.chars != null) {
-        Protocol.Flake.StartCharsVector(builder, flake.chars.Length);
-        for (int j = flake.chars.Length - 1; j > 0; --j)
-          builder.AddByte(flake.chars[j]); //TODO
-        chars = builder.EndVector();
+      if (flake.bytes != null) {
+        Protocol.Flake.StartBytesVector(builder, flake.bytes.Length);
+        for (int j = flake.bytes.Length - 1; j > 0; --j)
+          builder.AddByte(flake.bytes[j]);
+        bytes = builder.EndVector();
       }
       if (flake.text != null)
         text = builder.CreateString(flake.text);
@@ -266,16 +266,16 @@ namespace Holojam.Network {
       Protocol.Flake.StartFlake(builder);
       Protocol.Flake.AddLabel(builder, labelOffset);
 
-      if (flake.triples != null)
-        Protocol.Flake.AddTriples(builder, triples);
-      if (flake.quads != null)
-        Protocol.Flake.AddQuads(builder, quads);
+      if (flake.vector3s != null)
+        Protocol.Flake.AddVector3s(builder, vector3s);
+      if (flake.vector4s != null)
+        Protocol.Flake.AddVector4s(builder, vector4s);
       if (flake.floats != null)
         Protocol.Flake.AddFloats(builder, floats);
       if (flake.ints != null)
         Protocol.Flake.AddInts(builder, ints);
-      if (flake.chars != null)
-        Protocol.Flake.AddChars(builder, chars);
+      if (flake.bytes != null)
+        Protocol.Flake.AddBytes(builder, bytes);
       if (flake.text != null)
         Protocol.Flake.AddText(builder, text);
 
@@ -283,7 +283,7 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// Build a Holojam update packet buffer with FlatBuffers.
+    /// Build a Holojam update nugget buffer with FlatBuffers.
     /// </summary>
     /// <param name="controllers"></param>
     /// <returns>A raw buffer built using the Holojam FlatBuffers protocol schema.</returns>
@@ -295,28 +295,28 @@ namespace Holojam.Network {
 
       Offset<Protocol.Flake>[] offsets = new Offset<Protocol.Flake>[controllers.Count];
 
-      VectorOffset triples, quads;
-      VectorOffset floats, ints, chars;
+      VectorOffset vector3s, vector4s;
+      VectorOffset floats, ints, bytes;
       StringOffset text = default(StringOffset);
-      triples = quads = floats = ints = chars = default(VectorOffset);
+      vector3s = vector4s = floats = ints = bytes = default(VectorOffset);
 
       for (int i = 0; i < controllers.Count; ++i)
         BuildFlake(controllers[i].Label, controllers[i].data, ref builder, ref offsets[i],
-          ref triples, ref quads, ref floats, ref ints, ref chars, ref text
+          ref vector3s, ref vector4s, ref floats, ref ints, ref bytes, ref text
         );
-      var flakes = Protocol.Packet.CreateFlakesVector(builder, offsets);
+      var flakes = Protocol.Nugget.CreateFlakesVector(builder, offsets);
 
-      // Build packet
-      Offset<Protocol.Packet> packet = Protocol.Packet.CreatePacket(
-         builder, scope, origin, Protocol.PacketType.Update, flakes
+      // Build nugget
+      Offset<Protocol.Nugget> nugget = Protocol.Nugget.CreateNugget(
+         builder, scope, origin, Protocol.NuggetType.UPDATE, flakes
       );
-      builder.Finish(packet.Value);
+      builder.Finish(nugget.Value);
       // Return buffer
       return builder.SizedByteArray();
     }
 
     /// <summary>
-    /// Build a Holojam event packet buffer with FlatBuffers.
+    /// Build a Holojam event nugget buffer with FlatBuffers.
     /// </summary>
     /// <param name="label"></param>
     /// <param name="flake"></param>
@@ -328,28 +328,28 @@ namespace Holojam.Network {
 
       Offset<Protocol.Flake>[] offsets = new Offset<Protocol.Flake>[1];
 
-      VectorOffset triples, quads;
-      VectorOffset floats, ints, chars;
+      VectorOffset vector3s, vector4s;
+      VectorOffset floats, ints, bytes;
       StringOffset text = default(StringOffset);
-      triples = quads = floats = ints = chars = default(VectorOffset);
+      vector3s = vector4s = floats = ints = bytes = default(VectorOffset);
 
       BuildFlake(label, flake, ref builder, ref offsets[0],
-        ref triples, ref quads, ref floats, ref ints, ref chars, ref text
+        ref vector3s, ref vector4s, ref floats, ref ints, ref bytes, ref text
       );
 
-      var flakes = Protocol.Packet.CreateFlakesVector(builder, offsets);
+      var flakes = Protocol.Nugget.CreateFlakesVector(builder, offsets);
 
-      // Build packet
-      Offset<Protocol.Packet> packet = Protocol.Packet.CreatePacket(
-         builder, scope, origin, Protocol.PacketType.Event, flakes
+      // Build nugget
+      Offset<Protocol.Nugget> nugget = Protocol.Nugget.CreateNugget(
+         builder, scope, origin, Protocol.NuggetType.EVENT, flakes
       );
-      builder.Finish(packet.Value);
+      builder.Finish(nugget.Value);
       // Return buffer
       return builder.SizedByteArray();
     }
 
     /// <summary>
-    /// Build a Holojam notification packet buffer with FlatBuffers.
+    /// Build a Holojam notification nugget buffer with FlatBuffers.
     /// </summary>
     /// <param name="label"></param>
     /// <returns>A raw buffer built using the Holojam FlatBuffers protocol schema.</returns>
@@ -365,13 +365,13 @@ namespace Holojam.Network {
       Protocol.Flake.AddLabel(builder, notificationLabel);
       offsets[0] = Protocol.Flake.EndFlake(builder);
 
-      var flakes = Protocol.Packet.CreateFlakesVector(builder, offsets);
+      var flakes = Protocol.Nugget.CreateFlakesVector(builder, offsets);
 
-      // Build packet
-      Offset<Protocol.Packet> packet = Protocol.Packet.CreatePacket(
-         builder, scope, origin, Protocol.PacketType.Event, flakes
+      // Build nugget
+      Offset<Protocol.Nugget> nugget = Protocol.Nugget.CreateNugget(
+         builder, scope, origin, Protocol.NuggetType.EVENT, flakes
       );
-      builder.Finish(packet.Value);
+      builder.Finish(nugget.Value);
       // Return buffer
       return builder.SizedByteArray();
     }
