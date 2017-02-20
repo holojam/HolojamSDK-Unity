@@ -56,7 +56,7 @@ namespace Holojam.Tools {
     /// <summary>
     /// An Actor's label is determined from its build index using the canon.
     /// </summary>
-    public override string Label { get { return Network.Canon.IndexToLabel(index); } }
+    public sealed override string Label { get { return Network.Canon.IndexToLabel(index); } }
 
     /// <summary>
     /// Update Actor registration information.
@@ -160,7 +160,6 @@ namespace Holojam.Tools {
 
     // Useful (goggles) visualization
     void OnDrawGizmos() {
-      DrawGizmoGhost();
       Gizmos.color = debugColor;
       Vector3 offset = Center + Look * 0.0f;
       Utility.Drawer.Circle(offset + Left * 0.035f, Look, Up, 0.03f);
@@ -168,6 +167,5 @@ namespace Holojam.Tools {
       // Reference forward vector
       Gizmos.DrawRay(offset, Look);
     }
-    void OnDrawGizmosSelected() { } // Override Trackable implementation
   }
 }

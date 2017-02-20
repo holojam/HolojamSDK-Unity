@@ -13,20 +13,27 @@ namespace Holojam.Tools {
 
     /// <summary>
     /// Determines whether this object is affected by hierarchy.
-    /// Beta field. Should not be public.
+    /// Beta/deprecated field.
     /// </summary>
-    public bool localSpace = false;
+    [SerializeField] bool localSpace = false;
 
     /// <summary>
-    /// Apply a subtle smoothing function to level out any minor rough edges.
+    /// Is this object is affected by hierarchy?
+    /// Beta/deprecated property.
     /// </summary>
-    [SerializeField] bool smooth = false;
+    public bool LocalSpace { get { return localSpace; } }
+
+    /// <summary>
+    /// Apply a subtle smoothing function to level out any rough edges.
+    /// </summary>
+    [SerializeField] protected bool smooth = false;
 
     /// <summary>
     /// The raw position data (from the network), before localization/smoothing.
     /// </summary>
     public Vector3 RawPosition {
       get { return data.vector3s[0]; }
+      protected set { data.vector3s[0] = value; }
     }
 
     /// <summary>
@@ -34,6 +41,7 @@ namespace Holojam.Tools {
     /// </summary>
     public Quaternion RawRotation {
       get { return data.vector4s[0]; }
+      protected set { data.vector4s[0] = value; }
     }
 
     /// <summary>
@@ -68,12 +76,12 @@ namespace Holojam.Tools {
     }
     Quaternion lastRotation;
 
-    protected override ProcessDelegate Process { get { return UpdateTracking; } }
+    protected sealed override ProcessDelegate Process { get { return UpdateTracking; } }
 
     AdaptiveSmoother smoother = new AdaptiveSmoother();
 
     /// <summary>
-    /// Trackables are read-only.
+    /// Trackables are read-only by default.
     /// </summary>
     public override bool Sending { get { return false; } }
 
@@ -94,33 +102,6 @@ namespace Holojam.Tools {
         transform.position = TrackedPosition;
         transform.rotation = TrackedRotation;
       }
-    }
-
-    void OnDrawGizmos() {
-      DrawGizmoGhost();
-    }
-    void OnDrawGizmosSelected() {
-      Gizmos.color = Color.gray;
-      // Pivot
-      Utility.Drawer.Circle(transform.position, Vector3.up, Vector3.forward, 0.18f);
-      Gizmos.DrawLine(transform.position - 0.03f * Vector3.left, transform.position + 0.03f * Vector3.left);
-      Gizmos.DrawLine(transform.position - 0.03f * Vector3.forward, transform.position + 0.03f * Vector3.forward);
-      // Forward
-      Gizmos.DrawRay(transform.position, transform.forward * 0.18f);
-    }
-    // Draw ghost (in world space) if in local space
-    protected void DrawGizmoGhost() {
-      if (!localSpace || transform.parent == null) return;
-      Gizmos.color = Color.gray;
-      Gizmos.DrawLine(
-         RawPosition - 0.03f * Vector3.left,
-         RawPosition + 0.03f * Vector3.left
-      );
-      Gizmos.DrawLine(
-         RawPosition - 0.03f * Vector3.forward,
-         RawPosition + 0.03f * Vector3.forward
-      );
-      Gizmos.DrawLine(RawPosition - 0.03f * Vector3.up, RawPosition + 0.03f * Vector3.up);
     }
   }
 }

@@ -117,7 +117,7 @@ namespace Holojam.Network {
       // Optional check--you probably don't want to run this code in edit mode
       if (!Application.isPlaying) return;
 
-      Process();
+      Process(); // Mandatory call
     }
   }
 }

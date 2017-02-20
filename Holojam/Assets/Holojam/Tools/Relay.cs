@@ -25,7 +25,7 @@ namespace Holojam.Tools {
     /// <summary>
     /// Relays should never accept incoming data.
     /// </summary>
-    public override bool Deaf { get { return true; } }
+    public sealed override bool Deaf { get { return true; } }
 
     /// <summary>
     /// Position is sent over the first Vector3.
@@ -43,7 +43,7 @@ namespace Holojam.Tools {
       set { data.vector4s[0] = value; }
     }
 
-    protected override ProcessDelegate Process { get { return Load; } }
+    protected sealed override ProcessDelegate Process { get { return Load; } }
 
     /// <summary>
     /// Data descriptor is initialized with one Vector3 and one Quaternion.

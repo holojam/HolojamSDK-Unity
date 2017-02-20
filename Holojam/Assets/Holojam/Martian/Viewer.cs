@@ -78,7 +78,7 @@ namespace Holojam.Martian {
         transform.rotation = sourceRotation;
 
       // Apply local rotation if necessary
-      if (actor != null && actor.localSpace && actor.transform.parent != null)
+      if (actor != null && actor.LocalSpace && actor.transform.parent != null)
         transform.rotation = actor.transform.parent.rotation * transform.rotation;
     }
 

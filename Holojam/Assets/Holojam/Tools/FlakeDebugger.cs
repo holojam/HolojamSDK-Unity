@@ -23,11 +23,11 @@ namespace Holojam.Tools {
     public byte[] bytes;
     public string text;
 
-    public override string Scope { get { return scope; } }
-    public override string Label { get { return label; } }
-    public override bool Sending { get { return false; } }
+    public sealed override string Scope { get { return scope; } }
+    public sealed override string Label { get { return label; } }
+    public sealed override bool Sending { get { return false; } }
 
-    protected override ProcessDelegate Process { get { return Refresh; } }
+    protected sealed override ProcessDelegate Process { get { return Refresh; } }
 
     void Refresh() {
       origin = Source;

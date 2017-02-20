@@ -10,7 +10,7 @@ namespace Holojam.Tools {
   /// Indexes actors in the scene and manages the build target.
   /// </summary>
   [ExecuteInEditMode]
-  public class BuildManager : Utility.Global<BuildManager> {
+  public sealed class BuildManager : Utility.Global<BuildManager> {
 
     public enum Device {
       CARDBOARD, DAYDREAM, VIVE
