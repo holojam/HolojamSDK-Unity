@@ -14,8 +14,8 @@ namespace Holojam.Martian {
   /// </summary>
   public class Converter : MonoBehaviour {
 
-    readonly Utility.Smoothing XY_SMOOTHING = new Utility.Smoothing(.05f, 1.1f);
-    readonly Utility.Smoothing Z_SMOOTHING = new Utility.Smoothing(.15f, 2);
+    readonly Utility.AccurateSmoother XY_SMOOTHER = new Utility.AccurateSmoother(.05f, 1.1f);
+    readonly Utility.AccurateSmoother Z_SMOOTHER = new Utility.AccurateSmoother(.15f, 2);
     const float R_SMOOTHING = .12f;
 
     [SerializeField] Tracker extraData;
@@ -169,10 +169,10 @@ namespace Holojam.Martian {
       Vector2 xyTarget = new Vector2(target.x, target.y);
 
       Vector2 xy = Vector2.Lerp(xyLast, xyTarget, Mathf.Pow(
-         Mathf.Min(1, (xyLast - xyTarget).magnitude / XY_SMOOTHING.cap), XY_SMOOTHING.pow
+         Mathf.Min(1, (xyLast - xyTarget).magnitude / XY_SMOOTHER.cap), XY_SMOOTHER.pow
       ));
       float z = Mathf.Lerp(last.z, target.z, Mathf.Pow(
-         Mathf.Min(1, Mathf.Abs(last.z - target.z) / Z_SMOOTHING.cap), Z_SMOOTHING.pow
+         Mathf.Min(1, Mathf.Abs(last.z - target.z) / Z_SMOOTHER.cap), Z_SMOOTHER.pow
       ));
 
       target = new Vector3(xy.x, xy.y, z);

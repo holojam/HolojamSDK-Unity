@@ -6,10 +6,11 @@ using UnityEngine;
 namespace Holojam.Utility {
 
   /// <summary>
-  /// Class container for smoothing variables.
+  /// Position/rotation smoothing class, optimized for low-latency and jitter (noise) reduction.
+  /// Useful for environments where accuracy is more important than interpolation.
   /// </summary>
   [System.Serializable]
-  public class Smoothing {
+  public class AccurateSmoother {
 
     /// <summary>
     /// Scaling factor for the input signal. Lower values emphasize "snapping".
@@ -24,7 +25,7 @@ namespace Holojam.Utility {
     /// </summary>
     public float pow;
 
-    public Smoothing(float cap, float pow) {
+    public AccurateSmoother(float cap, float pow) {
       this.cap = cap;
       this.pow = pow;
     }
@@ -35,11 +36,10 @@ namespace Holojam.Utility {
     /// </summary>
     /// <param name="target"></param>
     /// <param name="last"></param>
-    /// <param name="smoothing"></param>
     /// <returns>A smoothed version of the input.</returns>
-    public static Vector3 Smooth(Vector3 target, ref Vector3 last, Smoothing smoothing) {
+    public Vector3 Smooth(Vector3 target, ref Vector3 last) {
       target = Vector3.Lerp(last, target, Mathf.Pow(
-        Mathf.Min(1, (last - target).magnitude / smoothing.cap), smoothing.pow
+        Mathf.Min(1, (last - target).magnitude / cap), pow
       ));
       last = target;
       return target;
@@ -51,13 +51,99 @@ namespace Holojam.Utility {
     /// </summary>
     /// <param name="target"></param>
     /// <param name="last"></param>
-    /// <param name="smoothing"></param>
     /// <returns>A smoothed version of the input.</returns>
-    public static Quaternion Smooth(Quaternion target, ref Quaternion last, Smoothing smoothing) {
+    public Quaternion Smooth(Quaternion target, ref Quaternion last) {
       float difference = .5f * Quaternion.Dot(last, target) + .5f;
       target = Quaternion.Slerp(last, target, Mathf.Pow(
-        Mathf.Min(1, difference / smoothing.cap), smoothing.pow
+        Mathf.Min(1, difference / cap), pow
       ));
+      last = target;
+      return target;
+    }
+  }
+
+  /// <summary>
+  /// Position/rotation smoothing class, optimized for steady animation in
+  /// variable-framerate environments.
+  /// Adaptively applies more or less smoothing based on update rate.
+  /// This has been pre-tuned for general use.
+  /// </summary>
+  public class AdaptiveSmoother {
+
+    /// <summary>
+    /// Range of FPS values covered by the smoothing function.
+    /// </summary>
+    readonly Vector2 fpsRange = new Vector2(10, 65);
+
+    /// <summary>
+    /// Range of scales to interpolate between. Larger values are more true to the input signal.
+    /// </summary>
+    readonly Vector2 positionScale = new Vector2(1, 20);
+
+    /// <summary>
+    /// Range of scales to interpolate between. Larger values are more true to the input signal.
+    /// </summary>
+    readonly Vector2 rotationScale = new Vector2(1, 30);
+
+    /// <summary>
+    /// Scaling factor for the interpolator. Larger values are jerkier but catch
+    /// frame drops or hangs more readily.
+    /// </summary>
+    const int factorScale = 8;
+
+    /// <summary>
+    /// Don't smooth if the update took longer than this many ms.
+    /// </summary>
+    const int timeout = 180; //ms
+
+    float positionFactor, rotationFactor;
+
+    /// <summary>
+    /// Smooth a Vector3 given a reference to its last state and a delta time.
+    /// Generally this is called within an update function.
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="last"></param>
+    /// <param name="delta"></param>
+    /// <returns>A smoothed version of the input.</returns>
+    public Vector3 Smooth(Vector3 target, ref Vector3 last, float delta) {
+      if (delta > timeout/1000f) {
+        last = target;
+        return target;
+      }
+
+      float fps = 1 / delta;
+      float newFactor = Mathf.Lerp(
+        positionScale.x, positionScale.y, (fps - fpsRange.x) / (fpsRange.y - fpsRange.x)
+      );
+      positionFactor = Mathf.Lerp(positionFactor, newFactor, Time.smoothDeltaTime * factorScale);
+
+      target = Vector3.Lerp(last, target, Time.smoothDeltaTime * positionFactor);
+      last = target;
+      return target;
+    }
+
+    /// <summary>
+    /// Smooth a Quaternion given a reference to its last state and a delta time.
+    /// Generally this is called within an update function.
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="last"></param>
+    /// <param name="delta"></param>
+    /// <returns>A smoothed version of the input.</returns>
+    public Quaternion Smooth(Quaternion target, ref Quaternion last, float delta) {
+      if (delta > timeout/1000f) {
+        last = target;
+        return target;
+      }
+
+      float fps = 1 / delta;
+      float newFactor = Mathf.Lerp(
+        rotationScale.x, rotationScale.y, (fps - fpsRange.x) / (fpsRange.y - fpsRange.x)
+      );
+      rotationFactor = Mathf.Lerp(rotationFactor, newFactor, Time.smoothDeltaTime * factorScale);
+
+      target = Quaternion.Slerp(last, target, Time.smoothDeltaTime * rotationFactor);
       last = target;
       return target;
     }

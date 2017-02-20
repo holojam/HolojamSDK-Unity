@@ -2,6 +2,7 @@
 // Created by Holojam Inc. on 09.07.16
 
 using UnityEngine;
+using Holojam.Utility;
 
 namespace Holojam.Tools {
 
@@ -9,9 +10,6 @@ namespace Holojam.Tools {
   /// Base class for trackable (read-only position and rotation) entities.
   /// </summary>
   public abstract class Trackable : Network.Controller {
-
-    readonly Utility.Smoothing POS_SMOOTHING = new Utility.Smoothing(.1f,1.4f);
-    readonly Utility.Smoothing ROT_SMOOTHING = new Utility.Smoothing(1.6f,1.1f);
 
     /// <summary>
     /// Determines whether this object is affected by hierarchy.
@@ -29,7 +27,6 @@ namespace Holojam.Tools {
     /// </summary>
     public Vector3 RawPosition {
       get { return data.vector3s[0]; }
-      protected set { data.vector3s[0] = value; }
     }
 
     /// <summary>
@@ -37,7 +34,6 @@ namespace Holojam.Tools {
     /// </summary>
     public Quaternion RawRotation {
       get { return data.vector4s[0]; }
-      protected set { data.vector4s[0] = value; }
     }
 
     /// <summary>
@@ -50,7 +46,7 @@ namespace Holojam.Tools {
         Vector3 position = localSpace && transform.parent != null ?
           transform.parent.TransformPoint(RawPosition) : RawPosition;
         return smooth ?
-          Utility.Smoothing.Smooth(position, ref lastPosition, POS_SMOOTHING) :
+          smoother.Smooth(position, ref lastPosition, DeltaTime()) :
           position;
       }
     }
@@ -66,13 +62,15 @@ namespace Holojam.Tools {
         Quaternion rotation = localSpace && transform.parent != null ?
            transform.parent.rotation * RawRotation : RawRotation;
         return smooth ?
-          Utility.Smoothing.Smooth(rotation, ref lastRotation, ROT_SMOOTHING) :
+          smoother.Smooth(rotation, ref lastRotation, DeltaTime()) :
           rotation;
       }
     }
     Quaternion lastRotation;
 
     protected override ProcessDelegate Process { get { return UpdateTracking; } }
+
+    AdaptiveSmoother smoother = new AdaptiveSmoother();
 
     /// <summary>
     /// Trackables are read-only.
