@@ -15,6 +15,11 @@ namespace Holojam.Tools {
   public class Actor : Trackable {
 
     /// <summary>
+    /// Rate to check for tracking changes and trigger the Fade functions.
+    /// </summary>
+    const float DROP_INTERVAL = 1;
+
+    /// <summary>
     /// Static read-only list of all the Actors in the current project.
     /// </summary>
     public static Dictionary<string, Actor>.ValueCollection AllLocal {
@@ -46,7 +51,6 @@ namespace Holojam.Tools {
     /// </summary>
     public Color debugColor = Utility.Palette.Select(DEFAULT_COLOR);
 
-    const float dropInterval = 1;
     bool lastTracked = false; float lastTime;
 
     /// <summary>
@@ -66,7 +70,7 @@ namespace Holojam.Tools {
         localInstances.Remove(Brand);
 
       // Call fade events
-      if (Time.time > lastTime + dropInterval) {
+      if (Time.time > lastTime + DROP_INTERVAL) {
         if (Tracked != lastTracked) {
           if (Tracked) FadeIn();
           else FadeOut();
@@ -77,6 +81,11 @@ namespace Holojam.Tools {
     }
 
     public override string Scope { get { return scope; } }
+
+    protected override void Awake() {
+      base.Awake();
+      FadeOut();
+    }
 
     /// <summary>
     /// See <code>Controller.cs</code> for details.

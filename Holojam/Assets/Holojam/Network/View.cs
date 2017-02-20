@@ -1,8 +1,6 @@
 // View.cs
 // Created by Holojam Inc. on 11.11.16
 
-using UnityEditor;
-
 namespace Holojam.Network {
 
   /// <summary>

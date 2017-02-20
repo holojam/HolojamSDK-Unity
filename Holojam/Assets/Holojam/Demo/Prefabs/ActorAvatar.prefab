@@ -91,7 +91,7 @@ GameObject:
   - 4: {fileID: 462518}
   - 114: {fileID: 11412888}
   m_Layer: 0
-  m_Name: ActorController
+  m_Name: ActorAvatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -301,6 +301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localSpace: 0
+  smooth: 0
   index: 1
   scope: 
   debugColor: {r: 0.26, g: 0.86, b: 0.6, a: 1}

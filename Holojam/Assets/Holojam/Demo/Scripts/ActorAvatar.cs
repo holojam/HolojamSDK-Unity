@@ -39,6 +39,15 @@ public class ActorAvatar : Holojam.Tools.Actor {
     get { return head != null ? head.rotation : Quaternion.identity; }
   }
 
+  // Blink in and out
+  protected override void FadeIn() {
+    head.gameObject.SetActive(true);
+  }
+
+  protected override void FadeOut() {
+    head.gameObject.SetActive(false);
+  }
+
   // Assign color and skin material
   void Start() { ApplyMotif(); }
 
