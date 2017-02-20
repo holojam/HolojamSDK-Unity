@@ -6,9 +6,26 @@ using UnityEngine;
 namespace Holojam.Network {
 
   /// <summary>
-  /// Unity component containing a Flake for components that need to work with Holojam data.
+  /// Unity component containing a Flake for MonoBehaviours that need to work with Holojam data.
   /// </summary>
   public abstract class FlakeComponent : MonoBehaviour {
+
+    /// <summary>
+    /// A timestamp from the most recent update to this component's data.
+    /// </summary>
+    public float Timestamp {
+      get { return timestamp; }
+      internal set { timestamp = value; }
+    }
+    float timestamp;
+
+    /// <summary>
+    /// The difference (delta) between the current time and the most recent update.
+    /// </summary>
+    /// <returns>The float specified.</returns>
+    public float DeltaTime() {
+      return Time.unscaledTime - Timestamp;
+    }
 
     /// <summary>
     /// Holojam data container. Protected to allow for direct modification in subclasses.

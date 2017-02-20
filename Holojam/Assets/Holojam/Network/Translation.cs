@@ -149,8 +149,9 @@ namespace Holojam.Network.Translation {
         return false;
 
       if (lookup.ContainsKey(controller.Label)) {
-        nugget.CopyToController(lookup[controller.Label], controller);
-        controller.Tracked = true;
+        (controller as FlakeComponent).Timestamp = Time.unscaledTime; // Set timestamp
+        nugget.CopyToController(lookup[controller.Label], controller); // Copy over data
+        controller.Tracked = true; // Set tracked flag
         return true;
       }
       return false;
