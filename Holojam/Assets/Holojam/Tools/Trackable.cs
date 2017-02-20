@@ -53,6 +53,7 @@ namespace Holojam.Tools {
       get {
         Vector3 position = localSpace && transform.parent != null ?
           transform.parent.TransformPoint(RawPosition) : RawPosition;
+
         return smooth ?
           smoother.Smooth(position, ref lastPosition, DeltaTime()) :
           position;
@@ -69,6 +70,7 @@ namespace Holojam.Tools {
       get {
         Quaternion rotation = localSpace && transform.parent != null ?
            transform.parent.rotation * RawRotation : RawRotation;
+
         return smooth ?
           smoother.Smooth(rotation, ref lastRotation, DeltaTime()) :
           rotation;

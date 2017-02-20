@@ -73,28 +73,38 @@ namespace Holojam.Utility {
     /// <summary>
     /// Range of FPS values covered by the smoothing function.
     /// </summary>
-    readonly Vector2 fpsRange = new Vector2(10, 65);
+    readonly Vector2 FPS_RANGE = new Vector2(10, 60);
 
     /// <summary>
     /// Range of scales to interpolate between. Larger values are more true to the input signal.
     /// </summary>
-    readonly Vector2 positionScale = new Vector2(1, 20);
+    readonly Vector2 POSITION_SCALE = new Vector2(10, 30);
 
     /// <summary>
     /// Range of scales to interpolate between. Larger values are more true to the input signal.
     /// </summary>
-    readonly Vector2 rotationScale = new Vector2(1, 30);
+    readonly Vector2 ROTATION_SCALE = new Vector2(10, 30);
 
     /// <summary>
     /// Scaling factor for the interpolator. Larger values are jerkier but catch
     /// frame drops or hangs more readily.
     /// </summary>
-    const int factorScale = 8;
+    const int FACTOR_SCALE = 8;
 
     /// <summary>
     /// Don't smooth if the update took longer than this many ms.
     /// </summary>
-    const int timeout = 180; //ms
+    const int TIMEOUT = 180; //ms
+
+    /// <summary>
+    /// Don't smooth if the position difference ran above this many meters.
+    /// </summary>
+    const float DISTANCE_CAP = 1; //m
+
+    /// <summary>
+    /// Don't smooth if the rotation dot ran below this value.
+    /// </summary>
+    const float DOT_MIN = -.5f;
 
     float positionFactor, rotationFactor;
 
@@ -107,20 +117,19 @@ namespace Holojam.Utility {
     /// <param name="delta"></param>
     /// <returns>A smoothed version of the input.</returns>
     public Vector3 Smooth(Vector3 target, ref Vector3 last, float delta) {
-      if (delta > timeout/1000f) {
+      if (delta > TIMEOUT / 1000f || Vector3.Distance(target, last) > DISTANCE_CAP) {
         last = target;
         return target;
       }
 
       float fps = 1 / delta;
       float newFactor = Mathf.Lerp(
-        positionScale.x, positionScale.y, (fps - fpsRange.x) / (fpsRange.y - fpsRange.x)
+        POSITION_SCALE.x, POSITION_SCALE.y, (fps - FPS_RANGE.x) / (FPS_RANGE.y - FPS_RANGE.x)
       );
-      positionFactor = Mathf.Lerp(positionFactor, newFactor, Time.smoothDeltaTime * factorScale);
+      positionFactor = Mathf.Lerp(positionFactor, newFactor, Time.smoothDeltaTime * FACTOR_SCALE);
 
-      target = Vector3.Lerp(last, target, Time.smoothDeltaTime * positionFactor);
-      last = target;
-      return target;
+      last = Vector3.Lerp(last, target, Time.smoothDeltaTime * positionFactor);
+      return last;
     }
 
     /// <summary>
@@ -132,20 +141,19 @@ namespace Holojam.Utility {
     /// <param name="delta"></param>
     /// <returns>A smoothed version of the input.</returns>
     public Quaternion Smooth(Quaternion target, ref Quaternion last, float delta) {
-      if (delta > timeout/1000f) {
+      if (delta > TIMEOUT / 1000f || Quaternion.Dot(target, last) < DOT_MIN) {
         last = target;
         return target;
       }
 
       float fps = 1 / delta;
       float newFactor = Mathf.Lerp(
-        rotationScale.x, rotationScale.y, (fps - fpsRange.x) / (fpsRange.y - fpsRange.x)
+        ROTATION_SCALE.x, ROTATION_SCALE.y, (fps - FPS_RANGE.x) / (FPS_RANGE.y - FPS_RANGE.x)
       );
-      rotationFactor = Mathf.Lerp(rotationFactor, newFactor, Time.smoothDeltaTime * factorScale);
+      rotationFactor = Mathf.Lerp(rotationFactor, newFactor, Time.smoothDeltaTime * FACTOR_SCALE);
 
-      target = Quaternion.Slerp(last, target, Time.smoothDeltaTime * rotationFactor);
-      last = target;
-      return target;
+      last = Quaternion.Slerp(last, target, Time.smoothDeltaTime * rotationFactor);
+      return last;
     }
   }
 }
