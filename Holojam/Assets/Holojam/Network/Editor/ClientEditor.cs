@@ -8,16 +8,15 @@ using Holojam.Network;
 namespace Holojam.Network{
    [CustomEditor(typeof(Client))]
    public class ClientEditor : Editor{
-      static bool advanced = false;
-
       SerializedProperty serverAddress, upstreamPort, multicastAddress, downstreamPort;
-      SerializedProperty sendScope;
+      SerializedProperty sendScope, rate;
       void OnEnable(){
          serverAddress = serializedObject.FindProperty("serverAddress");
          upstreamPort = serializedObject.FindProperty("upstreamPort");
          multicastAddress = serializedObject.FindProperty("multicastAddress");
          downstreamPort = serializedObject.FindProperty("downstreamPort");
          sendScope = serializedObject.FindProperty("sendScope");
+         rate = serializedObject.FindProperty("rate");
       }
 
       public override void OnInspectorGUI(){
@@ -66,11 +65,12 @@ namespace Holojam.Network{
 
          EditorGUILayout.Space();
          EditorGUIUtility.labelWidth = 0;
-         advanced = EditorGUILayout.Foldout(advanced,"Advanced");
-         if(advanced){
+         client.advanced = EditorGUILayout.Foldout(client.advanced,"Advanced");
+         if(client.advanced){
             EditorGUILayout.PropertyField(upstreamPort);
             EditorGUILayout.PropertyField(multicastAddress);
             EditorGUILayout.PropertyField(downstreamPort);
+            EditorGUILayout.PropertyField(rate);
          }
 
          serializedObject.ApplyModifiedProperties();
