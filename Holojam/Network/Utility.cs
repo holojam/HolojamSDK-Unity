@@ -25,8 +25,8 @@ namespace Holojam.Network {
     /// <param name="index"></param>
     /// <param name="raw"></param>
     /// <returns>The string specified.</returns>
-    public static string IndexToLabel(int index, bool raw = false) {
-      return "M" + Mathf.Max(1, index) + (raw ? "-Raw" : "");
+    public static string IndexToLabel(int index, bool raw = false, string extra = "") {
+      return "M" + Mathf.Max(1, index) + (raw ? "-Raw" : (string.IsNullOrEmpty(extra) ? "" : "-" + extra));
     }
   }
 }
