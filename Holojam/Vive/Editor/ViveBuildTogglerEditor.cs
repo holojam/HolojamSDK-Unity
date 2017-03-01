@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 namespace Holojam.Vive {
+  [CustomEditor(typeof(ViveBuildToggler))]
   public class ViveBuildTogglerEditor : Editor {
 
     public override void OnInspectorGUI() {

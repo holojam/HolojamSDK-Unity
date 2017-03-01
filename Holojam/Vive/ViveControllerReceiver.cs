@@ -12,6 +12,8 @@ namespace Holojam.Vive {
     /// </summary>
     public string label;
 
+    public bool updateTracking = true;
+
     private int[] previousFrame = new int[6];
     private int[] currentFrame = new int[6];
 
@@ -141,7 +143,8 @@ namespace Holojam.Vive {
     }
 
     protected override void UpdateTracking() {
-      base.UpdateTracking();
+      if (updateTracking)
+        base.UpdateTracking();
       previousFrame = currentFrame;
       currentFrame = data.ints;
 
