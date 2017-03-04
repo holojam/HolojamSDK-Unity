@@ -22,14 +22,19 @@ namespace Holojam.Network {
   /// </summary>
   public class Client : Utility.Global<Client> {
 
+    [SerializeField] string relayAddress = "0.0.0.0";
+    [SerializeField] int upstreamPort = 9592;
+    [SerializeField] string multicastAddress = "239.0.2.4";
+    [SerializeField] int downstreamPort = 9591;
+
     /// <summary>
     /// Address of the central Holojam relay node.
     /// </summary>
-    public string serverAddress = "0.0.0.0";
+    public string RelayAddress { get { return relayAddress; } }
 
-    public int upstreamPort = 9592;
-    public string multicastAddress = "239.0.2.4";
-    public int downstreamPort = 9591;
+    public int UpstreamPort { get { return upstreamPort; } }
+    public string MulticastAddress { get { return multicastAddress; } }
+    public int DownstreamPort { get { return downstreamPort; } }
 
     /// <summary>
     /// Global namespace for outgoing updates and events.
@@ -101,11 +106,45 @@ namespace Holojam.Network {
       global.emitter.SendEvent(label, flake);
     }
 
-    void Awake() {
-      staged = new List<Controller>();
-      untracked = new List<Controller>();
+    /// <summary>
+    /// Changes the IP address used to send data upstream to the Holojam relay node.
+    /// Automatically reconnects to the relay with the updated address.
+    /// </summary>
+    /// <param name="address">
+    /// The IP address of the relay you want to connect to. Must be a valid IP address.
+    /// </param>
+    public void ChangeRelayAddress(string address) {
+      relayAddress = address;
+      Restart();
+    }
 
-      emitter = new Emitter(serverAddress, upstreamPort);
+    /// <summary>
+    /// Changes the various client settings, and automatically restarts the client with the
+    /// updated addresses and ports.
+    /// </summary>
+    /// <param name="relayAddress"></param>
+    /// <param name="upstreamPort"></param>
+    /// <param name="multicastAddress"></param>
+    /// <param name="downstreamPort"></param>
+    public void ChangeClientSettings(
+      string relayAddress, int upstreamPort,
+      string multicastAddress, int downstreamPort
+    ){
+      this.relayAddress = relayAddress;
+      this.upstreamPort = upstreamPort;
+      this.multicastAddress = multicastAddress;
+      this.downstreamPort = downstreamPort;
+      Restart();
+    }
+
+    /// <summary>
+    /// Starts the threads for sending and receiving data, using the server settings configured
+    /// in the inspector.
+    /// </summary>
+    internal void Restart() {
+      Stop(); // Make sure nothing is running
+
+      emitter = new Emitter(relayAddress, upstreamPort);
       sink = new Sink(multicastAddress, downstreamPort);
 
       // Start threads
@@ -114,7 +153,22 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// Publishes events and triggers emission thread.
+    /// Stops the threads for sending and receiving data.
+    /// </summary>
+    internal void Stop() {
+      if (sink != null) { sink.Stop(); }
+      if (emitter != null) { emitter.Stop(); }
+    }
+
+    void Awake() {
+      staged = new List<Controller>();
+      untracked = new List<Controller>();
+
+      Restart();
+    }
+
+    /// <summary>
+    /// Publishes events, triggers emission thread.
     /// </summary>
     void Update() {
       // Process events as soon as possible
@@ -183,8 +237,7 @@ namespace Holojam.Network {
     #endif
 
     void OnDestroy() {
-      sink.Stop();
-      emitter.Stop();
+      Stop();
     }
 
     // Editor
