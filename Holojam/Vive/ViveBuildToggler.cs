@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Holojam.Vive {
+
   /// <summary>
   /// Helper class that automatically toggles the Vive Camera prefab and a master camera,
   /// based on whether or not the BuildManager is set for a build or master client.

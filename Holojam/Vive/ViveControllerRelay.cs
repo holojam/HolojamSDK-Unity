@@ -6,6 +6,12 @@ using UnityEngine;
 using Valve.VR;
 
 namespace Holojam.Vive {
+
+  /// <summary>
+  /// The counterpart of ViveControllerReceiver. Add this component to the Controller
+  /// game objects under the CameraRig prefa to synchronize Vive controllers (position, rotation, input)
+  /// across the Holojam network with standard labels.
+  /// </summary>
   public class ViveControllerRelay : Tools.Relay {
 
     public string label = "left";

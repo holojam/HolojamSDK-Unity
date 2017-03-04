@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Holojam.Vive {
 
   /// <summary>
-  /// Add this component to the SteamVR prefab on Camera (eye)
+  /// Add this component to the CameraRig prefab on Camera (eye)
   /// to synchronize HTC Vives within the Actor system.
   /// </summary>
   public sealed class ViveRelay : Tools.Relay {

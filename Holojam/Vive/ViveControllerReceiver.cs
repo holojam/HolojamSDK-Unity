@@ -7,6 +7,11 @@ using UnityEngine;
 using Valve.VR;
 
 namespace Holojam.Vive {
+
+  /// <summary>
+  /// Vive controller Trackable (synchronized position and rotation), plus a suite of
+  /// public input methods.
+  /// </summary>
   public class ViveControllerReceiver : Tools.Trackable {
 
     /// <summary>
@@ -147,6 +152,7 @@ namespace Holojam.Vive {
     protected override void UpdateTracking() {
       if (updateTracking)
         base.UpdateTracking();
+
       previousFrame = currentFrame;
       currentFrame = data.ints;
 

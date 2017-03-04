@@ -9,13 +9,16 @@ using Valve.VR;
 namespace Holojam.Vive {
 
   /// <summary>
-  /// 
+  /// "Calibrates" a Relay space (a room that has been delineated independently, instead of
+  /// a single integrated tracking system) by comparing its tracking centroid to an absolute center.
+  /// Synchronizes a flag (canCalibrate) to control when clients can respond to a calibration
+  /// signal.
   /// </summary>
   [RequireComponent(typeof(ViveControllerReceiver))]
   public class ViveCalibrator : Holojam.Tools.Synchronizable {
 
     /// <summary>
-    /// 
+    /// A transform representing the tracking bounds, e.g. the CameraRig prefab.
     /// </summary>
     public Transform centroid;
 
@@ -55,7 +58,7 @@ namespace Holojam.Vive {
     }
 
     /// <summary>
-    /// 
+    /// Synchronize the calibration permission flag.
     /// </summary>
     protected override void Sync() {
       if (Sending) {
@@ -66,7 +69,7 @@ namespace Holojam.Vive {
     }
 
     /// <summary>
-    /// 
+    /// Offset the centroid by its difference to the absolute center.
     /// </summary>
     void Calibrate(Vector3 center) {
       if (Tools.BuildManager.IsMasterClient()) return;
