@@ -4,7 +4,7 @@
 using UnityEditor;
 
 namespace Holojam.Vive {
-  [CustomEditor(typeof(ViveBuildToggler))]
+  [CustomEditor(typeof(ViveCalibrator))]
   public class ViveCalibratorEditor : Editor {
 
     SerializedProperty view, centroid, canCalibrate;

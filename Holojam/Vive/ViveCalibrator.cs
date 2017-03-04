@@ -8,7 +8,9 @@ using Valve.VR;
 
 namespace Holojam.Vive {
 
-  [RequireComponent(typeof(ViveControllerReceiver))]
+  /// <summary>
+  /// 
+  /// </summary>
   public class ViveCalibrator : Holojam.Tools.Synchronizable {
 
     /// <summary>
@@ -17,31 +19,19 @@ namespace Holojam.Vive {
     public Transform centroid;
 
     private ViveControllerReceiver receiver;
-    private Vector3 cachedCentroidPosition;
 
     /// <summary>
     /// If true, a global space calibration will be triggered on button press.
     /// </summary>
     [SerializeField] private bool canCalibrate;
 
-    public override string Label { get { return "vive-calibration"; } }
+    public override string Label { get { return "RelayCalibrator"; } }
     public override bool Host { get { return false; } }
     public override bool AutoHost { get { return true; } }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public void SetCanCalibrate(bool c) {
-      if (!Tools.BuildManager.IsMasterClient()) return;
-      canCalibrate = c;
-    }
 
     protected override void Awake() {
       base.Awake();
       receiver = GetComponent<ViveControllerReceiver>();
-
-      if (Application.isPlaying && centroid)
-        cachedCentroidPosition = centroid.position;
     }
 
     /// <summary>
@@ -79,7 +69,7 @@ namespace Holojam.Vive {
     void Calibrate(Vector3 center) {
       if (Tools.BuildManager.IsMasterClient()) return;
 
-      Vector3 difference = center - cachedCentroidPosition;
+      Vector3 difference = centroid.position - center;
       difference = new Vector3(difference.x, 0, difference.z);
       centroid.Translate(difference);
 
