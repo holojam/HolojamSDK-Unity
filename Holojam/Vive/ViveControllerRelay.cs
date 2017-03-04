@@ -18,7 +18,7 @@ namespace Holojam.Vive {
     /// Automatically selects the canon Vive label depending on the build index, with an additional controller label.
     /// </summary>
     public override string Label {
-      get { return Network.Canon.IndexToLabel(Tools.BuildManager.BUILD_INDEX,false,label); }
+      get { return Network.Canon.IndexToLabel(Tools.BuildManager.BUILD_INDEX,label); }
     }
 
     /// <summary>

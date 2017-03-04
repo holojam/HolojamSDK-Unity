@@ -20,13 +20,13 @@ namespace Holojam.Network {
     }
 
     /// <summary>
-    /// Returns a string label given a build/actor index (Holojam standard).
+    /// Returns a Holojam standard actor label (string), given an input build index.
     /// </summary>
     /// <param name="index"></param>
-    /// <param name="raw"></param>
+    /// <param name="extra">Optional string to append to the end of the label. </param>
     /// <returns>The string specified.</returns>
-    public static string IndexToLabel(int index, bool raw = false, string extra = "") {
-      return "M" + Mathf.Max(1, index) + (raw ? "-Raw" : (string.IsNullOrEmpty(extra) ? "" : "-" + extra));
+    public static string IndexToLabel(int index, string extra = "") {
+      return "M" + Mathf.Max(1, index) + (string.IsNullOrEmpty(extra) ? "" : "-" + extra);
     }
   }
 }

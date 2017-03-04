@@ -17,7 +17,7 @@ namespace Holojam.Martian {
     /// Listen on the raw Martian label associated with the build index.
     /// </summary>
     public override string Label {
-      get { return Network.Canon.IndexToLabel(Tools.BuildManager.BUILD_INDEX, true); }
+      get { return Network.Canon.IndexToLabel(Tools.BuildManager.BUILD_INDEX, "Raw"); }
     }
 
     /// <summary>
