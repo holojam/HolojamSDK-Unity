@@ -32,7 +32,7 @@ public class SynchronizableComponent : Holojam.Tools.SynchronizableTrackable {
   protected override void Sync() {
     base.Sync();
 
-    if (Host) {
+    if (Sending) {
       Scale = transform.localScale;
     } else {
       transform.localScale = Scale;

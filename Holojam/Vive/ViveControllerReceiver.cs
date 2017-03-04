@@ -1,5 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿// ViveControllerReceiver.cs
+// Created by Holojam Inc. on 24.02.17
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -150,7 +152,6 @@ namespace Holojam.Vive {
 
       previousTouchpadAxis = TouchpadAxis;
       previousTriggerAxis = TriggerAxis;
-
     }
   }
 }

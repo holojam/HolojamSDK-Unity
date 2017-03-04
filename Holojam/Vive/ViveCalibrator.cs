@@ -1,5 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿// ViveCalibrator.cs
+// Created by Holojam Inc. on 01.03.17
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -21,7 +23,6 @@ namespace Holojam.Vive {
     /// Specific label for calibration.
     /// </summary>
     public override string Label { get { return "vive-calibration"; } }
-
 
     public override bool Host { get { return false; } }
 

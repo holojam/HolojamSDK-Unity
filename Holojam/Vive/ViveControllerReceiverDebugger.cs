@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// ViveControllerReceiverDebugger.cs
+// Created by Holojam Inc. on 24.02.17
+
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -11,7 +13,7 @@ namespace Holojam.Vive {
 
     private ViveControllerReceiver receiver;
 
-    //Steam Controller button and axis ids
+    // Steam Controller button and axis ids
     private EVRButtonId[] pressIds = new EVRButtonId[] {
       EVRButtonId.k_EButton_ApplicationMenu,
       EVRButtonId.k_EButton_Grip,

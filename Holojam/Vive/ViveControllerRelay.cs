@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿// ViveRelay.cs
+// Created by Holojam Inc. on 24.02.17
+
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -35,22 +37,20 @@ namespace Holojam.Vive {
       Position = transform.position;
       Rotation = transform.rotation;
 
-      //Set press ints
+      // Set press ints
       AppMenuPress = GetPress(EVRButtonId.k_EButton_ApplicationMenu);
       GripPress = GetPress(EVRButtonId.k_EButton_Grip);
       TouchpadPress = GetPress(EVRButtonId.k_EButton_SteamVR_Touchpad);
       TriggerPress = GetPress(EVRButtonId.k_EButton_SteamVR_Trigger);
 
-      //Set touch ints
+      // Set touch ints
       TouchpadTouch = GetTouch(EVRButtonId.k_EButton_SteamVR_Touchpad);
       TriggerTouch = GetTouch(EVRButtonId.k_EButton_SteamVR_Trigger);
 
-      //Set axes
+      // Set axes
       TouchpadAxis = SteamVR_Controller.Input(index).GetAxis(EVRButtonId.k_EButton_SteamVR_Touchpad);
       TriggerAxis = SteamVR_Controller.Input(index).GetAxis(EVRButtonId.k_EButton_SteamVR_Trigger);
     }
-
-
 
     private bool GetPress(EVRButtonId id) {
       return SteamVR_Controller.Input(index).GetPressDown(id) 
@@ -105,7 +105,6 @@ namespace Holojam.Vive {
       get { return new Vector2(data.floats[2], data.floats[3]); }
       set { data.floats[2] = value.x; data.floats[3] = value.y; }
     }
-
 
     protected override void Awake() {
       base.Awake();
