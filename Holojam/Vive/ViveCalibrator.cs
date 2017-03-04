@@ -23,6 +23,7 @@ namespace Holojam.Vive {
     public Transform centroid;
 
     private ViveControllerReceiver receiver;
+    private Vector3 cachedPosition;
 
     /// <summary>
     /// If true, a global space calibration will be triggered on button press.
@@ -35,7 +36,9 @@ namespace Holojam.Vive {
 
     protected override void Awake() {
       base.Awake();
+
       receiver = GetComponent<ViveControllerReceiver>();
+      cachedPosition = centroid.position;
     }
 
     /// <summary>
@@ -74,7 +77,7 @@ namespace Holojam.Vive {
     void Calibrate(Vector3 center) {
       if (Tools.BuildManager.IsMasterClient()) return;
 
-      Vector3 difference = centroid.position - center;
+      Vector3 difference = cachedPosition - center;
       difference = new Vector3(difference.x, 0, difference.z);
       centroid.Translate(difference);
 
