@@ -16,11 +16,15 @@ namespace Holojam.Vive {
     }
 
     public override void OnInspectorGUI() {
+      serializedObject.Update();
+
       EditorGUILayout.PropertyField(view);
       EditorGUILayout.PropertyField(centroid);
 
       if (Tools.BuildManager.IsMasterClient())
         EditorGUILayout.PropertyField(canCalibrate);
+
+      serializedObject.ApplyModifiedProperties();
     }
   }
 }

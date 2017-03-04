@@ -11,6 +11,7 @@ namespace Holojam.Vive {
   /// <summary>
   /// 
   /// </summary>
+  [RequireComponent(typeof(ViveControllerReceiver))]
   public class ViveCalibrator : Holojam.Tools.Synchronizable {
 
     /// <summary>
@@ -41,6 +42,7 @@ namespace Holojam.Vive {
     protected override void Update() {
       base.Update();
 
+      receiver.label = Network.Canon.IndexToLabel(Tools.BuildManager.BUILD_INDEX, "right");
       if (receiver.GetPressDown(EVRButtonId.k_EButton_Grip) && canCalibrate)
         Calibrate(receiver.TrackedPosition);
     }
