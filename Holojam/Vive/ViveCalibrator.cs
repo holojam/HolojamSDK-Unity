@@ -60,7 +60,8 @@ namespace Holojam.Vive {
 
       receiver.label = Network.Canon.IndexToLabel(Tools.BuildManager.BUILD_INDEX, "right");
       if (receiver.GetPressDown(EVRButtonId.k_EButton_Grip) && canCalibrate)
-        Calibrate(receiver.TrackedPosition);
+        // Calibrate to the relative position of the controller
+        Calibrate(receiver.TrackedPosition - centroid.position);
     }
 
     /// <summary>
@@ -86,10 +87,7 @@ namespace Holojam.Vive {
     /// </summary>
     void Calibrate(Vector3 center) {
       if (Tools.BuildManager.IsMasterClient()) return;
-
-      Vector3 difference = cachedPosition - center;
-      difference = new Vector3(difference.x, 0, difference.z);
-      centroid.position = cachedPosition + difference;
+      centroid.position = cachedPosition - new Vector3(center.x, 0, center.z);
     }
   }
 }
