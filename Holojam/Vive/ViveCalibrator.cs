@@ -79,12 +79,7 @@ namespace Holojam.Vive {
 
       Vector3 difference = cachedPosition - center;
       difference = new Vector3(difference.x, 0, difference.z);
-      centroid.Translate(difference);
-
-      Debug.Log(
-        "Holojam.Vive.ViveCalibrator: space calibrated with offset ("
-        + difference.x + ", " + difference.z + ")"
-      );
+      centroid.position = cachedPosition + difference;
     }
   }
 }
