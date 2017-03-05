@@ -1,4 +1,4 @@
-﻿// ViveControllerRelay.cs
+// ViveControllerRelay.cs
 // Created by Holojam Inc. on 24.02.17
 
 using System.Collections.Generic;

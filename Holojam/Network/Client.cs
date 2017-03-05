@@ -37,6 +37,11 @@ namespace Holojam.Network {
     public int DownstreamPort { get { return downstreamPort; } }
 
     /// <summary>
+    /// Are there threads running?
+    /// </summary>
+    bool Running { get { return sink.Running || emitter.Running; } }
+
+    /// <summary>
     /// Global namespace for outgoing updates and events.
     /// </summary>
     public string sendScope = "Unity";
@@ -115,7 +120,9 @@ namespace Holojam.Network {
     /// </param>
     public void ChangeRelayAddress(string address) {
       relayAddress = address;
-      Restart();
+      if (Running) {
+        Restart();
+      }
     }
 
     /// <summary>
@@ -134,7 +141,9 @@ namespace Holojam.Network {
       this.upstreamPort = upstreamPort;
       this.multicastAddress = multicastAddress;
       this.downstreamPort = downstreamPort;
-      Restart();
+      if (Running) {
+        Restart();
+      }
     }
 
     /// <summary>

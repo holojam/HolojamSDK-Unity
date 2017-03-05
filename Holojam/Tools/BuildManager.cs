@@ -68,8 +68,7 @@ namespace Holojam.Tools {
       get {
         return global.preview ? global.previewIndex : global.buildIndex;
       }
-      //Nothing implements this yet
-      //set{global.buildIndex = value;}
+      set { global.buildIndex = value; }
     }
 
     /// <summary>
