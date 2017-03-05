@@ -9,11 +9,11 @@ namespace Holojam.Tools {
   [CustomEditor(typeof(BuildManager))]
   public class BuildManagerEditor : Editor {
 
-    SerializedProperty viewer, device;
+    SerializedProperty viewer; //, device;
     SerializedProperty preview, previewIndex, spectator, runtimeIndexing;
 
     void OnEnable() {
-      device = serializedObject.FindProperty("device");
+      //device = serializedObject.FindProperty("device");
       preview = serializedObject.FindProperty("preview");
       previewIndex = serializedObject.FindProperty("previewIndex");
       spectator = serializedObject.FindProperty("spectator");
@@ -23,7 +23,7 @@ namespace Holojam.Tools {
     public override void OnInspectorGUI() {
       serializedObject.Update();
 
-      EditorGUILayout.PropertyField(device);
+      //EditorGUILayout.PropertyField(device);
       EditorGUILayout.PropertyField(preview, new GUIContent(
         "Preview Actor", "Preview Unity build state for a specific actor"
       ));

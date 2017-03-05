@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEditor;
 
 namespace Holojam.Vive {
+
   [CustomEditor(typeof(ViveBuildToggler))]
   public class ViveBuildTogglerEditor : Editor {
 
