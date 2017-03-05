@@ -14,7 +14,8 @@ namespace Holojam.Vive {
     public override void OnInspectorGUI() {
       base.OnInspectorGUI();
 
-      PlayerSettings.virtualRealitySupported = !Tools.BuildManager.IsMasterClient();
+      PlayerSettings.virtualRealitySupported =
+        !((ViveBuildToggler)serializedObject.targetObject).masterClientBuild;
 
       EditorGUILayout.LabelField("Virtual Reality Supported: " + PlayerSettings.virtualRealitySupported);
     }
