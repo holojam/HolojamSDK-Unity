@@ -27,8 +27,18 @@ namespace Holojam.Vive {
 
     /// <summary>
     /// If true, a global space calibration will be triggered on button press.
+    /// Set this to true at runtime to allow calibration for all the clients, then
+    /// unset it to disable accidental calibrations. We recommend mapping it to a
+    /// button press or UI element.
     /// </summary>
     [SerializeField] private bool canCalibrate;
+
+    /// <summary>
+    /// Public setter for canCalibrate.
+    /// </summary>
+    public void SetCanCalibrate(bool canCalibrate) {
+      this.canCalibrate = canCalibrate;
+    }
 
     public override string Label { get { return "RelayCalibrator"; } }
     public override bool Host { get { return false; } }
