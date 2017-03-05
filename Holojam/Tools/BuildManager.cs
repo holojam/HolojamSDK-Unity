@@ -136,8 +136,7 @@ namespace Holojam.Tools {
     enum Result { INDEXED, PASSED, EMPTY, NOBUILD };
 
     /// <summary>
-    /// Intelligently index the Actors in the scene, determine the build Actor,
-    /// update the Viewer.
+    /// Intelligently index the Actors in the scene and determine the build Actor.
     /// </summary>
     Result Index(bool force = false) {
       ReadOnlyCollection<Actor> allActors = Network.Controller.All<Actor>();
