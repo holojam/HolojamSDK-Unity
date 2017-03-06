@@ -2,4 +2,6 @@ The Holojam SDK enables content creators to build complex location-based multipl
 
 ## Developers
 
-Clone the repository within an empty (or existing) Unity project under the `Assets` directory, then contribute as usual.
+1. Clone the repository within an empty or existing Unity project under the `Assets` directory.
+2. **Before opening Unity**, copy in `Holojam-Core.dll` under `Holojam/`.
+3. Contribute as usual.
