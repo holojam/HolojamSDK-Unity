@@ -6,8 +6,10 @@ using UnityEditor;
 using Holojam.Network;
 
 namespace Holojam.Network {
+
   [CustomEditor(typeof(Client))]
   public class ClientEditor : Editor {
+
     SerializedProperty relayAddress, upstreamPort, multicastAddress, downstreamPort;
     SerializedProperty sendScope, rate;
 
