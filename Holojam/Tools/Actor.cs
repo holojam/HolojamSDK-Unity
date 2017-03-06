@@ -84,7 +84,8 @@ namespace Holojam.Tools {
 
     protected override void Awake() {
       base.Awake();
-      FadeOut();
+      if (Application.isPlaying)
+        FadeOut();
     }
 
     /// <summary>
