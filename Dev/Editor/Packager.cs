@@ -7,6 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 
 public class Packager : EditorWindow{
+
   [MenuItem("Window/Packager")]
   public static void ShowWindow() {
     EditorWindow.GetWindow(typeof(Packager));
@@ -15,26 +16,34 @@ public class Packager : EditorWindow{
   string output = "Holojam";
   string version = "0.0.0";
   string ignorePath = "Dev";
+  string extraPath;
   bool clear = true;
 
-  void OnGUI(){
+  readonly string repoName = "/HolojamSDK-Unity/";
+
+  void OnGUI() {
     output = EditorGUILayout.TextField("Title", output);
     version = EditorGUILayout.TextField("Version", version);
     ignorePath = EditorGUILayout.TextField("Ignore Directory", ignorePath);
+    extraPath = EditorGUILayout.TextField("Extra Ignore Directory", extraPath);
     clear = EditorGUILayout.Toggle("Clear on build", clear);
 
     if (GUILayout.Button("Build")) Build();
   }
-  void Build(){
+
+  void Build() {
     List<string> subdirs = new List<string>();
     string[] paths = Directory.GetDirectories(
-      Application.dataPath + "/HolojamSDK-Unity"
+      Application.dataPath //+ repoName
     );
 
     foreach (string p in paths) {
-      Debug.Log(CleanPath(p) + " vs " + ignorePath);
-      if (CleanPath(p) != "Assets/HolojamSDK-Unity/" + ignorePath)
-        subdirs.Add(CleanPath(p));
+      string path = CleanPath(p);
+      if (path != "Assets" + /*repoName +*/ "/" + ignorePath
+        && path != "Assets" + /*repoName +*/ "/" + extraPath
+      ) {
+        subdirs.Add(path);
+      }
     }
 
     if (subdirs.Count == 0) {
@@ -46,12 +55,16 @@ public class Packager : EditorWindow{
       foreach (string f in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.unitypackage"))
         File.Delete(f);
 
+    foreach(string dir in subdirs)
+      Debug.Log(dir);
+
     AssetDatabase.ExportPackage(
       subdirs.ToArray(), 
       output + "-v" + version + ".unitypackage", 
       ExportPackageOptions.Recurse | ExportPackageOptions.Interactive
     );
   }
+
   string CleanPath(string input) {
     return input.Substring(input.IndexOf("Assets"));
   }
