@@ -9,3 +9,9 @@ Note: at the moment, Holojam releases are pre-configured for SteamVR (Vive). **M
 ### Developer Version
 
 For the latest (warning: may be unstable) code, clone the repository within an empty or existing Unity project under the `Assets` directory. **Before opening Unity**, copy in `Holojam-Core.dll` under `Holojam/`.
+
+## Documentation
+
+- API documentation available [here](https://acgaudette.gitlab.io/holojamsdk-unity-docs/annotated.html).
+- Check out the Vive setup tutorial on the [wiki](https://github.com/holojamvr/HolojamSDK-Unity/wiki/Vive-Setup-Tutorial-(Beginner)).
+- Example code can be found under [Holojam/Demo/Scripts](https://github.com/holojamvr/HolojamSDK-Unity/tree/master/Holojam/Demo/Scripts).
