@@ -17,7 +17,7 @@ namespace Holojam.Network {
       EditorStyles.label.wordWrap = true;
 
       Notifier notifier = serializedObject.targetObject as Notifier;
-      foreach (string e in notifier.eventData)
+      foreach (string e in notifier.editorEventData)
         EditorGUILayout.LabelField("   " + e);
       if (!Application.isPlaying)
         EditorGUILayout.LabelField("   (Paused)");

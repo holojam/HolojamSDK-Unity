@@ -100,7 +100,7 @@ namespace Holojam.Network {
       if (fired) yield return null;
       EditorUtility.SetDirty((UnityEngine.Object)this);
       fired = true;
-      yield return new WaitForSeconds(Notifier.FIRE_TIME);
+      yield return new WaitForSeconds(Notifier.EDITOR_FIRE_TIME);
       fired = false;
       EditorUtility.SetDirty((UnityEngine.Object)this);
     }

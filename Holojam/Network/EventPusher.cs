@@ -46,7 +46,7 @@ namespace Holojam.Network {
     IEnumerator Fire() {
       if (fired) yield return null;
       fired = true;
-      yield return new WaitForSeconds(Notifier.FIRE_TIME);
+      yield return new WaitForSeconds(Notifier.EDITOR_FIRE_TIME);
       fired = false;
     }
     #endif
