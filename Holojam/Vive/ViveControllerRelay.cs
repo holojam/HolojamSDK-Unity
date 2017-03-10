@@ -13,8 +13,8 @@ namespace Holojam.Vive {
   /// across the Holojam network with standard labels.
   /// </summary>
   public class ViveControllerRelay : Tools.Relay {
+    public ViveModule.Type type = ViveModule.Type.LEFT;
 
-    public string label = "left";
     private SteamVR_TrackedObject controller;
 
     /// <summary>
@@ -26,7 +26,11 @@ namespace Holojam.Vive {
     /// Automatically selects the canon Vive label depending on the build index, with an additional controller label.
     /// </summary>
     public override string Label {
-      get { return Network.Canon.IndexToLabel(Tools.BuildManager.BUILD_INDEX,label); }
+      get {
+        return Network.Canon.IndexToLabel(
+          Tools.BuildManager.BUILD_INDEX, ViveModule.TypeToString(type)
+        );
+      }
     }
 
     /// <summary>

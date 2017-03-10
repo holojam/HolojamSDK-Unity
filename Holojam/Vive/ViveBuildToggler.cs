@@ -12,25 +12,29 @@ namespace Holojam.Vive {
   /// based on whether or not the BuildManager is set for a build or master client.
   /// The editor script for this class also toggles PlayerSettings.virtualRealitySupported.
   /// </summary>
-  [ExecuteInEditMode]
-  public class ViveBuildToggler : MonoBehaviour {
+  [ExecuteInEditMode, RequireComponent(typeof(ViveModule))]
+  public sealed class ViveBuildToggler : MonoBehaviour {
 
     public bool masterClientBuild = false;
 
-    [SerializeField] private GameObject cameraRig;
     [SerializeField] private GameObject masterCam;
+    private ViveModule module;
+
+    void Awake() {
+      module = GetComponent<ViveModule>() as ViveModule;
+    }
 
     // Called in the editor
     void Update() {
-      if (!cameraRig || !masterCam)
+      if (!module.cameraRig || !masterCam)
         return;
 
       //if (Tools.BuildManager.IsMasterClient()) {
       if (masterClientBuild) {
-        cameraRig.SetActive(false);
+        module.cameraRig.SetActive(false);
         if (masterCam) masterCam.SetActive(true);
       } else {
-        cameraRig.SetActive(true);
+        module.cameraRig.SetActive(true);
         if (masterCam) masterCam.SetActive(false);
       }
     }

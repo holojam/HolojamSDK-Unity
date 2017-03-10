@@ -58,7 +58,14 @@ namespace Holojam.Vive {
     protected override void Update() {
       base.Update();
 
-      receiver.label = Network.Canon.IndexToLabel(Tools.BuildManager.BUILD_INDEX, "right");
+      receiver.index = Tools.BuildManager.BUILD_INDEX;
+      receiver.type = ViveModule.Type.RIGHT;
+
+      if (!centroid) {
+        Debug.LogWarning("Holojam.Vive.ViveCalibrator: Centroid not assigned!");
+        return;
+      }
+
       if (receiver.GetPressDown(EVRButtonId.k_EButton_Grip) && canCalibrate)
         // Calibrate to the relative position of the controller
         Calibrate(receiver.TrackedPosition - centroid.position);

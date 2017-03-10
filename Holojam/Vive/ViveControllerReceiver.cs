@@ -15,10 +15,17 @@ namespace Holojam.Vive {
   public class ViveControllerReceiver : Tools.Trackable {
 
     /// <summary>
-    /// Label for the controller.
+    /// Which Actor should we listen to for controller input?
     /// </summary>
-    public string label;
+    public int index = 1;
 
+    public ViveModule.Type type = ViveModule.Type.LEFT;
+
+    /// <summary>
+    /// If true, the position and rotation of this object is updated to match the synchronized
+    /// position and rotation of the controller. Otherwise, this receiver just accumulates
+    /// input data.
+    /// </summary>
     public bool updateTracking = true;
 
     private int[] previousFrame = new int[6];
@@ -39,10 +46,10 @@ namespace Holojam.Vive {
     };
 
     /// <summary>
-    /// Automatically selects the canon Vive label depending on the build index, with an additional controller label.
+    /// Selects the canon Vive label depending on the type and build index.
     /// </summary>
     public override string Label {
-      get { return label; }
+      get { return Network.Canon.IndexToLabel(index, ViveModule.TypeToString(type)); }
     }
 
     /// <summary>
