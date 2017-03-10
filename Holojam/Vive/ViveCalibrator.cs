@@ -60,6 +60,7 @@ namespace Holojam.Vive {
 
       receiver.index = Tools.BuildManager.BUILD_INDEX;
       receiver.type = ViveModule.Type.RIGHT;
+      receiver.updateTracking = true;
 
       if (!centroid) {
         Debug.LogWarning("Holojam.Vive.ViveCalibrator: Centroid not assigned!");
