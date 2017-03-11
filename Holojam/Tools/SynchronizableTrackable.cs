@@ -33,7 +33,7 @@ namespace Holojam.Tools {
     /// Synchronizes Trackable data by default.
     /// </summary>
     protected virtual void Sync() {
-      if (Host) {
+      if (Sending) {
         RawPosition = transform.position;
         RawRotation = transform.rotation;
       } else {
