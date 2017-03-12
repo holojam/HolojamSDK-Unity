@@ -36,7 +36,7 @@ namespace Holojam.Network {
       EditorGUI.LabelField(rect, brand,
         Application.isPlaying ?
           controller ?
-            controller.Sending ? "Sending" :
+            controller.Sending ? "Sending" : controller.Deaf ? "Not Sending" :
             controller.Tracked ? "Tracked" : "Untracked" :
           listener ?
             listener.Fired ? "Fired" : "Event" :

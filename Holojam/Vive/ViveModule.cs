@@ -71,8 +71,8 @@ namespace Holojam.Vive {
       SteamVR_Camera camera = cameraRig.GetComponentInChildren<SteamVR_Camera>() as SteamVR_Camera;
 
       if (camera) {
-        if (!camera.GetComponent<ViveRelay>()) {
-          camera.gameObject.AddComponent<ViveRelay>();
+        if (!camera.GetComponent<Tools.ActorTransformRelay>()) {
+          camera.gameObject.AddComponent<Tools.ActorTransformRelay>();
         }
       } else {
         Debug.LogWarning(
