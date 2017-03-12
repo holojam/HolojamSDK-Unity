@@ -7,18 +7,25 @@ using UnityEngine;
 public class Spectator : Holojam.Tools.Trackable {
 
   public int targetIndex = 1;
+  public string spectatorLabel = "Spectator";
+
+  public bool autoCycle = false;
+  public float cycleInterval = 4; //s
 
   Vector3 spectatorPosition;
   Quaternion spectatorRotation;
   bool lastTracked = false;
+  float lastTime;
 
+  // Use canon label, unless target index is not valid (then use spectator label)
   public override string Label {
-    get { return Holojam.Network.Canon.IndexToLabel(targetIndex); }
+    get {
+      return targetIndex > 0 ? Holojam.Network.Canon.IndexToLabel(targetIndex) :
+        spectatorLabel;
+    }
   }
 
   protected override void UpdateTracking() {
-    base.UpdateTracking();
-
     if (Tracked != lastTracked) {
       if (Tracked) {
         // Save position and rotation
@@ -31,6 +38,17 @@ public class Spectator : Holojam.Tools.Trackable {
       }
     }
 
+    base.UpdateTracking();
     lastTracked = Tracked;
+
+    if (autoCycle) {
+      int count = Holojam.Network.Controller.All<Holojam.Tools.Actor>().Count + 1;
+
+      // Cycle all perspectives
+      if (Time.time > lastTime + cycleInterval) {
+        targetIndex = (targetIndex + 1) % count;
+        lastTime = Time.time;
+      }
+    }
   }
 }
