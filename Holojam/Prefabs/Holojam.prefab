@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 114204134467722802}
   - component: {fileID: 114615662255141442}
   - component: {fileID: 114748726467797520}
-  - component: {fileID: 114000013142514114}
-  - component: {fileID: 114000013885288260}
   - component: {fileID: 114653569414185928}
+  - component: {fileID: 114000013142514114}
+  - component: {fileID: 114694228294611138}
   m_Layer: 0
   m_Name: Holojam
   m_TagString: Untagged
@@ -57,17 +57,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   editorEventData: []
---- !u!114 &114000013885288260
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 160812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c979fbd37a1ea4fe48c3ce8df48da9cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114204134467722802
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -106,6 +95,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   configFilePath: ./HolojamConfig.xml
+--- !u!114 &114694228294611138
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 160812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1834260139, guid: 1362ee83563f0458bbbc776de423bfe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114748726467797520
 MonoBehaviour:
   m_ObjectHideFlags: 1

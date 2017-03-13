@@ -1,6 +1,7 @@
 // Spectator.cs
 // Created by Holojam Inc. on 11.03.17
 
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
@@ -14,7 +15,7 @@ public class Spectator : Holojam.Tools.Trackable {
 
   Vector3 spectatorPosition;
   Quaternion spectatorRotation;
-  bool lastTracked = false;
+  bool lastTracked = false, loaded = true;
   float lastTime;
 
   // Use canon label, unless target index is not valid (then use spectator label)
@@ -28,13 +29,14 @@ public class Spectator : Holojam.Tools.Trackable {
   protected override void UpdateTracking() {
     if (Tracked != lastTracked) {
       if (Tracked) {
-        // Save position and rotation
-        spectatorPosition = transform.position;
-        spectatorRotation = transform.rotation;
+        if (loaded) {
+          // Save position and rotation
+          spectatorPosition = transform.position;
+          spectatorRotation = transform.rotation;
+          loaded = false;
+        }
       } else {
-        // Load position and rotation
-        transform.position = spectatorPosition;
-        transform.rotation = spectatorRotation;
+        StartCoroutine(LoadSpectator());
       }
     }
 
@@ -49,6 +51,17 @@ public class Spectator : Holojam.Tools.Trackable {
         targetIndex = (targetIndex + 1) % count;
         lastTime = Time.time;
       }
+    }
+  }
+
+  // Only load spectator values after a timeout
+  IEnumerator LoadSpectator() {
+    yield return new WaitForSeconds(2);
+    if (!Tracked) {
+      // Load position and rotation
+      transform.position = spectatorPosition;
+      transform.rotation = spectatorRotation;
+      loaded = true;
     }
   }
 }
