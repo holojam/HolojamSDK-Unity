@@ -11,7 +11,7 @@ namespace Holojam.Utility {
   /// </summary>
   public sealed class Metrics : Network.EventIO<MetricsInput, MetricsOutput> {
 
-    protected override void OnInput(string source, Network.Flake input) {
+    protected override void OnInput(string source, string scope, Network.Flake input) {
       output.Tick = input.ints[0];
       output.Push();
     }
