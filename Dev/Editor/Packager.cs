@@ -55,9 +55,6 @@ public class Packager : EditorWindow{
       foreach (string f in Directory.GetFiles(Directory.GetCurrentDirectory(), "*.unitypackage"))
         File.Delete(f);
 
-    foreach(string dir in subdirs)
-      Debug.Log(dir);
-
     AssetDatabase.ExportPackage(
       subdirs.ToArray(), 
       output + "-v" + version + ".unitypackage", 
