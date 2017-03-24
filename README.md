@@ -2,16 +2,16 @@ The Holojam SDK enables content creators to build complex location-based multipl
 
 ## Get Holojam
 
-Download the latest release [here](https://github.com/holojamvr/HolojamSDK-Unity/releases). In Unity, Go to _'Assets -> Package -> Custom Package...'_ and import Holojam into your project.
+Download the latest release [here](https://github.com/holojamvr/HolojamSDK-Unity/releases/latest). In Unity, Go to _'Assets -> Package -> Custom Package...'_ and import Holojam into your project.
 
 Note: at the moment, Holojam releases are pre-configured for SteamVR (Vive). **Make sure to install the [SteamVR plugin](https://www.assetstore.unity3d.com/en/#!/content/32647) in your project alongside Holojam.**
 
 ### Developer Version
 
-For the latest (warning: may be unstable) code, clone the repository within an empty or existing Unity project under the `Assets` directory. **Before opening Unity**, copy in `Holojam-Core.dll` under `Holojam/`.
+For the latest (warning: may be unstable) code, clone the repository within an empty or existing Unity project under the `Assets` directory. **Before opening Unity**, copy in `Holojam-Core.dll` under `Holojam/`. In the Editor Settings, make sure to set 'Version Control Mode' to 'Visible Meta Files' and 'Asset Serialization Mode' to 'Force Text'.
 
 ## Documentation
 
 - API documentation available [here](https://acgaudette.gitlab.io/holojamsdk-unity-docs/annotated.html).
-- Check out the Vive setup tutorial on the [wiki](https://github.com/holojamvr/HolojamSDK-Unity/wiki/Vive-Setup-Tutorial-(Beginner)).
+- Check out the Vive setup tutorial on the [wiki](https://github.com/holojamvr/HolojamSDK-Unity/wiki/Basic-Setup-Tutorial-(Vive)).
 - Example code can be found under [Holojam/Demo/Scripts](https://github.com/holojamvr/HolojamSDK-Unity/tree/master/Holojam/Demo/Scripts).

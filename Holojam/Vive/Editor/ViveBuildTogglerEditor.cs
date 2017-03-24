@@ -11,13 +11,28 @@ namespace Holojam.Vive {
   [CustomEditor(typeof(ViveBuildToggler))]
   public class ViveBuildTogglerEditor : Editor {
 
+    SerializedProperty masterClientBuild, masterCam;
+
+    void OnEnable() {
+      masterClientBuild = serializedObject.FindProperty("masterClientBuild");
+      masterCam = serializedObject.FindProperty("masterCam");
+    }
+
     public override void OnInspectorGUI() {
-      base.OnInspectorGUI();
+      serializedObject.Update();
+
+      GUI.enabled = Tools.BuildManager.IsMasterClient() && !Tools.BuildManager.IsSpectator();
+      EditorGUILayout.PropertyField(masterClientBuild);
+      GUI.enabled = true;
+
+      EditorGUILayout.PropertyField(masterCam);
 
       PlayerSettings.virtualRealitySupported =
         !((ViveBuildToggler)serializedObject.targetObject).masterClientBuild;
 
       EditorGUILayout.LabelField("Virtual Reality Supported: " + PlayerSettings.virtualRealitySupported);
+
+      serializedObject.ApplyModifiedProperties();
     }
   }
 }

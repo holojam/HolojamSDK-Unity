@@ -26,6 +26,11 @@ namespace Holojam.Vive {
 
     // Called in the editor
     void Update() {
+      // Automatically set masterClientBuild if build or spectator
+      if (!Tools.BuildManager.IsMasterClient()) {
+        masterClientBuild = Tools.BuildManager.IsSpectator();
+      }
+
       if (!module.cameraRig) {
         Debug.LogWarning("Holojam.Vive.ViveBuildToggler: ViveModule camera rig not assigned! ");
         return;

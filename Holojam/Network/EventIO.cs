@@ -27,9 +27,11 @@ namespace Holojam.Network {
     /// <summary>
     /// The function called when the input event is triggered.
     /// </summary>
-    protected abstract void OnInput(string source, Flake input);
+    protected abstract void OnInput(string source, string scope, Flake input);
 
-    internal void RouteIO(string source, Flake input) { OnInput(source, input); }
+    internal void RouteIO(string source, string scope, Flake input) {
+      OnInput(source, scope, input);
+    }
 
     /// <summary>
     /// Initialize input and output components.

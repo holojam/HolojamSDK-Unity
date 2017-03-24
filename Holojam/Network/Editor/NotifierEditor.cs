@@ -17,10 +17,14 @@ namespace Holojam.Network {
       EditorStyles.label.wordWrap = true;
 
       Notifier notifier = serializedObject.targetObject as Notifier;
+
       foreach (string e in notifier.editorEventData)
         EditorGUILayout.LabelField("   " + e);
+
       if (!Application.isPlaying)
         EditorGUILayout.LabelField("   (Paused)");
+      else if (notifier.editorEventData.Count == 0)
+        EditorGUILayout.LabelField("   (None)");
     }
   }
 }

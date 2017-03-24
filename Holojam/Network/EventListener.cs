@@ -88,11 +88,11 @@ namespace Holojam.Network {
     /// <summary>
     /// Intercept function for display (View) purposes in the editor.
     /// </summary>
-    void Intercept(string source, Flake input) {
+    void Intercept(string source, string scope, Flake input) {
       #if UNITY_EDITOR
       StartCoroutine(Fire());
       #endif
-      Callback(source, input);
+      Callback(source, scope, input);
     }
 
     #if UNITY_EDITOR
