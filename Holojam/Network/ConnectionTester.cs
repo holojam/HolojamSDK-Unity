@@ -2,19 +2,49 @@
 using System.Collections;
 using UnityEngine;
 
-// TODO: Doc this all
 
 namespace Holojam.Network {
+  /// <summary>
+  /// Utility for avoiding issues with the client send/receive threads.
+  /// Periodically pings the relay and listens for a response. If multiple pings go unanswered,
+  /// restarts the send and recieve threads on this client.
+  /// </summary>
   public class ConnectionTester : MonoBehaviour {
 
+    /// <summary>
+    /// The time interval between ping messages.
+    /// </summary>
     const float SECONDS_BETWEEN_CHECKS = 5;
+    /// <summary>
+    /// The amount of time in seconds before a ping is considered lost and restarts.
+    /// </summary>
     const float TIMEOUT = 1;
+    /// <summary>
+    /// Number of unanswered pings before the client threads are restarted.
+    /// </summary>
     const int FAILED_CHECKS_BEFORE_RESTART = 3;
 
+    /// <summary>
+    /// The time since the last ping was sent.
+    /// </summary>
     float timeSinceLastCheckSent = 0;
+    /// <summary>
+    /// True if we've sent a ping and are waiting for a response. No other pings should go out
+    /// while we're waiting.
+    /// </summary>
     bool awaitingResponse = false;
+    /// <summary>
+    /// The prefix to the label the ping notification uses.
+    /// </summary>
     string notificationLabelPrefix = "ClientConnectionCheck_";
+    /// <summary>
+    /// This gets set to a random value so that multiple clients running on a single computer
+    /// can still differentiate between ping messages meant for each one.
+    /// </summary>
     string randomSuffix = "?";
+    /// <summary>
+    /// The number of consecutive pings that have gone unanswered so far.
+    /// </summary>
     int consecutiveFailedChecks = 0;
 
     void Start() {
@@ -45,12 +75,21 @@ namespace Holojam.Network {
       }
     }
 
+    /// <summary>
+    /// Sends out a ping notification.
+    /// </summary>
     void SendPing() {
       Client.Notify(notificationLabelPrefix + randomSuffix);
       timeSinceLastCheckSent = 0;
       awaitingResponse = true;
     }
 
+    /// <summary>
+    /// Callback for when a ping notification is received.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="scope"></param>
+    /// <param name="data"></param>
     void PingReceived(string source, string scope, Flake data) {
       if (source == Canon.Origin()) {
         awaitingResponse = false;
