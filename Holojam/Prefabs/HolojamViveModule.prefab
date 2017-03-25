@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 114120379253625214}
   - component: {fileID: 114362550112674314}
   - component: {fileID: 114115312097726392}
-  - component: {fileID: 114043421559764522}
   m_Layer: 0
   m_Name: HolojamViveModule
   m_TagString: Untagged
@@ -43,22 +42,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114043421559764522
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1525909844803024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29b0e55cc47f51b438ed5ea556024c73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localSpace: 0
-  smooth: 0
-  index: 0
-  type: 1
-  updateTracking: 1
 --- !u!114 &114115312097726392
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -70,8 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43e4a3de88b264e15a1e24288ec906ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centroid: {fileID: 0}
-  canCalibrate: 0
+  enable: 1
 --- !u!114 &114120379253625214
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -95,5 +77,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58513592c7b13d247b639e6c2ed1cb56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterClientBuild: 1
+  masterClientBuild: 0
   masterCam: {fileID: 0}

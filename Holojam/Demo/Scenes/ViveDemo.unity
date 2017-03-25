@@ -2335,11 +2335,6 @@ Prefab:
       propertyPath: masterCam
       value: 
       objectReference: {fileID: 589128015}
-    - target: {fileID: 114362550112674314, guid: 042629fe5f748456fa6a53bd43406a1a,
-        type: 2}
-      propertyPath: masterClientBuild
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 042629fe5f748456fa6a53bd43406a1a, type: 2}
   m_IsPrefabParent: 0
