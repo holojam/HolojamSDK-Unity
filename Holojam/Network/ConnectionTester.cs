@@ -9,14 +9,13 @@ namespace Holojam.Network {
 
     const float SECONDS_BETWEEN_CHECKS = 5;
     const float TIMEOUT = 1;
-    //const int FAILED_CHECKS_BEFORE_RESTART = 3;
+    const int FAILED_CHECKS_BEFORE_RESTART = 3;
 
     float timeSinceLastCheckSent = 0;
     bool awaitingResponse = false;
     string notificationLabelPrefix = "ClientConnectionCheck_";
     string randomSuffix = "?";
-
-    // TODO: Try sending multiple pings before restarting
+    int consecutiveFailedChecks = 0;
 
     void Start() {
       randomSuffix = UnityEngine.Random.Range(1, int.MaxValue).ToString();
@@ -30,9 +29,19 @@ namespace Holojam.Network {
         SendPing();
       }
       else if (awaitingResponse && timeSinceLastCheckSent > TIMEOUT) {
-        Debug.LogError("Connection check response not received from server, restarting client...");
-        Client.Restart();
-        awaitingResponse = false;
+        consecutiveFailedChecks++;
+
+        if (consecutiveFailedChecks >= FAILED_CHECKS_BEFORE_RESTART) {
+          Debug.LogError("Holojam.Network.ConnectionTester: Server not responding to connection "
+                         + "test messages. Restarting client...");
+          Client.Restart();
+          consecutiveFailedChecks = 0;
+          awaitingResponse = false;
+          timeSinceLastCheckSent = 0;
+        }
+        else {
+          SendPing();
+        }
       }
     }
 
@@ -45,6 +54,7 @@ namespace Holojam.Network {
     void PingReceived(string source, string scope, Flake data) {
       if (source == Canon.Origin()) {
         awaitingResponse = false;
+        consecutiveFailedChecks = 0;
       }
     }
   }
