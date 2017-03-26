@@ -49,6 +49,9 @@ namespace Holojam.Tools {
       }
 
       foreach (XmlNode node in configFile.DocumentElement.ChildNodes) {
+        if (node.NodeType == XmlNodeType.Comment) {
+            continue;
+        }
         switch (node.Name) {
         case "RelayIP":
           Client client = GetComponent<Client>();
