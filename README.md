@@ -2,7 +2,7 @@ The Holojam SDK enables content creators to build complex location-based multipl
 
 ## Get Holojam
 
-Download the latest release [here](https://github.com/holojamvr/HolojamSDK-Unity/releases). In Unity, Go to _'Assets -> Package -> Custom Package...'_ and import Holojam into your project.
+Download the latest release [here](https://github.com/holojamvr/HolojamSDK-Unity/releases/latest). In Unity, Go to _'Assets -> Package -> Custom Package...'_ and import Holojam into your project.
 
 Note: at the moment, Holojam releases are pre-configured for SteamVR (Vive). **Make sure to install the [SteamVR plugin](https://www.assetstore.unity3d.com/en/#!/content/32647) in your project alongside Holojam.**
 
