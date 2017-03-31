@@ -10,7 +10,7 @@ namespace Holojam.Network {
   [CustomEditor(typeof(Client))]
   public class ClientEditor : Editor {
 
-    SerializedProperty relayAddress, upstreamPort, multicastAddress, downstreamPort;
+    SerializedProperty relayAddress, upstreamPort, multicastAddress, downstreamPort, verboseLogs;
     SerializedProperty sendScope, rate;
 
     string newRelayAddress = "?";
@@ -25,6 +25,7 @@ namespace Holojam.Network {
       downstreamPort = serializedObject.FindProperty("downstreamPort");
       sendScope = serializedObject.FindProperty("sendScope");
       rate = serializedObject.FindProperty("rate");
+      verboseLogs = serializedObject.FindProperty("verboseLogs");
 
       newRelayAddress = relayAddress.stringValue;
       newUpstreamPort = upstreamPort.intValue;
@@ -41,8 +42,7 @@ namespace Holojam.Network {
         // If we're in run mode, we need to go through the API to change the server address so that
         // we restart the sending and receiving threads and so on.
         newRelayAddress = EditorGUILayout.TextField("Relay Address", newRelayAddress);
-      }
-      else {
+      } else {
         // Otherwise, we can just change the serialized property directly.
         EditorGUILayout.PropertyField(relayAddress);
       }
@@ -62,14 +62,15 @@ namespace Holojam.Network {
 
       EditorGUILayout.Space();
       EditorGUILayout.LabelField("Packets per Second", bold);
+
       if(Application.isPlaying)
         style.normal.textColor = client.sentPPS > 0 ?
-               new Color(0.5f, 1, 0.5f) : new Color(1, 0.5f, 0.5f);
+          new Color(0.5f, 1, 0.5f) : new Color(1, 0.5f, 0.5f);
       EditorGUILayout.LabelField("Sent:", client.sentPPS.ToString(), style);
 
       if(Application.isPlaying)
         style.normal.textColor = client.receivedPPS > 0 ?
-               new Color(0.5f, 1, 0.5f) : new Color(1, 0.5f, 0.5f);
+          new Color(0.5f, 1, 0.5f) : new Color(1, 0.5f, 0.5f);
       EditorGUILayout.LabelField("Received", client.receivedPPS.ToString(), style);
 
       EditorGUILayout.Space();
@@ -79,18 +80,6 @@ namespace Holojam.Network {
         EditorGUILayout.LabelField(s);
       if(!Application.isPlaying)
         EditorGUILayout.LabelField("   (Paused)");
-
-      /*
-         EditorGUILayout.Space();
-         EditorGUILayout.LabelField("Controllers",bold);
-         style = new GUIStyle();
-         foreach(Controller c in Controller.All){
-            if(Application.isPlaying)
-               style.normal.textColor = c.Tracked?
-                  new Color(0.5f,1,0.5f):new Color(1,0.5f,0.5f);
-            EditorGUILayout.LabelField("  "+c.Label+(c.Sending?" (S)":""),style);
-         }
-         */
 
       EditorGUILayout.Space();
       EditorGUIUtility.labelWidth = 0;
@@ -102,20 +91,21 @@ namespace Holojam.Network {
           newUpstreamPort = EditorGUILayout.IntField("Upstream Port", newUpstreamPort);
           newMulticastAddress = EditorGUILayout.TextField("Multicast Address", newMulticastAddress);
           newDownstreamPort = EditorGUILayout.IntField("Downstream Port", newDownstreamPort);
-        }
-        else {
+        } else {
           // Otherwise, we can just change the serialized property directly.
           EditorGUILayout.PropertyField(upstreamPort);
           EditorGUILayout.PropertyField(multicastAddress);
           EditorGUILayout.PropertyField(downstreamPort);
         }
         EditorGUILayout.PropertyField(rate);
+        EditorGUILayout.PropertyField(verboseLogs);
 
         // "Apply changes" button should only be shown if we changed these settings while in run mode
-        if (Application.isPlaying && (newUpstreamPort != upstreamPort.intValue
-                                      || newMulticastAddress != multicastAddress.stringValue
-                                      || newDownstreamPort != downstreamPort.intValue))
-        {
+        if (Application.isPlaying && (
+          newUpstreamPort != upstreamPort.intValue
+          || newMulticastAddress != multicastAddress.stringValue
+          || newDownstreamPort != downstreamPort.intValue)
+        ) {
           if (GUILayout.Button("Apply changes")) {
             client.ChangeClientSettings(
               client.RelayAddress, newUpstreamPort, newMulticastAddress, newDownstreamPort
@@ -125,6 +115,6 @@ namespace Holojam.Network {
       }
 
       serializedObject.ApplyModifiedProperties();
-      }
+    }
   }
 }
