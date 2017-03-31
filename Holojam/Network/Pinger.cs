@@ -9,7 +9,7 @@ namespace Holojam.Network {
   /// Periodically pings the relay and listens for a response. If multiple pings go unanswered,
   /// restarts the send and recieve threads on this client.
   /// </summary>
-  public class ConnectionTester : MonoBehaviour {
+  public class Pinger : MonoBehaviour {
 
     /// <summary>
     /// The time interval between ping messages.
