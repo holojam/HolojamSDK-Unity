@@ -51,6 +51,8 @@ namespace Holojam.Network {
       randomSuffix = UnityEngine.Random.Range(1, int.MaxValue).ToString();
       Notifier.AddSubscriber(PingReceived, notificationLabelPrefix + randomSuffix,
                              Client.SEND_SCOPE);
+      // Set us up to send our first ping immediately
+      timeSinceLastCheckSent = SECONDS_BETWEEN_CHECKS;
     }
 
     void Update() {
