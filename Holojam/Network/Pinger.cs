@@ -47,7 +47,16 @@ namespace Holojam.Network {
     /// </summary>
     int consecutiveFailedChecks = 0;
 
+    /// <summary>
+    /// Indicates whether this client is connected.
+    /// A client is considered to be disconnected if enough pings have failed to restart the client
+    /// threads (see FAILED_CHECKS_BEFORE_RESTART). Once a client is disconnected, a single
+    /// successful ping is enough to get it to report as being connected again.
+    /// </summary>
+    public bool Connected { get; private set; }
+
     void Start() {
+      Connected = false;
       randomSuffix = UnityEngine.Random.Range(1, int.MaxValue).ToString();
       Notifier.AddSubscriber(PingReceived, notificationLabelPrefix + randomSuffix,
                              Client.SEND_SCOPE);
@@ -70,6 +79,8 @@ namespace Holojam.Network {
           consecutiveFailedChecks = 0;
           awaitingResponse = false;
           timeSinceLastCheckSent = 0;
+
+          Connected = false;
         }
         else {
           SendPing();
@@ -96,6 +107,7 @@ namespace Holojam.Network {
       if (source == Canon.Origin()) {
         awaitingResponse = false;
         consecutiveFailedChecks = 0;
+        Connected = true;
       }
     }
   }
