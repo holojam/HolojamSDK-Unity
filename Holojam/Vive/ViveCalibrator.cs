@@ -28,8 +28,8 @@ namespace Holojam.Vive {
     bool ready = false;
 
     ViveModule module;
-    Vector3 cachedPosition;
-    Quaternion cachedRotation;
+    Vector3 cachedPosition = Vector3.zero;
+    Quaternion cachedRotation = Quaternion.identity;
 
     bool Valid {
       get {
@@ -118,9 +118,12 @@ namespace Holojam.Vive {
       Vector3 offset = .5f * (l0 + l1);
       module.cameraRig.transform.localPosition = cachedPosition - offset;
 
-      // Calculate the forward vector with the corner
-      Vector3 forward = l0 - new Vector3(l0.x, 0, l1.z);
-      module.cameraRig.transform.localRotation = cachedRotation * Quaternion.LookRotation(forward);
+      // Calculate the forward vector with the diagonal
+      Vector3 forward = l1 - l0;
+      module.cameraRig.transform.localRotation = cachedRotation
+        * Quaternion.Inverse(Quaternion.LookRotation(forward));
+
+      forward.Normalize();
 
       Network.RemoteLogger.Log(
         "Calibration successful: offset = (" + offset.x + ", " + offset.z
