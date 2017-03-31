@@ -36,7 +36,7 @@ namespace Holojam.Network {
     /// <summary>
     /// The prefix to the label the ping notification uses.
     /// </summary>
-    string notificationLabelPrefix = "ClientConnectionCheck_";
+    string notificationLabelPrefix = "Ping_";
     /// <summary>
     /// This gets set to a random value so that multiple clients running on a single computer
     /// can still differentiate between ping messages meant for each one.
