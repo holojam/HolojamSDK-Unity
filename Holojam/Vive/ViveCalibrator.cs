@@ -17,7 +17,7 @@ namespace Holojam.Vive {
   [RequireComponent(typeof(ViveModule))]
   public sealed class ViveCalibrator : MonoBehaviour {
 
-    const float ERROR = .04f; // 4cm
+    const float ERROR = .02f; // 2cm
 
     SteamVR_Events.Action posesAction;
     Vector3[] lighthouses = new Vector3[2];
