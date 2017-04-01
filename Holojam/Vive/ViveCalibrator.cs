@@ -119,7 +119,9 @@ namespace Holojam.Vive {
 
       // Calculate the forward vector with the diagonal
       Vector3 forward = l1 - l0;
-      Quaternion rotation = Quaternion.LookRotation(forward);
+      Quaternion rotation = Quaternion.Inverse(
+        Quaternion.LookRotation(forward)
+      );
       module.cameraRig.transform.localRotation = cachedRotation * rotation;
 
       // Offset the centroid by its difference to the tracking center,
