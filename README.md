@@ -16,4 +16,4 @@ For the latest (warning: may be unstable) code, clone the repository within an e
 
 - API documentation available [here](https://acgaudette.gitlab.io/holojamsdk-unity-docs/annotated.html).
 - Check out the Vive setup tutorial on the [wiki](https://github.com/holojamvr/HolojamSDK-Unity/wiki/Basic-Setup-Tutorial-(Vive)).
-- Example code can be found under [Holojam/Demo/Scripts](https://github.com/holojamvr/HolojamSDK-Unity/tree/master/Holojam/Demo/Scripts).
+- Example code can be found under [Holojam/Demo/Scripts/Examples](https://github.com/holojamvr/HolojamSDK-Unity/tree/master/Holojam/Demo/Scripts/Examples).
