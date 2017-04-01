@@ -76,7 +76,10 @@ namespace Holojam.Vive {
       posesAction = SteamVR_Events.NewPosesAction(OnNewPoses);
       module = GetComponent<ViveModule>() as ViveModule;
 
-      if (!Valid) return;
+      if (!Valid) {
+        Debug.Log("Holojam.Vive.ViveCalibrator: Build state not valid for calibration");
+        return;
+      }
 
       if (!module.cameraRig) {
         Network.RemoteLogger.Log(
@@ -114,16 +117,17 @@ namespace Holojam.Vive {
       l0 = new Vector3(l0.x, 0, l0.z);
       l1 = new Vector3(l1.x, 0, l1.z);
 
-      // Offset the centroid by its difference to the tracking center
-      Vector3 offset = .5f * (l0 + l1);
-      module.cameraRig.transform.localPosition = cachedPosition - offset;
-
       // Calculate the forward vector with the diagonal
       Vector3 forward = l1 - l0;
-      module.cameraRig.transform.localRotation = cachedRotation
-        * Quaternion.Inverse(Quaternion.LookRotation(forward));
+      Quaternion rotation = Quaternion.LookRotation(forward);
+      module.cameraRig.transform.localRotation = cachedRotation * rotation;
 
-      forward.Normalize();
+      // Offset the centroid by its difference to the tracking center,
+      // relative to the forward vector
+      Vector3 offset = .5f * (l0 + l1);
+      module.cameraRig.transform.localPosition = cachedPosition + rotation * -offset;
+
+      forward.Normalize(); // For debugging
 
       Network.RemoteLogger.Log(
         "Calibration successful: offset = (" + offset.x + ", " + offset.z
