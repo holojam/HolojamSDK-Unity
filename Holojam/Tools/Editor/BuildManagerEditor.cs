@@ -71,12 +71,12 @@ namespace Holojam.Tools {
       EditorGUILayout.Space();
       EditorGUILayout.LabelField("Actors", bold);
       EditorStyles.label.wordWrap = true;
-      GUIStyle style = new GUIStyle();
+      //GUIStyle style = new GUIStyle();
 
       foreach (Actor a in actors) {
-        style.normal.textColor = a.debugColor;
+        //style.normal.textColor = a.debugColor;
         EditorGUILayout.LabelField("   " + a.gameObject.name + " [" + a.Brand + "] " +
-          (a.IsLocal ? "(Local) " : "") + (a.IsBuild ? "(Build)" : ""), style
+          (a.IsLocal ? "(Local) " : "") + (a.IsBuild ? "(Build)" : "")//, style
         );
       }
 
