@@ -6,15 +6,16 @@ using UnityEngine;
 
 public class SynchronizableComponent : Holojam.Tools.SynchronizableTrackable {
 
-  // Inspector fields
+  // As an example, expose all the Synchronizable properties in the inspector.
+  // In practice you probably don't want to do this.
 
-  [SerializeField] string label = "Synchronizable";
-  [SerializeField] string scope = "";
+  public string label = "Synchronizable";
+  public string scope = "";
 
-  [SerializeField] bool host = true;
-  [SerializeField] bool autoHost = false;
+  public bool host = true;
+  public bool autoHost = false;
 
-  // Control the label, scope, host, and auto-host fields within the Unity editor
+  // Point the property overrides to the public inspector fields
 
   public override string Label { get { return label; } }
   public override string Scope { get { return scope; } }
