@@ -18,14 +18,16 @@ namespace Holojam.Network {
       GUIStyle style = new GUIStyle(EditorStyles.boldLabel);
 
       if(Application.isPlaying) {
-        style.normal.textColor = latency > 100 ? new Color(1, .5f, .5f) :
+        style.normal.textColor = latency > 100 || !ping.Connected ? new Color(1, .5f, .5f) :
           latency > 50 ? new Color(1, 1, .5f) : new Color(.5f, 1, .5f);
       }
 
       EditorGUILayout.LabelField(
-        "Latency", Application.isPlaying ? (latency + "ms") : "Paused", style
+        "Latency", Application.isPlaying ? ping.Connected ?
+          (latency + "ms") : "Disconnected" : "Paused", style
       );
 
+      EditorUtility.SetDirty(ping);
       serializedObject.ApplyModifiedProperties();
     }
   }
