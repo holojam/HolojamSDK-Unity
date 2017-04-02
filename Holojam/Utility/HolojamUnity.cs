@@ -7,6 +7,10 @@ using UnityEditor;
 #endif
 
 namespace Holojam.Utility {
+
+  /// <summary>
+  /// Utility class for the Holojam prefab.
+  /// </summary>
   public class HolojamUnity : MonoBehaviour {
 
     #if UNITY_EDITOR
