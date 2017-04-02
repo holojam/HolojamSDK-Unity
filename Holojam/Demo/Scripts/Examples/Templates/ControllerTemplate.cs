@@ -17,7 +17,7 @@ public class ControllerTemplate : Holojam.Network.Controller {
   // Controller property overrides
 
   public override string Label {
-    get { return "label"; }
+    get { return "label"; } // The unique identifier for this piece of data
   }
 
   public override string Scope {
@@ -142,7 +142,7 @@ public class ControllerTemplate : Holojam.Network.Controller {
     );
   }
 
-  // You need to reset (allocate) the flake data before you can use it
+  // You need to reset (allocate) this Controller's data before you can use it
   // Awake() calls ResetData() by default
   public override void ResetData() {
     data = new Holojam.Network.Flake(

@@ -7,13 +7,22 @@ using UnityEngine;
 public class SynchronizableComponent : Holojam.Tools.SynchronizableTrackable {
 
   // As an example, expose all the Synchronizable properties in the inspector.
-  // In practice you probably don't want to do this.
+  // In practice, you probably want to control some or all of these manually in code.
 
-  public string label = "Synchronizable";
-  public string scope = "";
+  [SerializeField] string label = "Synchronizable";
+  [SerializeField] string scope = "";
 
-  public bool host = true;
-  public bool autoHost = false;
+  [SerializeField] bool host = true;
+  [SerializeField] bool autoHost = false;
+
+  // As an example, allow all the Synchronizable properties to be publicly settable
+  // In practice, you probably want to control some or all of these manually in code.
+
+  public void SetLabel(string label) { this.label = label; }
+  public void SetScope(string scope) { this.scope = scope; }
+
+  public void SetHost(bool host) { this.host = host; }
+  public void SetAutoHost(bool autoHost) { this.autoHost = autoHost; }
 
   // Point the property overrides to the public inspector fields
 

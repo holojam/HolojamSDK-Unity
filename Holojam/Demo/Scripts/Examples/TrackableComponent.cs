@@ -6,11 +6,17 @@ using UnityEngine;
 
 public class TrackableComponent : Holojam.Tools.Trackable {
 
-  // As an example, expose all the Synchronizable properties in the inspector.
-  // In practice you probably don't want to do this.
+  // As an example, expose all the Trackable properties in the inspector.
+  // In practice, you probably want to control some or all of these manually in code.
 
   public string label = "Trackable";
   public string scope = ""; 
+
+  // As an example, allow all the Trackable properties to be publicly settable
+  // In practice, you probably want to control some or all of these manually in code.
+
+  public void SetLabel(string label) { this.label = label; }
+  public void SetScope(string scope) { this.scope = scope; }
 
   // Point the property overrides to the public inspector fields
 
