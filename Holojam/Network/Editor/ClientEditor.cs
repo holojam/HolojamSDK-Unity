@@ -3,7 +3,6 @@
 
 using UnityEngine;
 using UnityEditor;
-using Holojam.Network;
 
 namespace Holojam.Network {
 
