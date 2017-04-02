@@ -13,7 +13,7 @@ namespace Holojam.Network {
       serializedObject.Update();
 
       Ping ping = (Ping)serializedObject.targetObject;
-      float latency = ping.LastRoundTripLatency;
+      int latency = ping.CorrectedLatency;
 
       GUIStyle style = new GUIStyle(EditorStyles.boldLabel);
 
@@ -23,7 +23,7 @@ namespace Holojam.Network {
       }
 
       EditorGUILayout.LabelField(
-        "Latency", (int)latency + "ms", style
+        "Latency", Application.isPlaying ? (latency + "ms") : "Paused", style
       );
 
       serializedObject.ApplyModifiedProperties();

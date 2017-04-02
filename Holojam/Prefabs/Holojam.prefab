@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 114204134467722802}
   - component: {fileID: 114615662255141442}
   - component: {fileID: 114748726467797520}
+  - component: {fileID: 114736255769847042}
   - component: {fileID: 114653569414185928}
   - component: {fileID: 114000013142514114}
   - component: {fileID: 114694228294611138}
@@ -106,6 +107,17 @@ MonoBehaviour:
   m_Script: {fileID: 1834260139, guid: 1362ee83563f0458bbbc776de423bfe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114736255769847042
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 160812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 270974c6bc6874f3193b202653cdf4be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114748726467797520
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -124,7 +136,9 @@ MonoBehaviour:
   sendScope: Unity
   rate: 3
   verboseLogs: 0
+  ediff: 0
+  sdiff: 0
   sentPPS: 0
   receivedPPS: 0
   threadData: []
-  advanced: 0
+  advanced: 1

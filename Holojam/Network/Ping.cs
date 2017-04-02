@@ -36,15 +36,31 @@ namespace Holojam.Network {
     public bool Connected { get; private set; }
 
     /// <summary>
-    /// The round-trip latency of this client, in milliseconds.
+    /// The raw round-trip latency of this client, in milliseconds.
     /// Includes delay caused by render loop.
     /// </summary>
     public float LastRoundTripLatency { get; private set; }
 
     /// <summary>
+    /// The round-trip latency of this client, in milliseconds.
+    /// Approximately corrects the delay in LastRoundTripLatency using the frame delta time.
+    /// Accurate to +/- (500 / FPS) ms.
+    /// </summary>
+    public int CorrectedLatency {
+      get {
+        return (int)Mathf.Max(0, Mathf.Round(LastRoundTripLatency - .5f * lastDelta * 1000));
+      }
+    }
+
+    /// <summary>
     /// The timestamp of the last ping.
     /// </summary>
     float lastTime = 0;
+
+    /// <summary>
+    /// The delta time at the last ping.
+    /// </summary>
+    float lastDelta = 0;
 
     /// <summary>
     /// True if we've sent a ping and are waiting for a response.
@@ -115,6 +131,7 @@ namespace Holojam.Network {
       Client.PushEvent("Ping" + randomSuffix, data);
       awaitingResponse = true;
       lastTime = Time.unscaledTime;
+      lastDelta = Time.unscaledDeltaTime;
     }
 
     /// <summary>
