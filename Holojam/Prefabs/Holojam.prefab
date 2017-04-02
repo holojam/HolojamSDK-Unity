@@ -122,7 +122,8 @@ MonoBehaviour:
   multicastAddress: 239.0.2.4
   downstreamPort: 9591
   sendScope: Unity
-  rate: 1
+  rate: 3
+  verboseLogs: 0
   sentPPS: 0
   receivedPPS: 0
   threadData: []
