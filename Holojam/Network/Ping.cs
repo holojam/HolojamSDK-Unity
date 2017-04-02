@@ -131,6 +131,11 @@ namespace Holojam.Network {
       Client.PushEvent("Ping" + randomSuffix, data);
       awaitingResponse = true;
       lastTime = Time.unscaledTime;
+      StartCoroutine(SetPingDelta());
+    }
+
+    IEnumerator SetPingDelta() {
+      yield return null;
       lastDelta = Time.unscaledDeltaTime;
     }
 
