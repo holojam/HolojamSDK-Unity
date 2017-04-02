@@ -29,6 +29,19 @@ namespace Holojam.Network {
     const int MAX_FAILURES = 3;
 
     /// <summary>
+    /// Indicates whether or not this client is connected.
+    /// A client is considered to be disconnected if several pings have gone unanswered.
+    /// If this value is false, one successful ping is required to set it to true.
+    /// </summary>
+    public bool Connected { get; private set; }
+
+    /// <summary>
+    /// The round-trip latency of this client, in milliseconds.
+    /// Includes delay caused by render loop.
+    /// </summary>
+    public float LastRoundTripLatency { get; private set; }
+
+    /// <summary>
     /// The timestamp of the last ping.
     /// </summary>
     float lastTime = 0;
@@ -50,11 +63,9 @@ namespace Holojam.Network {
     string randomSuffix = "";
 
     /// <summary>
-    /// Indicates whether or not this client is connected.
-    /// A client is considered to be disconnected if several pings have gone unanswered.
-    /// If this value is false, one successful ping is required to set it to true.
+    /// Allocate one int for latency calculation.
     /// </summary>
-    public bool Connected { get; private set; }
+    Flake data = new Flake(0, 0, 0, 1);
 
     void Start() {
       Connected = false;
@@ -100,7 +111,8 @@ namespace Holojam.Network {
     /// Pings the relay by sending a notification.
     /// </summary>
     void SendPing() {
-      Client.Notify("Ping" + randomSuffix);
+      data.ints[0] = (int)System.Diagnostics.Stopwatch.GetTimestamp();
+      Client.PushEvent("Ping" + randomSuffix, data);
       awaitingResponse = true;
       lastTime = Time.unscaledTime;
     }
@@ -109,9 +121,12 @@ namespace Holojam.Network {
     /// Callback for when a ping notification is received.
     /// Updates connection status, resets failure count.
     /// </summary>
-    void PingReceived(string source, string scope, Flake data) {
+    void PingReceived(string source, string scope, Flake input) {
       if (source == Canon.Origin()) {
         Connected = true;
+        LastRoundTripLatency = ((int)System.Diagnostics.Stopwatch.GetTimestamp() - input.ints[0])
+          * 1000 / (float)System.Diagnostics.Stopwatch.Frequency;
+
         failures = 0;
         awaitingResponse = false;
       }
