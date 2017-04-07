@@ -18,14 +18,14 @@ namespace Holojam.Tools {
     /// Text is shown hovering in front of the main camera, in both the VR headset and 
     /// the main window (if applicable).
     /// </summary>
-    Dictionary<string, string> vrTextToShow = new Dictionary<string, string>();
+    SortedDictionary<string, string> vrTextToShow = new SortedDictionary<string, string>();
     /// <summary>
     /// Mesh for the text shown in the VR headset.
     /// </summary>
     TextMesh vrText;
 
     // TODO: DOC ALL NEW THINGS
-    Dictionary<string, string> windowTextToShow = new Dictionary<string, string>();
+    SortedDictionary<string, string> windowTextToShow = new SortedDictionary<string, string>();
     Text windowText;
 
     /// <summary>
@@ -85,7 +85,7 @@ namespace Holojam.Tools {
       windowText.text = ConcatenateValues(windowTextToShow);
     }
 
-    string ConcatenateValues(Dictionary<string, string> textSnippets) {
+    string ConcatenateValues(SortedDictionary<string, string> textSnippets) {
       string finalText = "";
       foreach (var textSnippet in textSnippets) {
         if (finalText != "") {
