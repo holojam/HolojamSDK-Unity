@@ -24,13 +24,24 @@ namespace Holojam.Tools {
     /// </summary>
     TextMesh vrText;
 
-    // TODO: DOC ALL NEW THINGS
+    /// <summary>
+    /// The key to toggle the window text on and off.
+    /// </summary>
     [SerializeField] KeyCode toggleWindowTextKey = KeyCode.BackQuote;
 
-    // TODO: DOC ALL NEW THINGS
+    /// <summary>
+    /// Whether or not the window (non-VR) text should be shown.
+    /// </summary>
+    [SerializeField] bool showWindowText = false;
+
+    /// <summary>
+    /// Dictionary that contains the strings to show in the window, not in VR.
+    /// </summary>
     SortedDictionary<string, string> windowTextToShow = new SortedDictionary<string, string>();
+    /// <summary>
+    /// GUI object for the non-VR text shown only in the window.
+    /// </summary>
     Text windowText;
-    bool showWindowText = false;
 
     /// <summary>
     /// The size of the VR text.
@@ -100,6 +111,12 @@ namespace Holojam.Tools {
       }
     }
 
+    /// <summary>
+    /// Utility function to concatenate a set of strings stored in a dictionary.
+    /// </summary>
+    /// <returns>A single string with all values of the dictionary concatenated, separated by
+    /// newlines.</returns>
+    /// <param name="textSnippets">The dictionary whose values you want to concatenate.</param>
     string ConcatenateValues(SortedDictionary<string, string> textSnippets) {
       string finalText = "";
       foreach (var textSnippet in textSnippets) {
@@ -111,10 +128,21 @@ namespace Holojam.Tools {
       return finalText;
     }
 
+    /// <summary>
+    /// Sets a string to be displayed to users on the main window (not in VR).
+    /// </summary>
+    /// <param name="key">A unique key to identify this string. This key can be used to then update
+    /// this string (by calling this method again with the same key) or to remove the text
+    /// (by calling ClearWindowText with the same key).</param>
+    /// <param name="text">The text you want to display to the user.</param>
     public static void SetWindowText(string key, string text) {
       global.windowTextToShow[key] = text;
     }
 
+    /// <summary>
+    /// Removes a string from the main window
+    /// </summary>
+    /// <param name="key">The key corresponding to the string you want to remove.</param>
     public static void ClearWindowText(string key) {
       global.windowTextToShow.Remove(key);
     }
@@ -134,7 +162,7 @@ namespace Holojam.Tools {
     /// <summary>
     /// Removes a string from the VR/main camera view.
     /// </summary>
-    /// <param name="key">The key for the string you want to remove.</param>
+    /// <param name="key">The key  corresponding to the string you want to remove.</param>
     public static void ClearVRText(string key) {
       global.vrTextToShow.Remove(key);
     }
