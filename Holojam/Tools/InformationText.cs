@@ -25,8 +25,12 @@ namespace Holojam.Tools {
     TextMesh vrText;
 
     // TODO: DOC ALL NEW THINGS
+    [SerializeField] KeyCode toggleWindowTextKey = KeyCode.BackQuote;
+
+    // TODO: DOC ALL NEW THINGS
     SortedDictionary<string, string> windowTextToShow = new SortedDictionary<string, string>();
     Text windowText;
+    bool showWindowText = false;
 
     /// <summary>
     /// The size of the VR text.
@@ -79,11 +83,21 @@ namespace Holojam.Tools {
       windowText.rectTransform.anchorMax = Vector2.one;
       windowText.rectTransform.offsetMin = Vector2.one * 10;
       windowText.rectTransform.offsetMax = Vector2.one * -10;
+
+      showWindowText = false;
     }
 
     void Update() {
+      if (Input.GetKeyUp(toggleWindowTextKey)) {
+        showWindowText = !showWindowText;
+      }
+
       vrText.text = ConcatenateValues(vrTextToShow);
-      windowText.text = ConcatenateValues(windowTextToShow);
+
+      windowText.gameObject.SetActive(showWindowText);
+      if (showWindowText) {
+        windowText.text = ConcatenateValues(windowTextToShow);
+      }
     }
 
     string ConcatenateValues(SortedDictionary<string, string> textSnippets) {
