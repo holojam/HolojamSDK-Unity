@@ -73,6 +73,7 @@ namespace Holojam.Tools {
       windowTextObject.AddComponent<CanvasRenderer>();
       windowText = windowTextObject.AddComponent<Text>();
       windowText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+      windowText.fontSize = 18;
       windowTextObject.transform.SetParent(canvasObject.transform);
       windowText.rectTransform.anchorMin = Vector2.zero;
       windowText.rectTransform.anchorMax = Vector2.one;
