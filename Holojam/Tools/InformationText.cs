@@ -115,7 +115,7 @@ namespace Holojam.Tools {
       global.windowTextToShow[key] = text;
     }
 
-    public static void ClearWindowText(string key, string text) {
+    public static void ClearWindowText(string key) {
       global.windowTextToShow.Remove(key);
     }
 
