@@ -4,6 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Holojam.Network;
 
 namespace Holojam.Tools {
@@ -22,6 +23,10 @@ namespace Holojam.Tools {
     /// Mesh for the text shown in the VR headset.
     /// </summary>
     TextMesh vrText;
+
+    // TODO: DOC ALL NEW THINGS
+    Dictionary<string, string> windowTextToShow = new Dictionary<string, string>();
+    Text windowText;
 
     /// <summary>
     /// The size of the VR text.
@@ -46,6 +51,7 @@ namespace Holojam.Tools {
       vrText.fontSize = VR_TEXT_FONT_SIZE;
       vrText.transform.localScale = VR_TEXT_DEFAULT_SCALE;
 
+      // Attach it to the main camera, if available, which should be the VR camera in VR builds
       Camera mainCamera = Camera.main;
       if (mainCamera == null) {
         vrText.gameObject.SetActive (false);
@@ -56,16 +62,46 @@ namespace Holojam.Tools {
         vrText.transform.localPosition = VR_TEXT_RELATIVE_POSITION;
         vrText.transform.localRotation = Quaternion.identity;
       }
+
+      // Create a Unity UI panel for the window text (this shouldn't show in VR)
+      GameObject canvasObject = new GameObject("Window Information Text Canvas");
+      Canvas canvas = canvasObject.AddComponent<Canvas>();
+      canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+      canvasObject.AddComponent<CanvasScaler>();
+      canvasObject.AddComponent<GraphicRaycaster>();
+      GameObject windowTextObject = new GameObject("Window Information Text");
+      windowTextObject.AddComponent<CanvasRenderer>();
+      windowText = windowTextObject.AddComponent<Text>();
+      windowText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+      windowTextObject.transform.SetParent(canvasObject.transform);
+      windowText.rectTransform.anchorMin = Vector2.zero;
+      windowText.rectTransform.anchorMax = Vector2.one;
+      windowText.rectTransform.offsetMin = Vector2.one * 10;
+      windowText.rectTransform.offsetMax = Vector2.one * -10;
     }
 
     void Update() {
-      vrText.text = "";
-      foreach (var textSnippet in vrTextToShow) {
-        if (vrText.text != "") {
-          vrText.text += "\n";
+      vrText.text = ConcatenateValues(vrTextToShow);
+      windowText.text = ConcatenateValues(windowTextToShow);
+    }
+
+    string ConcatenateValues(Dictionary<string, string> textSnippets) {
+      string finalText = "";
+      foreach (var textSnippet in textSnippets) {
+        if (finalText != "") {
+          finalText += "\n";
         }
-        vrText.text += textSnippet.Value;
+        finalText += textSnippet.Value;
       }
+      return finalText;
+    }
+
+    public static void SetWindowText(string key, string text) {
+      global.windowTextToShow[key] = text;
+    }
+
+    public static void ClearWindowText(string key, string text) {
+      global.windowTextToShow.Remove(key);
     }
 
     /// <summary>
