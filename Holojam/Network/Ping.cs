@@ -29,6 +29,11 @@ namespace Holojam.Network {
     const int MAX_FAILURES = 3;
 
     /// <summary>
+    /// Identifier key for the message shown to users when the connection is dropped.
+    /// </summary>
+    const string VR_TEXT_STATUS_KEY = "ping status";
+
+    /// <summary>
     /// Indicates whether or not this client is connected.
     /// A client is considered to be disconnected if several pings have gone unanswered.
     /// If this value is false, one successful ping is required to set it to true.
@@ -112,6 +117,11 @@ namespace Holojam.Network {
             "Holojam.Network.Ping: Relay connection attempts failed. Restarting client..."
           );
 
+          Tools.InformationText.SetVRText(
+            VR_TEXT_STATUS_KEY,
+            "<color='red'>Connection error</color>"
+          );
+
           Client.Restart();
 
           failures = 0;
@@ -151,6 +161,7 @@ namespace Holojam.Network {
 
         failures = 0;
         awaitingResponse = false;
+        Tools.InformationText.ClearVRText(VR_TEXT_STATUS_KEY);
       }
     }
   }
