@@ -124,7 +124,7 @@ namespace Holojam.Network {
 
           Tools.InformationText.SetVRText(
             VR_TEXT_STATUS_KEY,
-            "<color='red'>Connection error</color>"
+            "<color='red'><b>CONNECTION ERROR</b></color>"
           );
 
           Tools.InformationText.SetWindowText(
