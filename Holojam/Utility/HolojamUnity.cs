@@ -30,6 +30,10 @@ namespace Holojam.Utility {
         "build index", "Build Index: " + Tools.BuildManager.BUILD_INDEX
       );
       Tools.InformationText.SetWindowText(
+        "build is spectator", "Build is "
+          + (Tools.BuildManager.IsSpectator() ? "" : "not") + " spectator"
+      );
+      Tools.InformationText.SetWindowText(
         "relay ip", "Relay IP: " + client.RelayAddress
           + ":" + client.UpstreamPort
       );
