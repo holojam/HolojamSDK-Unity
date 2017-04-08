@@ -31,6 +31,8 @@ namespace Holojam.Vive {
     Vector3 cachedPosition = Vector3.zero;
     Quaternion cachedRotation = Quaternion.identity;
 
+    const string INFORMATION_TEXT_KEY = "vive calibration";
+
     bool Valid {
       get {
         return !Tools.BuildManager.IsMasterClient() && !Tools.BuildManager.IsSpectator();
@@ -48,6 +50,10 @@ namespace Holojam.Vive {
         Network.RemoteLogger.Log(
           "Calibration failed; lighthouses not found"
         );
+        Tools.InformationText.SetWindowText(
+          INFORMATION_TEXT_KEY,
+          "Vive calibration: <color='red'>could not find lighthouses</color>"
+        );
         return false;
       }
 
@@ -56,12 +62,20 @@ namespace Holojam.Vive {
         Network.RemoteLogger.Log(
           "Calibration failed; lighthouse heights are too similar"
         );
+        Tools.InformationText.SetWindowText(
+          INFORMATION_TEXT_KEY,
+          "Vive calibration: <color='red'>lighthouse heights too similar</color>"
+        );
         return false;
       }
 
       if (!module.cameraRig) {
         Network.RemoteLogger.Log(
           "Calibration failed; ViveModule camera rig not assigned"
+        );
+        Tools.InformationText.SetWindowText(
+          INFORMATION_TEXT_KEY,
+          "Vive calibration: <color='red'>camera rig not assigned</color>"
         );
         return false;
       }
@@ -131,9 +145,17 @@ namespace Holojam.Vive {
 
       forward.Normalize(); // For debugging
 
+      string offsetString = "(" + offset.x + ", " + offset.z + ")";
+      string forwardString = "(" + forward.x + ", " + forward.z + ")";
+
+      Tools.InformationText.SetWindowText(
+        INFORMATION_TEXT_KEY,
+        "Vive calibration: <color='green'>successful</color>, offset " + offsetString
+          + ", forwardString " + forwardString + ";"
+      );
+
       Network.RemoteLogger.Log(
-        "Calibration successful: offset = (" + offset.x + ", " + offset.z
-        + "), forward = (" + forward.x + ", " + forward.z + ")"
+        "Calibration successful: offset = " + offsetString + ", forward = " + forwardString
       );
 
       return true;
