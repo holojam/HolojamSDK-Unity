@@ -34,6 +34,11 @@ namespace Holojam.Network {
     const string VR_TEXT_STATUS_KEY = "ping status";
 
     /// <summary>
+    /// Identifier key for the message shown in the network information.
+    /// </summary>
+    const string WINDOW_TEXT_STATUS_KEY = "ping status";
+
+    /// <summary>
     /// Indicates whether or not this client is connected.
     /// A client is considered to be disconnected if several pings have gone unanswered.
     /// If this value is false, one successful ping is required to set it to true.
@@ -122,6 +127,11 @@ namespace Holojam.Network {
             "<color='red'>Connection error</color>"
           );
 
+          Tools.InformationText.SetWindowText(
+            WINDOW_TEXT_STATUS_KEY,
+            "Ping status: <color='red'>multiple pings failed</color>"
+          );
+
           Client.Restart();
 
           failures = 0;
@@ -129,6 +139,11 @@ namespace Holojam.Network {
           lastTime = Time.unscaledTime;
         } else {
           SendPing(); // Try again
+
+          Tools.InformationText.SetWindowText(
+            WINDOW_TEXT_STATUS_KEY,
+            "Ping status: <color='red'>not received</color>"
+          );
         }
       }
     }
@@ -162,6 +177,11 @@ namespace Holojam.Network {
         failures = 0;
         awaitingResponse = false;
         Tools.InformationText.ClearVRText(VR_TEXT_STATUS_KEY);
+
+        Tools.InformationText.SetWindowText(
+          WINDOW_TEXT_STATUS_KEY,
+          "Ping status: <color='green'>received</color>"
+        );
       }
     }
   }
