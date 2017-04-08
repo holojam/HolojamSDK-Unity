@@ -151,7 +151,7 @@ namespace Holojam.Vive {
       Tools.InformationText.SetWindowText(
         INFORMATION_TEXT_KEY,
         "Vive calibration: <color='green'>successful</color>, offset " + offsetString
-          + ", forwardString " + forwardString + ";"
+          + ", forward vector " + forwardString + ";"
       );
 
       Network.RemoteLogger.Log(
