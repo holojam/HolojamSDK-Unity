@@ -42,6 +42,10 @@ namespace Holojam.Tools {
     /// GUI object for the non-VR text shown only in the window.
     /// </summary>
     Text windowText;
+    /// <summary>
+    /// Parent canvas object for the window text.
+    /// </summary>
+    GameObject windowTextCanvasObject;
 
     /// <summary>
     /// The size of the VR text.
@@ -79,11 +83,22 @@ namespace Holojam.Tools {
       }
 
       // Create a Unity UI panel for the window text (this shouldn't show in VR)
-      GameObject canvasObject = new GameObject("Window Information Text Canvas");
-      Canvas canvas = canvasObject.AddComponent<Canvas>();
+      windowTextCanvasObject = new GameObject("Window Information Text Canvas");
+      Canvas canvas = windowTextCanvasObject.AddComponent<Canvas>();
       canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-      canvasObject.AddComponent<CanvasScaler>();
-      canvasObject.AddComponent<GraphicRaycaster>();
+      windowTextCanvasObject.AddComponent<CanvasScaler>();
+      windowTextCanvasObject.AddComponent<GraphicRaycaster>();
+
+      GameObject backgroundObject = new GameObject("Window Information Text Background");
+      backgroundObject.AddComponent<CanvasRenderer>();
+      Image backgroundImage = backgroundObject.AddComponent<Image>();
+      backgroundObject.transform.SetParent(windowTextCanvasObject.transform);
+      backgroundImage.rectTransform.anchorMin = Vector2.zero;
+      backgroundImage.rectTransform.anchorMax = Vector2.one;
+      backgroundImage.rectTransform.offsetMin = Vector2.one * 5;
+      backgroundImage.rectTransform.offsetMax = Vector2.one * -5;
+      backgroundImage.color = new Color(0f, 0f, 0f, 0.7f);
+
       GameObject windowTextObject = new GameObject("Window Information Text");
       windowTextObject.AddComponent<CanvasRenderer>();
       windowText = windowTextObject.AddComponent<Text>();
@@ -91,7 +106,7 @@ namespace Holojam.Tools {
       windowText.resizeTextForBestFit = true;
       windowText.resizeTextMinSize = 10;
       windowText.resizeTextMaxSize = 32;
-      windowTextObject.transform.SetParent(canvasObject.transform);
+      windowTextObject.transform.SetParent(windowTextCanvasObject.transform);
       windowText.rectTransform.anchorMin = Vector2.zero;
       windowText.rectTransform.anchorMax = Vector2.one;
       windowText.rectTransform.offsetMin = Vector2.one * 10;
@@ -107,7 +122,7 @@ namespace Holojam.Tools {
 
       vrText.text = ConcatenateValues(vrTextToShow);
 
-      windowText.gameObject.SetActive(showWindowText);
+      windowTextCanvasObject.SetActive(showWindowText);
       if (showWindowText) {
         windowText.text = ConcatenateValues(windowTextToShow);
       }
