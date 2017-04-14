@@ -1,4 +1,4 @@
-﻿// ConfigFileReader.cs
+﻿// Configuration.cs
 // Created by Holojam Inc. on 03.04.17
 
 using System.Net;
