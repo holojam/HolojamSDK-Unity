@@ -87,6 +87,8 @@ namespace Holojam.Vive {
 
       cachedPosition = module.cameraRig.transform.localPosition;
       cachedRotation = module.cameraRig.transform.localRotation;
+      calibratedPosition = cachedPosition;
+      calibratedRotation = cachedRotation;
     }
 
     /// <summary>
@@ -100,11 +102,9 @@ namespace Holojam.Vive {
         lastTime = Time.time;
       }
 
-      else if (calibrated) {
-        module.cameraRig.transform.localPosition = calibratedPosition;
-        module.cameraRig.transform.localRotation = calibratedRotation;
-        module.cameraRig.transform.localScale = Vector3.one;
-      }
+      module.cameraRig.transform.localPosition = calibratedPosition;
+      module.cameraRig.transform.localRotation = calibratedRotation;
+      module.cameraRig.transform.localScale = Vector3.one;
     }
 
     /// <summary>
