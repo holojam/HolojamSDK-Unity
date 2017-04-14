@@ -17,7 +17,8 @@ namespace Holojam.Vive {
   [RequireComponent(typeof(ViveModule))]
   public sealed class ViveCalibrator : MonoBehaviour {
 
-    const float ERROR = .02f; // 2cm
+    const float MIN_DELTA = .004f; //m
+    const float RETRY_RATE = 4; //s
 
     SteamVR_Events.Action posesAction;
     Vector3[] lighthouses = new Vector3[2];
@@ -27,22 +28,31 @@ namespace Holojam.Vive {
     /// </summary>
     bool ready = false;
 
+    /// <summary>
+    /// Has a successful calibration been performed?
+    /// </summary>
+    bool calibrated = false;
+
     ViveModule module;
+    float lastTime = 0;
+
     Vector3 cachedPosition = Vector3.zero;
     Quaternion cachedRotation = Quaternion.identity;
 
-    bool Valid {
-      get {
-        return !Tools.BuildManager.IsMasterClient() && !Tools.BuildManager.IsSpectator();
-      }
-    }
+    Vector3 calibratedPosition = Vector3.zero;
+    Quaternion calibratedRotation = Quaternion.identity;
 
     /// <summary>
     /// If calibration is possible, do calibration.
     /// <returns>True if successful, false if there was an error.</returns>
     /// </summary>
     public bool Calibrate() {
-      if (!Valid) return false;
+      if (!module.cameraRig) {
+        Network.RemoteLogger.Log(
+          "Calibration failed; ViveModule camera rig not assigned"
+        );
+        return false;
+      }
 
       if (!ready) {
         Network.RemoteLogger.Log(
@@ -52,61 +62,55 @@ namespace Holojam.Vive {
       }
 
       // Relative difference, not absolute
-      if (Mathf.Abs(lighthouses[0].y - lighthouses[1].y) < ERROR) {
+      if (Mathf.Abs(lighthouses[0].y - lighthouses[1].y) < MIN_DELTA) {
         Network.RemoteLogger.Log(
-          "Calibration failed; lighthouse heights are too similar"
+          "Calibration failed; lighthouse heights are too similar (within "
+          + (100 * MIN_DELTA) + " cm)"
         );
         return false;
       }
 
-      if (!module.cameraRig) {
-        Network.RemoteLogger.Log(
-          "Calibration failed; ViveModule camera rig not assigned"
-        );
-        return false;
-      }
-
-      return DoCalibration(lighthouses[0], lighthouses[1]);
+      return DoCalibration(module.cameraRig.transform, lighthouses[0], lighthouses[1]);
     }
 
     /// <summary>
-    /// Start a calibration automatically on Awake().
+    /// Initializes, and caches the position/rotation of the centroid.
     /// </summary>
     void Awake() {
       posesAction = SteamVR_Events.NewPosesAction(OnNewPoses);
       module = GetComponent<ViveModule>() as ViveModule;
 
-      if (!Valid) {
-        Debug.Log("Holojam.Vive.ViveCalibrator: Build state not valid for calibration");
-        return;
-      }
-
       if (!module.cameraRig) {
-        Network.RemoteLogger.Log(
-          "Calibration failed; ViveModule camera rig not assigned!"
-        );
+        Debug.Log("Holojam.Vive.ViveCalibrator: ViveModule camera rig not assigned!");
         return;
       }
 
-      // Cache the centroid position and rotation for future offset
       cachedPosition = module.cameraRig.transform.localPosition;
       cachedRotation = module.cameraRig.transform.localRotation;
-
-      StartCoroutine(WaitToCalibrate());
     }
 
     /// <summary>
-    /// Wait for the lighthouses to become tracked before initiating a calibration.
+    /// Triggers a calibration as soon as the lighthouses become tracked,
+    /// or regularly at an interval of RETRY_RATE seconds.
+    /// Fixes the centroid in place after a successful calibration.
     /// </summary>
-    IEnumerator WaitToCalibrate() {
-      while (!ready) yield return null;
-      Calibrate();
+    void Update() {
+      if (!calibrated && (ready || Time.time > lastTime + RETRY_RATE)) {
+        calibrated = Calibrate();
+        lastTime = Time.time;
+      }
+
+      else if (calibrated) {
+        module.cameraRig.transform.localPosition = calibratedPosition;
+        module.cameraRig.transform.localRotation = calibratedRotation;
+        module.cameraRig.transform.localScale = Vector3.one;
+      }
     }
 
     /// <summary>
-    /// Perform a calibration, given two lighthouse positions.
+    /// Performs a calibration, given a centroid and two lighthouse positions.
     /// </summary>
-    bool DoCalibration(Vector3 l0, Vector3 l1) {
+    bool DoCalibration(Transform centroid, Vector3 l0, Vector3 l1) {
       if (l1.y > l0.y) { // Highest lighthouse is always first
         Vector3 swap = l0;
         l0 = l1;
@@ -122,12 +126,12 @@ namespace Holojam.Vive {
       Quaternion rotation = Quaternion.Inverse(
         Quaternion.LookRotation(forward)
       );
-      module.cameraRig.transform.localRotation = cachedRotation * rotation;
+      centroid.localRotation = cachedRotation * rotation;
 
       // Offset the centroid by its difference to the tracking center,
       // relative to the forward vector
       Vector3 offset = .5f * (l0 + l1);
-      module.cameraRig.transform.localPosition = cachedPosition + rotation * -offset;
+      centroid.localPosition = cachedPosition + rotation * -offset;
 
       forward.Normalize(); // For debugging
 
@@ -135,6 +139,9 @@ namespace Holojam.Vive {
         "Calibration successful: offset = (" + offset.x + ", " + offset.z
         + "), forward = (" + forward.x + ", " + forward.z + ")"
       );
+
+      calibratedPosition = centroid.localPosition;
+      calibratedRotation = centroid.localRotation;
 
       return true;
     }
