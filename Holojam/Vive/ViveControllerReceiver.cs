@@ -14,6 +14,10 @@ namespace Holojam.Vive {
   /// </summary>
   public class ViveControllerReceiver : Tools.Trackable {
 
+    [SerializeField] protected string scope = "";
+
+    public override string Scope { get { return scope; } }
+
     /// <summary>
     /// Which Actor should we listen to for controller input?
     /// </summary>
