@@ -131,7 +131,7 @@ namespace Holojam.Vive {
       // Offset the centroid by its difference to the tracking center,
       // relative to the forward vector
       Vector3 offset = .5f * (l0 + l1);
-      centroid.localPosition = cachedPosition + rotation * -offset;
+      centroid.localPosition = rotation * (cachedPosition - offset);
 
       forward.Normalize(); // For debugging
 
