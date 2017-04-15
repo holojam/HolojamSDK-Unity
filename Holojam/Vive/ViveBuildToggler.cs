@@ -31,8 +31,9 @@ namespace Holojam.Vive {
         masterClientBuild = Tools.BuildManager.IsSpectator();
       }
 
-      Tools.InformationText.SetWindowText(
-        "vive build", "Vive build toggler: is " + (masterClientBuild ? "" : "not ") + "master client"
+      Tools.InformationText.SetPanelKey(
+        "vive",
+        "Vive: Master client build = " + masterClientBuild
       );
 
       if (!module.cameraRig) {

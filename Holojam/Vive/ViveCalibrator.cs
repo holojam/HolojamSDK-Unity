@@ -31,8 +31,6 @@ namespace Holojam.Vive {
     Vector3 cachedPosition = Vector3.zero;
     Quaternion cachedRotation = Quaternion.identity;
 
-    const string INFORMATION_TEXT_KEY = "vive calibration";
-
     bool Valid {
       get {
         return !Tools.BuildManager.IsMasterClient() && !Tools.BuildManager.IsSpectator();
@@ -50,9 +48,9 @@ namespace Holojam.Vive {
         Network.RemoteLogger.Log(
           "Calibration failed; lighthouses not found"
         );
-        Tools.InformationText.SetWindowText(
-          INFORMATION_TEXT_KEY,
-          "Vive calibration: <color='red'>could not find lighthouses</color>"
+        Tools.InformationText.SetPanelKey(
+          "calibrator",
+          "Calibrator: <color=yellow>lighthouses not found</color>"
         );
         return false;
       }
@@ -62,9 +60,9 @@ namespace Holojam.Vive {
         Network.RemoteLogger.Log(
           "Calibration failed; lighthouse heights are too similar"
         );
-        Tools.InformationText.SetWindowText(
-          INFORMATION_TEXT_KEY,
-          "Vive calibration: <color='red'>lighthouse heights too similar</color>"
+        Tools.InformationText.SetPanelKey(
+          "calibrator",
+          "Calibrator: <color=red>lighthouse heights too similar</color>"
         );
         return false;
       }
@@ -73,9 +71,9 @@ namespace Holojam.Vive {
         Network.RemoteLogger.Log(
           "Calibration failed; ViveModule camera rig not assigned"
         );
-        Tools.InformationText.SetWindowText(
-          INFORMATION_TEXT_KEY,
-          "Vive calibration: <color='red'>camera rig not assigned</color>"
+        Tools.InformationText.SetPanelKey(
+          "calibrator",
+          "Calibrator: <color='red'>camera rig not assigned</color>"
         );
         return false;
       }
@@ -148,10 +146,10 @@ namespace Holojam.Vive {
       string offsetString = "(" + offset.x + ", " + offset.z + ")";
       string forwardString = "(" + forward.x + ", " + forward.z + ")";
 
-      Tools.InformationText.SetWindowText(
-        INFORMATION_TEXT_KEY,
-        "Vive calibration: <color='green'>successful</color>, offset " + offsetString
-          + ", forward vector " + forwardString + ";"
+      Tools.InformationText.SetPanelKey(
+        "calibrator",
+        "Calibrator: <color='green'>successful</color>, offset " + offsetString
+          + ", forward " + forwardString
       );
 
       Network.RemoteLogger.Log(

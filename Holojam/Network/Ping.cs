@@ -29,16 +29,6 @@ namespace Holojam.Network {
     const int MAX_FAILURES = 3;
 
     /// <summary>
-    /// Identifier key for the message shown to users when the connection is dropped.
-    /// </summary>
-    const string VR_TEXT_STATUS_KEY = "ping status";
-
-    /// <summary>
-    /// Identifier key for the message shown in the network information.
-    /// </summary>
-    const string WINDOW_TEXT_STATUS_KEY = "ping status";
-
-    /// <summary>
     /// Indicates whether or not this client is connected.
     /// A client is considered to be disconnected if several pings have gone unanswered.
     /// If this value is false, one successful ping is required to set it to true.
@@ -122,14 +112,14 @@ namespace Holojam.Network {
             "Holojam.Network.Ping: Relay connection attempts failed. Restarting client..."
           );
 
-          Tools.InformationText.SetVRText(
-            VR_TEXT_STATUS_KEY,
-            "<color='red'><b>CONNECTION ERROR</b></color>"
+          Tools.InformationText.SetOverlayKey(
+            "ping",
+            "<color=red><b>CONNECTION ERROR</b></color>"
           );
 
-          Tools.InformationText.SetWindowText(
-            WINDOW_TEXT_STATUS_KEY,
-            "Ping status: <color='red'>multiple pings failed</color>"
+          Tools.InformationText.SetPanelKey(
+            "ping",
+            "Ping: <color=red>multiple pings failed</color>"
           );
 
           Client.Restart();
@@ -140,9 +130,9 @@ namespace Holojam.Network {
         } else {
           SendPing(); // Try again
 
-          Tools.InformationText.SetWindowText(
-            WINDOW_TEXT_STATUS_KEY,
-            "Ping status: <color='red'>not received</color>"
+          Tools.InformationText.SetPanelKey(
+            "ping",
+            "Ping: <color=red>not received</color>"
           );
         }
       }
@@ -176,11 +166,11 @@ namespace Holojam.Network {
 
         failures = 0;
         awaitingResponse = false;
-        Tools.InformationText.ClearVRText(VR_TEXT_STATUS_KEY);
+        Tools.InformationText.ClearOverlayKey("ping");
 
-        Tools.InformationText.SetWindowText(
-          WINDOW_TEXT_STATUS_KEY,
-          "Ping status: <color='green'>received</color>"
+        Tools.InformationText.SetPanelKey(
+          "ping",
+          "Ping: " + LastRoundTripLatency + " ms (" + CorrectedLatency + " ms)"
         );
       }
     }
