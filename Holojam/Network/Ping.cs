@@ -112,11 +112,6 @@ namespace Holojam.Network {
             "Holojam.Network.Ping: Relay connection attempts failed. Restarting client..."
           );
 
-          Tools.Overlay.SetOverlayKey(
-            "ping",
-            "<color=red><b>CONNECTION ERROR</b></color>"
-          );
-
           Tools.InfoPanel.SetPanelKey(
             "ping",
             "Ping: <color=red>multiple pings failed</color>"
@@ -166,7 +161,6 @@ namespace Holojam.Network {
 
         failures = 0;
         awaitingResponse = false;
-        Tools.Overlay.ClearOverlayKey("ping");
 
         Tools.InfoPanel.SetPanelKey(
           "ping",
