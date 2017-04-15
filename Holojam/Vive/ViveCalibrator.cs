@@ -87,6 +87,8 @@ namespace Holojam.Vive {
 
       cachedPosition = module.cameraRig.transform.localPosition;
       cachedRotation = module.cameraRig.transform.localRotation;
+      calibratedPosition = cachedPosition;
+      calibratedRotation = cachedRotation;
     }
 
     /// <summary>
@@ -100,11 +102,9 @@ namespace Holojam.Vive {
         lastTime = Time.time;
       }
 
-      else if (calibrated) {
-        module.cameraRig.transform.localPosition = calibratedPosition;
-        module.cameraRig.transform.localRotation = calibratedRotation;
-        module.cameraRig.transform.localScale = Vector3.one;
-      }
+      module.cameraRig.transform.localPosition = calibratedPosition;
+      module.cameraRig.transform.localRotation = calibratedRotation;
+      module.cameraRig.transform.localScale = Vector3.one;
     }
 
     /// <summary>
@@ -126,12 +126,12 @@ namespace Holojam.Vive {
       Quaternion rotation = Quaternion.Inverse(
         Quaternion.LookRotation(forward)
       );
-      centroid.localRotation = cachedRotation * rotation;
+      centroid.localRotation = rotation * cachedRotation;
 
       // Offset the centroid by its difference to the tracking center,
       // relative to the forward vector
       Vector3 offset = .5f * (l0 + l1);
-      centroid.localPosition = cachedPosition + rotation * -offset;
+      centroid.localPosition = rotation * (cachedPosition - offset);
 
       forward.Normalize(); // For debugging
 
