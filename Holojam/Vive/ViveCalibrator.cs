@@ -51,12 +51,20 @@ namespace Holojam.Vive {
         Network.RemoteLogger.Log(
           "Calibration failed; ViveModule camera rig not assigned"
         );
+        Tools.InfoPanel.SetPanelKey(
+          "calibrator",
+          "Calibrator: <color=red>camera rig is null</color>"
+        );
         return false;
       }
 
       if (!ready) {
         Network.RemoteLogger.Log(
           "Calibration failed; lighthouses not found"
+        );
+        Tools.InfoPanel.SetPanelKey(
+          "calibrator",
+          "Calibrator: <color=yellow>lighthouses not found</color>"
         );
         return false;
       }
@@ -65,7 +73,12 @@ namespace Holojam.Vive {
       if (Mathf.Abs(lighthouses[0].y - lighthouses[1].y) < MIN_DELTA) {
         Network.RemoteLogger.Log(
           "Calibration failed; lighthouse heights are too similar (within "
-          + (100 * MIN_DELTA) + " cm)"
+          + (1000 * MIN_DELTA) + " mm)"
+        );
+        Tools.InfoPanel.SetPanelKey(
+          "calibrator",
+          "Calibrator: <color=red>lighthouse heights within "
+          + (1000 * MIN_DELTA) + " mm</color>"
         );
         return false;
       }
@@ -89,6 +102,8 @@ namespace Holojam.Vive {
       cachedRotation = module.cameraRig.transform.localRotation;
       calibratedPosition = cachedPosition;
       calibratedRotation = cachedRotation;
+
+      Tools.InfoPanel.SetPanelKey("calibrator", "Calibrator: waiting");
     }
 
     /// <summary>
@@ -117,6 +132,8 @@ namespace Holojam.Vive {
         l1 = swap;
       }
 
+      float difference = Mathf.Abs(l0.y - l1.y);
+
       // Zero the height (the rest is 2D)
       l0 = new Vector3(l0.x, 0, l0.z);
       l1 = new Vector3(l1.x, 0, l1.z);
@@ -135,13 +152,26 @@ namespace Holojam.Vive {
 
       forward.Normalize(); // For debugging
 
-      Network.RemoteLogger.Log(
-        "Calibration successful: offset = (" + offset.x + ", " + offset.z
-        + "), forward = (" + forward.x + ", " + forward.z + ")"
-      );
-
       calibratedPosition = centroid.localPosition;
       calibratedRotation = centroid.localRotation;
+
+      // Debug
+
+      string[] debug = {
+        "offset = (" + offset.x.ToString("F3") + ", " + offset.z.ToString("F3") + ") m",
+        "forward = (" + forward.x.ToString("F3") + ", " + forward.z.ToString("F3") + ") m",
+        "diff = " + difference * 100 + " cm"
+      };
+
+      Network.RemoteLogger.Log(
+        "Calibration successful: "
+        + debug[0] + ", " + debug[1] + ", " + debug[2]
+      );
+
+      Tools.InfoPanel.SetPanelKey(
+        "calibrator", "Calibrator:"
+        + "\n " + debug[0] + "\n " + debug[1] + "\n " + debug[2]
+      );
 
       return true;
     }

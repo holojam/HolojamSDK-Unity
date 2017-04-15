@@ -13,10 +13,31 @@ namespace Holojam.Utility {
   /// </summary>
   public class HolojamUnity : MonoBehaviour {
 
+    Network.Client client;
+
     #if UNITY_EDITOR
     void UpdateController(Network.Controller controller) {
       EditorUtility.SetDirty((UnityEngine.Object)controller);
     }
     #endif
+
+    void Start() {
+      client = GetComponent<Network.Client>();
+    }
+
+    void Update() {
+      Tools.InfoPanel.SetPanelKey(
+        "build-index", "Build Index: " + Tools.BuildManager.BUILD_INDEX
+      );
+
+      Tools.InfoPanel.SetPanelKey(
+        "spectator", "Spectator: " + Tools.BuildManager.IsSpectator()
+      );
+
+      Tools.InfoPanel.SetPanelKey(
+        "ip", "Relay: " + client.RelayAddress
+          + ":" + client.UpstreamPort
+      );
+    }
   }
 }
