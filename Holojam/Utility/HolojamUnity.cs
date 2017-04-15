@@ -26,15 +26,15 @@ namespace Holojam.Utility {
     }
 
     void Update() {
-      Tools.InformationText.SetPanelKey(
+      Tools.InfoPanel.SetPanelKey(
         "build-index", "Build Index: " + Tools.BuildManager.BUILD_INDEX
       );
 
-      Tools.InformationText.SetPanelKey(
+      Tools.InfoPanel.SetPanelKey(
         "spectator", "Spectator: " + Tools.BuildManager.IsSpectator()
       );
 
-      Tools.InformationText.SetPanelKey(
+      Tools.InfoPanel.SetPanelKey(
         "ip", "Relay: " + client.RelayAddress
           + ":" + client.UpstreamPort
       );

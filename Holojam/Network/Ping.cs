@@ -112,12 +112,12 @@ namespace Holojam.Network {
             "Holojam.Network.Ping: Relay connection attempts failed. Restarting client..."
           );
 
-          Tools.InformationText.SetOverlayKey(
+          Tools.Overlay.SetOverlayKey(
             "ping",
             "<color=red><b>CONNECTION ERROR</b></color>"
           );
 
-          Tools.InformationText.SetPanelKey(
+          Tools.InfoPanel.SetPanelKey(
             "ping",
             "Ping: <color=red>multiple pings failed</color>"
           );
@@ -130,7 +130,7 @@ namespace Holojam.Network {
         } else {
           SendPing(); // Try again
 
-          Tools.InformationText.SetPanelKey(
+          Tools.InfoPanel.SetPanelKey(
             "ping",
             "Ping: <color=red>not received</color>"
           );
@@ -166,9 +166,9 @@ namespace Holojam.Network {
 
         failures = 0;
         awaitingResponse = false;
-        Tools.InformationText.ClearOverlayKey("ping");
+        Tools.Overlay.ClearOverlayKey("ping");
 
-        Tools.InformationText.SetPanelKey(
+        Tools.InfoPanel.SetPanelKey(
           "ping",
           "Ping: " + LastRoundTripLatency + " ms (" + CorrectedLatency + " ms)"
         );
