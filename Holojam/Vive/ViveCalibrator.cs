@@ -126,7 +126,7 @@ namespace Holojam.Vive {
       Quaternion rotation = Quaternion.Inverse(
         Quaternion.LookRotation(forward)
       );
-      centroid.localRotation = cachedRotation * rotation;
+      centroid.localRotation = rotation * cachedRotation;
 
       // Offset the centroid by its difference to the tracking center,
       // relative to the forward vector
