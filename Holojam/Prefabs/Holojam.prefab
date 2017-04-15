@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 114653569414185928}
   - component: {fileID: 114000013142514114}
   - component: {fileID: 114694228294611138}
+  - component: {fileID: 114455135630302756}
   m_Layer: 0
   m_Name: Holojam
   m_TagString: Untagged
@@ -69,6 +70,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce1d2ec38187349efbbc678df0de9a00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114455135630302756
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 160812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fb0eb229cd6e4f11b5e1201c2c08e89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  display: 0
+  toggleKey: 96
 --- !u!114 &114615662255141442
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -136,8 +150,6 @@ MonoBehaviour:
   sendScope: Unity
   rate: 3
   verboseLogs: 0
-  ediff: 0
-  sdiff: 0
   sentPPS: 0
   receivedPPS: 0
   threadData: []

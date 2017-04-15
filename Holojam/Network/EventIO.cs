@@ -7,7 +7,6 @@ namespace Holojam.Network {
 
   /// <summary>
   /// Abstract base class for routing data on an event out through another event. 
-  /// See Metrics.cs for an example.
   /// <typeparam name="I">The input listener, which must be an EventInput.</typeparam>
   /// <typeparam name="O">The output pusher, which must be an EventPusher.</typeparam>
   /// </summary>

@@ -13,8 +13,12 @@ namespace Holojam.Tools {
     public string scope, label;
 
     [Space(8)]
+    public float deltaTime;
+    public bool updatedThisFrame;
+
+    [Space(8)]
     public string origin;
-    public bool isTracked;
+    public bool tracked;
 
     public Vector3[] vector3s;
     public Quaternion[] vector4s;
@@ -30,8 +34,11 @@ namespace Holojam.Tools {
     protected sealed override ProcessDelegate Process { get { return Refresh; } }
 
     void Refresh() {
+      deltaTime = DeltaTime();
+      updatedThisFrame = UpdatedThisFrame;
+
       origin = Source;
-      isTracked = Tracked;
+      tracked = Tracked;
 
       vector3s = data.vector3s;
       vector4s = data.vector4s;
