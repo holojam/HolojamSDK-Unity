@@ -31,7 +31,7 @@ namespace Holojam.Vive {
         masterClientBuild = Tools.BuildManager.IsSpectator();
       }
 
-      Tools.InfoPanel.SetPanelKey(
+      Tools.InfoPanel.SetString(
         "vive",
         "Vive: Master client build = " + masterClientBuild
       );

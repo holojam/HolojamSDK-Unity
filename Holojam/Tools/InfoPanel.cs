@@ -56,7 +56,7 @@ namespace Holojam.Tools {
     /// this string again or to remove the text (by calling ClearPanelKey).
     /// </param>
     /// <param name="text">The text you want to display to the user.</param>
-    public static void SetPanelKey(string key, string text) {
+    public static void SetString(string key, string text) {
       if (global)
         global.snippets[key] = text;
     }
@@ -65,7 +65,7 @@ namespace Holojam.Tools {
     /// Removes a string from the info panel.
     /// </summary>
     /// <param name="key">The key corresponding to the string you want to remove.</param>
-    public static void ClearPanelKey(string key) {
+    public static void ClearString(string key) {
       if (global)
         global.snippets.Remove(key);
     }

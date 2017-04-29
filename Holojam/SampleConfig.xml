@@ -2,12 +2,12 @@
 
   <!-- This is a sample config file for use with the Configuration component. -->
   <!-- You can specify or omit any or all of these options. -->
-  <!-- Don't add any extra whitespace! -->
+  <!-- Don't add any extra whitespace between tags! -->
 
-  <!-- IP address of the main Holojam relay. -->
+  <!-- IP address of the Holojam relay. -->
   <RelayIP>0.0.0.0</RelayIP>
 
-  <!-- Index of the actor (i.e. player or headset). -->
+  <!-- Unique identification index -->
   <BuildIndex>0</BuildIndex>
 
 </HolojamConfig>

@@ -112,7 +112,7 @@ namespace Holojam.Network {
             "Holojam.Network.Ping: Relay connection attempts failed. Restarting client..."
           );
 
-          Tools.InfoPanel.SetPanelKey(
+          Tools.InfoPanel.SetString(
             "ping",
             "Ping: <color=red>multiple pings failed</color>"
           );
@@ -125,7 +125,7 @@ namespace Holojam.Network {
         } else {
           SendPing(); // Try again
 
-          Tools.InfoPanel.SetPanelKey(
+          Tools.InfoPanel.SetString(
             "ping",
             "Ping: <color=red>not received</color>"
           );
@@ -137,7 +137,9 @@ namespace Holojam.Network {
     /// Pings the relay by sending a notification.
     /// </summary>
     void SendPing() {
-      data.ints[0] = (int)System.Diagnostics.Stopwatch.GetTimestamp();
+      data.bytes = BitConverter.GetBytes(
+        System.Diagnostics.Stopwatch.GetTimestamp()
+      );
       Client.PushEvent("Ping" + randomSuffix, data);
       awaitingResponse = true;
       lastTime = Time.unscaledTime;
@@ -156,13 +158,15 @@ namespace Holojam.Network {
     void PingReceived(string source, string scope, Flake input) {
       if (source == Canon.Origin()) {
         Connected = true;
-        LastRoundTripLatency = ((int)System.Diagnostics.Stopwatch.GetTimestamp() - input.ints[0])
-          * 1000 / (float)System.Diagnostics.Stopwatch.Frequency;
+        LastRoundTripLatency = (
+          System.Diagnostics.Stopwatch.GetTimestamp()
+          - BitConverter.ToInt64(data.bytes, 0)
+        ) * 1000 / (float)System.Diagnostics.Stopwatch.Frequency;
 
         failures = 0;
         awaitingResponse = false;
 
-        Tools.InfoPanel.SetPanelKey(
+        Tools.InfoPanel.SetString(
           "ping",
           "Ping: " + LastRoundTripLatency + " ms (" + CorrectedLatency + " ms)"
         );

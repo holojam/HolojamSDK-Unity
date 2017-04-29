@@ -51,7 +51,7 @@ namespace Holojam.Vive {
         Network.RemoteLogger.Log(
           "Calibration failed; ViveModule camera rig not assigned"
         );
-        Tools.InfoPanel.SetPanelKey(
+        Tools.InfoPanel.SetString(
           "calibrator",
           "Calibrator: <color=red>camera rig is null</color>"
         );
@@ -62,7 +62,7 @@ namespace Holojam.Vive {
         Network.RemoteLogger.Log(
           "Calibration failed; lighthouses not found"
         );
-        Tools.InfoPanel.SetPanelKey(
+        Tools.InfoPanel.SetString(
           "calibrator",
           "Calibrator: <color=yellow>lighthouses not found</color>"
         );
@@ -75,7 +75,7 @@ namespace Holojam.Vive {
           "Calibration failed; lighthouse heights are too similar (within "
           + (1000 * MIN_DELTA) + " mm)"
         );
-        Tools.InfoPanel.SetPanelKey(
+        Tools.InfoPanel.SetString(
           "calibrator",
           "Calibrator: <color=red>lighthouse heights within "
           + (1000 * MIN_DELTA) + " mm</color>"
@@ -103,7 +103,7 @@ namespace Holojam.Vive {
       calibratedPosition = cachedPosition;
       calibratedRotation = cachedRotation;
 
-      Tools.InfoPanel.SetPanelKey("calibrator", "Calibrator: waiting");
+      Tools.InfoPanel.SetString("calibrator", "Calibrator: waiting");
     }
 
     /// <summary>
@@ -168,7 +168,7 @@ namespace Holojam.Vive {
         + debug[0] + ", " + debug[1] + ", " + debug[2]
       );
 
-      Tools.InfoPanel.SetPanelKey(
+      Tools.InfoPanel.SetString(
         "calibrator", "Calibrator:"
         + "\n " + debug[0] + "\n " + debug[1] + "\n " + debug[2]
       );
