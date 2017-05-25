@@ -108,8 +108,6 @@ namespace Holojam.Tools {
       text = o.AddComponent<Text>();
       text.font = Resources.Load<Font>("Calcon");
       text.fontSize = FONT_SIZE;
-
-      display = false;
     }
 
     void Update() {
