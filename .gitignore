@@ -1,8 +1,17 @@
 Holojam.meta
 Dev.meta
 Gizmos.meta
+Editor.meta
 
 Demo.meta
+Materials.meta
+Models.meta
+Scenes.meta
+Scripts.meta
+Textures.meta
+Examples.meta
+Templates.meta
+
 Network.meta
 Plugins.meta
 Prefabs.meta
