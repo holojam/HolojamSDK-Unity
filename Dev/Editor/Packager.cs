@@ -13,19 +13,15 @@ public class Packager : EditorWindow{
     EditorWindow.GetWindow(typeof(Packager));
   }
 
-  string output = "Holojam";
   string version = "0.0.0";
-  string ignorePath = "Dev";
-  string extraPath;
+  string ignore0 = "Dev";
+  string ignore1;
   bool clear = true;
 
-  readonly string repoName = "/HolojamSDK-Unity/";
-
   void OnGUI() {
-    output = EditorGUILayout.TextField("Title", output);
     version = EditorGUILayout.TextField("Version", version);
-    ignorePath = EditorGUILayout.TextField("Ignore Directory", ignorePath);
-    extraPath = EditorGUILayout.TextField("Extra Ignore Directory", extraPath);
+    ignore0 = EditorGUILayout.TextField("Ignore", ignore0);
+    ignore1 = EditorGUILayout.TextField("Ignore", ignore1);
     clear = EditorGUILayout.Toggle("Clear on build", clear);
 
     if (GUILayout.Button("Build")) Build();
@@ -34,13 +30,13 @@ public class Packager : EditorWindow{
   void Build() {
     List<string> subdirs = new List<string>();
     string[] paths = Directory.GetDirectories(
-      Application.dataPath //+ repoName
+      Application.dataPath
     );
 
     foreach (string p in paths) {
       string path = CleanPath(p);
-      if (path != "Assets" + /*repoName +*/ "/" + ignorePath
-        && path != "Assets" + /*repoName +*/ "/" + extraPath
+      if (path != "Assets" + "/" + ignore0
+        && path != "Assets" + "/" + ignore1
       ) {
         subdirs.Add(path);
       }
@@ -57,7 +53,7 @@ public class Packager : EditorWindow{
 
     AssetDatabase.ExportPackage(
       subdirs.ToArray(), 
-      output + "-v" + version + ".unitypackage", 
+      "Holojam_v" + version + ".unitypackage", 
       ExportPackageOptions.Recurse | ExportPackageOptions.Interactive
     );
   }

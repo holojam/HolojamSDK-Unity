@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Holojam.Tools{
+namespace Holojam.Tools {
 
   [CustomEditor(typeof(Actor)), CanEditMultipleObjects]
   public class ActorEditor : Editor {

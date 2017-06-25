@@ -17,7 +17,7 @@ namespace Holojam.Vive {
   [RequireComponent(typeof(ViveModule))]
   public sealed class ViveCalibrator : MonoBehaviour {
 
-    const float MIN_DELTA = .004f; //m
+    const float MIN_DELTA = .02f; //m
     const float RETRY_RATE = 4; //s
 
     SteamVR_Events.Action posesAction;

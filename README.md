@@ -10,7 +10,7 @@ Note: at the moment, Holojam is pre-configured for SteamVR (Vive). **Make sure t
 
 ### Developer Version
 
-For the latest (warning: may be unstable) code, clone the repository within an empty or existing Unity project under the `Assets` directory. **Before opening Unity**, copy in `Holojam-Core.dll` under `Holojam/`. In the Editor Settings, make sure to set 'Version Control Mode' to 'Visible Meta Files' and 'Asset Serialization Mode' to 'Force Text'.
+For the latest code, clone the repository within an empty or existing Unity project under the `Assets` directory. **Before opening Unity**, copy `Holojam.Core.dll` to `Holojam/Plugins/`. In the Editor Settings, make sure to set 'Version Control Mode' to 'Visible Meta Files' and 'Asset Serialization Mode' to 'Force Text'.
 
 ## Documentation
 
