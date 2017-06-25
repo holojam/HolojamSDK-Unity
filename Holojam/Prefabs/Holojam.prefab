@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 114204134467722802}
   - component: {fileID: 114615662255141442}
   - component: {fileID: 114748726467797520}
+  - component: {fileID: 114205449099819024}
   - component: {fileID: 114736255769847042}
   - component: {fileID: 114653569414185928}
-  - component: {fileID: 114205449099819024}
-  - component: {fileID: 114446457617304200}
   - component: {fileID: 114455135630302756}
+  - component: {fileID: 114446457617304200}
   m_Layer: 0
   m_Name: Holojam
   m_TagString: Untagged
