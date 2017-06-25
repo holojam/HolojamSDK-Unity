@@ -15,7 +15,7 @@ namespace Holojam.Utility {
 
       string holojamData = "Not loaded";
       System.Version v = typeof(Configuration).Assembly.GetName().Version;
-      if (v.Major > 0 && v.Minor > 0 && v.Revision > 0)
+      if (v.Major > 0 || v.Minor > 0 || v.Revision > 0)
         holojamData = "v" + v;
 
       EditorGUILayout.LabelField("Holojam", holojamData);
