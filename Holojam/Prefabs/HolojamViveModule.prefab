@@ -50,7 +50,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1525909844803024}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43e4a3de88b264e15a1e24288ec906ec, type: 3}
+  m_Script: {fileID: 36723083, guid: 42b94fcfc589740d5a85529768177f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114120379253625214
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1525909844803024}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddb37b5b07e014a528070ae8bb10096f, type: 3}
+  m_Script: {fileID: 45607443, guid: 42b94fcfc589740d5a85529768177f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cameraRig: {fileID: 0}
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1525909844803024}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58513592c7b13d247b639e6c2ed1cb56, type: 3}
+  m_Script: {fileID: -2113029660, guid: 42b94fcfc589740d5a85529768177f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   masterClientBuild: 0
