@@ -64,7 +64,9 @@ Resources.meta
 Tools.meta
 Utility.meta
 
+FlatBuffers.meta
+LICENSE.txt.meta
+
 Vive.meta
 Holojam.Vive.dll
 Holojam.Vive.Editor.dll
-
