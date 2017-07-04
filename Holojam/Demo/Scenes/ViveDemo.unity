@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 7
+  serializedVersion: 8
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -25,6 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 0.8
   m_AmbientMode: 0
+  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: e34190f504cf24601a92730046f05315, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -41,7 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 7
+  serializedVersion: 9
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -53,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 4
+    serializedVersion: 8
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -66,14 +67,28 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_DirectLightInLightProbes: 1
     m_FinalGather: 0
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
-  m_LightingDataAsset: {fileID: 112000004, guid: d9c986ee00af942a6a83d532b4eb0833,
+    m_MixedBakeMode: 1
+    m_BakeBackend: 0
+    m_PVRSampling: 1
+    m_PVRDirectSampleCount: 32
+    m_PVRSampleCount: 500
+    m_PVRBounces: 2
+    m_PVRFiltering: 0
+    m_PVRFilteringMode: 1
+    m_PVRCulling: 1
+    m_PVRFilteringGaussRadiusDirect: 1
+    m_PVRFilteringGaussRadiusIndirect: 5
+    m_PVRFilteringGaussRadiusAO: 2
+    m_PVRFilteringAtrousColorSigma: 1
+    m_PVRFilteringAtrousNormalSigma: 1
+    m_PVRFilteringAtrousPositionSigma: 1
+  m_LightingDataAsset: {fileID: 112000002, guid: d9c986ee00af942a6a83d532b4eb0833,
     type: 2}
-  m_RuntimeCPUUsage: 25
+  m_ShadowMaskMode: 2
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -90,6 +105,8 @@ NavMeshSettings:
     minRegionArea: 2
     manualCellSize: 0
     cellSize: 0.16666667
+    manualTileSize: 0
+    tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1001 &35130358
@@ -235,8 +252,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scope: 
   label: 
+  deltaTime: 0
+  updatedThisFrame: 0
   origin: 
-  isTracked: 0
+  tracked: 0
   vector3s: []
   vector4s: []
   floats: []
@@ -303,6 +322,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &878021554
 MeshFilter:
@@ -495,26 +515,6 @@ Prefab:
       propertyPath: masterCam
       value: 
       objectReference: {fileID: 1289385609}
-    - target: {fileID: 114115312097726392, guid: 042629fe5f748456fa6a53bd43406a1a,
-        type: 2}
-      propertyPath: tmp
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114115312097726392, guid: 042629fe5f748456fa6a53bd43406a1a,
-        type: 2}
-      propertyPath: other
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114120379253625214, guid: 042629fe5f748456fa6a53bd43406a1a,
-        type: 2}
-      propertyPath: cameraRig
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114362550112674314, guid: 042629fe5f748456fa6a53bd43406a1a,
-        type: 2}
-      propertyPath: masterClientBuild
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 042629fe5f748456fa6a53bd43406a1a, type: 2}
   m_IsPrefabParent: 0
@@ -687,7 +687,7 @@ Light:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1312062858}
   m_Enabled: 1
-  serializedVersion: 7
+  serializedVersion: 8
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.597, a: 1}
   m_Intensity: 1
@@ -712,6 +712,8 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!1 &1371881228
@@ -832,30 +834,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gradient:
-    key0:
-      serializedVersion: 2
-      rgba: 4285953791
-    key1:
-      serializedVersion: 2
-      rgba: 4278244351
-    key2:
-      serializedVersion: 2
-      rgba: 10616739
-    key3:
-      serializedVersion: 2
-      rgba: 16763136
-    key4:
-      serializedVersion: 2
-      rgba: 16748773
-    key5:
-      serializedVersion: 2
-      rgba: 7763711
-    key6:
-      serializedVersion: 2
-      rgba: 0
-    key7:
-      serializedVersion: 2
-      rgba: 0
+    serializedVersion: 2
+    key0: {r: 1, g: 0.4627451, b: 0.4627451, a: 1}
+    key1: {r: 1, g: 0.827451, b: 0, a: 1}
+    key2: {r: 0.6392157, g: 1, b: 0.6313726, a: 0}
+    key3: {r: 0, g: 0.7882353, b: 1, a: 0}
+    key4: {r: 0.8980392, g: 0.5647059, b: 1, a: 0}
+    key5: {r: 1, g: 0.4627451, b: 0.4627451, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
     ctime1: 9830
     ctime2: 21627
@@ -1033,30 +1020,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gradient:
-    key0:
-      serializedVersion: 2
-      rgba: 4285953791
-    key1:
-      serializedVersion: 2
-      rgba: 4278244351
-    key2:
-      serializedVersion: 2
-      rgba: 10616739
-    key3:
-      serializedVersion: 2
-      rgba: 16763136
-    key4:
-      serializedVersion: 2
-      rgba: 16748773
-    key5:
-      serializedVersion: 2
-      rgba: 7763711
-    key6:
-      serializedVersion: 2
-      rgba: 0
-    key7:
-      serializedVersion: 2
-      rgba: 0
+    serializedVersion: 2
+    key0: {r: 1, g: 0.4627451, b: 0.4627451, a: 1}
+    key1: {r: 1, g: 0.827451, b: 0, a: 1}
+    key2: {r: 0.6392157, g: 1, b: 0.6313726, a: 0}
+    key3: {r: 0, g: 0.7882353, b: 1, a: 0}
+    key4: {r: 0.8980392, g: 0.5647059, b: 1, a: 0}
+    key5: {r: 1, g: 0.4627451, b: 0.4627451, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
     ctime1: 9830
     ctime2: 21627
