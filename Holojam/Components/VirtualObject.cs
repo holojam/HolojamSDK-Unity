@@ -28,5 +28,15 @@ namespace Holojam.Components {
     public override bool Sending {
       get { return owner == Tools.BuildManager.BUILD_ACTOR; }
     }
+
+    protected override void UpdateTracking() {
+      if (Sending) {
+        RawPosition = transform.position;
+        RawRotation = transform.rotation;
+      } else if (Tracked) {
+        transform.position = TrackedPosition;
+        transform.rotation = TrackedRotation;
+      }
+    }
   }
 }
