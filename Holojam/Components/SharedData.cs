@@ -20,5 +20,9 @@ namespace Holojam.Components {
     public override string Scope {
       get { return ""; }
     }
+
+    public override bool Sending {
+      get { return Tools.BuildManager.IsMasterClient(); }
+    }
   }
 }
