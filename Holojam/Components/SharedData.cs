@@ -9,29 +9,31 @@ namespace Holojam.Components {
 
     string label;
 
-    protected override void Awake() {
-      base.Awake();
-      label = Labeler.Instance.GenerateLabel(this.gameObject);
+    public override string Label {
+      get { return label; }
     }
 
     public void SetLabel(string label) {
       this.label = label;
     }
 
-    public override string Label {
-      get { return label; }
+    string scope = "";
+
+    public override string Scope {
+      get { return scope; }
     }
 
     public void SetScope(string scope) {
       this.scope = scope;
     }
 
-    public override string Scope {
-      get { return ""; }
-    }
-
     public override bool Sending {
       get { return Tools.BuildManager.IsMasterClient(); }
+    }
+
+    protected override void Awake() {
+      base.Awake();
+      label = Labeler.Instance.GenerateLabel(this.gameObject);
     }
   }
 }
