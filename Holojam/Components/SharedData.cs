@@ -6,11 +6,12 @@ using UnityEngine;
 namespace Holojam.Components {
 
   public class SharedData : Network.Controller {
-	public string label;
 
-	void Start() {
-	  label = Labeler.Instance.GenerateLabel(this.gameObject);
-	}
+    string label;
+
+    void Awake() {
+      label = Labeler.Instance.GenerateLabel(this.gameObject);
+    }
 
     public void SetLabel(string label) {
       this.label = label;
@@ -29,4 +30,3 @@ namespace Holojam.Components {
     }
   }
 }
-
