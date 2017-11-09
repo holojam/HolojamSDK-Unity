@@ -7,13 +7,13 @@ namespace Holojam.Components {
 
   public class VirtualObject : Tools.Trackable {
 
-    public string label;
-
     [SerializeField] Tools.Actor owner = null;
 
-  void Start() {
-    label = Labeler.Instance.GenerateLabel(this.gameObject);
-  }
+    string label;
+
+    void Awake() {
+      label = Labeler.Instance.GenerateLabel(this.gameObject);
+    }
 
     public void SetLabel(string label) {
       this.label = label;
