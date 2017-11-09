@@ -5,9 +5,7 @@ using System.Collections.Generic;
 namespace Holojam.Components {
 
   /// <summary>
-  /// Static class granting access to a singleton labeler instance (NOTE: Feel
-  /// free to disagree with this design choice), which generates labels upon
-  /// request.
+  /// Static class with functionality to generate network labels upon request.
   /// </summary>
   public static class Labeler {
 
@@ -36,17 +34,18 @@ namespace Holojam.Components {
         return g.name + ':' + count;
       }
     }
-    
+
     private static LabelerInstance instance;
-    
-    // <summary>
-    // wrapper for internal instance method, GenerateLabel,
-    // returns a new label upon request
-    // </summary>
+
+    /// <summary>
+    /// Wrapper for internal instance method, GenerateLabel.
+    /// Returns a new label upon request.
+    /// </summary>
     public static string GenerateLabel(GameObject g) {
       if (instance == null) {
         instance = new LabelerInstance();
       }
+
       return instance.GenerateLabel(g);
     }
   }
