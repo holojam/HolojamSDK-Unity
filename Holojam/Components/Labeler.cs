@@ -36,14 +36,18 @@ namespace Holojam.Components {
         return g.name + ':' + count;
       }
     }
-
+    
     private static LabelerInstance instance;
-
-    public static LabelerInstance Instance {
-      get {
-        return (instance == null) ?
-          instance = new LabelerInstance() : instance;
+    
+    // <summary>
+    // wrapper for internal instance method, GenerateLabel,
+    // returns a new label upon request
+    // </summary>
+    public static string GenerateLabel(GameObject g) {
+      if (instance == null) {
+        instance = new LabelerInstance();
       }
+      return instance.GenerateLabel(g);
     }
   }
 }
