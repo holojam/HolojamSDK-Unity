@@ -6,9 +6,12 @@ using UnityEngine;
 namespace Holojam.Components {
 
   public class VirtualObject : Tools.Trackable {
-
-    [SerializeField] string label = "MyVirtualObject";
+	public string label;
     [SerializeField] int owner = 1;
+
+	void Start() {
+	  label = Labeler.Instance.GenerateLabel(this.gameObject);
+	}
 
     public void SetLabel(string label) {
       this.label = label;
