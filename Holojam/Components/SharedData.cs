@@ -27,6 +27,9 @@ namespace Holojam.Components {
       this.scope = scope;
     }
 
+    /// <summary>
+    /// Host the data if this is the master client.
+    /// </summary>
     public override bool Sending {
       get { return Tools.BuildManager.IsMasterClient(); }
     }
