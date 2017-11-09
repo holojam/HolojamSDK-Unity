@@ -11,7 +11,8 @@ namespace Holojam.Components {
 
     string label;
 
-    void Awake() {
+    protected override void Awake() {
+      base.Awake();
       label = Labeler.Instance.GenerateLabel(this.gameObject);
     }
 
