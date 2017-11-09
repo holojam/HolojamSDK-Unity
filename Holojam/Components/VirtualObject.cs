@@ -24,6 +24,10 @@ namespace Holojam.Components {
       get { return label; }
     }
 
+    public void SetScope(string scope) {
+      this.scope = scope;
+    }
+
     public override string Scope {
       get { return ""; }
     }
