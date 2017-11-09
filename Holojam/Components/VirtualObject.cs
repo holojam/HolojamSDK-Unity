@@ -11,25 +11,22 @@ namespace Holojam.Components {
 
     string label;
 
-    protected override void Awake() {
-      base.Awake();
-      label = Labeler.Instance.GenerateLabel(this.gameObject);
+    public override string Label {
+      get { return label; }
     }
 
     public void SetLabel(string label) {
       this.label = label;
     }
 
-    public override string Label {
-      get { return label; }
+    string scope = "";
+
+    public override string Scope {
+      get { return scope; }
     }
 
     public void SetScope(string scope) {
       this.scope = scope;
-    }
-
-    public override string Scope {
-      get { return ""; }
     }
 
     /// <summary>
@@ -45,6 +42,11 @@ namespace Holojam.Components {
         // Somebody owns this object
         return owner == Tools.BuildManager.BUILD_ACTOR;
       }
+    }
+
+    protected override void Awake() {
+      base.Awake();
+      label = Labeler.Instance.GenerateLabel(this.gameObject);
     }
 
     protected override void UpdateTracking() {
