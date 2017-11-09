@@ -36,7 +36,15 @@ namespace Holojam.Components {
     /// Override Trackable's read-only behavior
     /// </summary>
     public override bool Sending {
-      get { return owner == Tools.BuildManager.BUILD_ACTOR; }
+      get {
+        // If nobody owns this object, the master client owns it
+        if (owner == null) {
+          return Tools.BuildManager.IsMasterClient();
+        }
+
+        // Somebody owns this object
+        return owner == Tools.BuildManager.BUILD_ACTOR;
+      }
     }
 
     protected override void UpdateTracking() {
