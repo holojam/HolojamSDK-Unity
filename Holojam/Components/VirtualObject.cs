@@ -10,6 +10,7 @@ namespace Holojam.Components {
     [SerializeField] Tools.Actor owner = null;
 
     string label;
+    Syncronizer syncronizer;
 
     public override string Label {
       get { return label; }
@@ -47,6 +48,9 @@ namespace Holojam.Components {
     protected override void Awake() {
       base.Awake();
       label = Labeler.GenerateLabel(this.gameObject);
+      syncronizer = new Syncronizer (data);
+
+      //Stage the data you want to sync with syncronizer.syncData(string dataName, <DataType> newData).
     }
 
     protected override void UpdateTracking() {
