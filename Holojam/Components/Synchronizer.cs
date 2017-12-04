@@ -4,12 +4,12 @@ using UnityEngine;
 using Holojam.Network;
 
 namespace Holojam.Components{
-	public class Syncronizer  {
+	public class Synchronizer  {
 		Dictionary<string, int>dataLocMap;
 		int vec3Count,vec4Count,intCount,floatCount,byteCount;
     Flake data;
 
-		public Syncronizer(Flake data){
+		public Synchronizer(Flake data){
       this.data = data;
 			this.dataLocMap = new Dictionary<string, int> ();
 			this.vec3Count = 1;
