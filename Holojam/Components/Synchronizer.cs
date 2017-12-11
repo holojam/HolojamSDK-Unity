@@ -40,6 +40,11 @@ namespace Holojam.Components{
       );
     }
 
+    ///<summary>
+    /// Synchronize Vector3 data over the Holojam network.
+    /// This allows the user to tag synchronized data with a string without
+    /// worrying about indexing within the Flake.
+    ///</summary>
     public void SyncData(string name, Vector3 newData) {
       if (!dataLocMap.ContainsKey(name)) {
         if (this.vec3Count < data.vector3s.Length) {
@@ -56,6 +61,11 @@ namespace Holojam.Components{
       this.data.vector3s[this.dataLocMap[name]] = newData;
     }
 
+    ///<summary>
+    /// Synchronize Quaternion data over the Holojam network.
+    /// This allows the user to tag synchronized data with a string without
+    /// worrying about indexing within the Flake.
+    ///</summary>
     public void SyncData(string name, Quaternion newData) {
       if (!dataLocMap.ContainsKey(name)) {
         if (this.vec4Count < data.vector4s.Length) {
@@ -69,6 +79,11 @@ namespace Holojam.Components{
       this.data.vector4s[this.dataLocMap[name]] = newData;
     }
 
+    ///<summary>
+    /// Synchronize int data over the Holojam network.
+    /// This allows the user to tag synchronized data with a string without
+    /// worrying about indexing within the Flake.
+    ///</summary>
     public void SyncData(string name, int newData) {
       if (!dataLocMap.ContainsKey(name)) {
         if (this.intCount < data.ints.Length) {
@@ -82,6 +97,11 @@ namespace Holojam.Components{
       this.data.ints[this.dataLocMap[name]] = newData;
     }
 
+    ///<summary>
+    /// Synchronize float data over the Holojam network.
+    /// This allows the user to tag synchronized data with a string without
+    /// worrying about indexing within the Flake.
+    ///</summary>
     public void SyncData(string name, float newData) {
       if (!dataLocMap.ContainsKey(name)) {
           if (this.floatCount < data.floats.Length) {
@@ -95,6 +115,11 @@ namespace Holojam.Components{
       this.data.floats[this.dataLocMap[name]] = newData;
     }
 
+    ///<summary>
+    /// Synchronize byte data over the Holojam network.
+    /// This allows the user to tag synchronized data with a string without
+    /// worrying about indexing within the Flake.
+    ///</summary>
     public void SyncData(string name, byte newData) {
       if (!dataLocMap.ContainsKey(name)) {
         if (this.byteCount < data.bytes.Length) {
@@ -108,6 +133,10 @@ namespace Holojam.Components{
       this.data.bytes [this.dataLocMap [name]] = newData;
     }
 
+    /// <summary>
+    /// Grab tagged Vector3 data over the Holojam network.
+    /// Only the string that represents the synchronized data is needed.
+    /// </summary>
     public Vector3 GetVec3(string name) {
       int result;
 
@@ -118,6 +147,10 @@ namespace Holojam.Components{
       }
     }
 
+    /// <summary>
+    /// Grab tagged Quaternion data over the Holojam network.
+    /// Only the string that represents the synchronized data is needed.
+    /// </summary>
     public Quaternion GetVec4(string name) {
       int result;
 
@@ -128,6 +161,10 @@ namespace Holojam.Components{
       }
     }
 
+    /// <summary>
+    /// Grab tagged float data over the Holojam network.
+    /// Only the string that represents the synchronized data is needed.
+    /// </summary>
     public float GetFloat(string name) {
       int result;
 
@@ -138,6 +175,10 @@ namespace Holojam.Components{
       }
     }
 
+    /// <summary>
+    /// Grab tagged int data over the Holojam network.
+    /// Only the string that represents the synchronized data is needed.
+    /// </summary>
     public int GetInt(string name) {
       int result;
 
@@ -148,6 +189,10 @@ namespace Holojam.Components{
       }
     }
 
+    /// <summary>
+    /// Grab tagged byte data over the Holojam network.
+    /// Only the string that represents the synchronized data is needed.
+    /// </summary>
     public byte GetByte(string name) {
       int result;
 
