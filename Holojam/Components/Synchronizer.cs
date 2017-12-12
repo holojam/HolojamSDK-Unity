@@ -52,8 +52,8 @@ namespace Holojam.Components{
           this.vec3Count++;
         } else {
           Debug.LogError(
-            "Totaly number of sync data is over the size of the staged data"
-            "buffered size. Please resize your Flake package."
+            "Attempted to synchronize more data than the Flake can support."
+            + "Restage your Flake."
           );
         }
       }
@@ -72,7 +72,10 @@ namespace Holojam.Components{
           dataLocMap.Add(name, this.vec4Count);
           this.vec4Count++;
         } else {
-          Debug.LogError("Totaly number of sync data is over the size of the staged data buffered size. Please resize your Flake package.");
+          Debug.LogError(
+            "Attempted to synchronize more data than the Flake can support."
+            + "Restage your Flake."
+          );
         }
       }
 
@@ -90,7 +93,10 @@ namespace Holojam.Components{
           dataLocMap.Add(name, this.intCount);
           this.intCount++;
         } else {
-          Debug.LogError("Totaly number of sync data is over the size of the staged data buffered size. Please resize your Flake package.");
+          Debug.LogError(
+            "Attempted to synchronize more data than the Flake can support."
+            + "Restage your Flake."
+          );
         }
       }
 
@@ -104,12 +110,15 @@ namespace Holojam.Components{
     ///</summary>
     public void SyncData(string name, float newData) {
       if (!dataLocMap.ContainsKey(name)) {
-          if (this.floatCount < data.floats.Length) {
-            dataLocMap.Add(name, this.floatCount);
-            this.floatCount++;
-          } else {
-            Debug.LogError("Totaly number of sync data is over the size of the staged data buffered size. Please resize your Flake package.");
-          }
+        if (this.floatCount < data.floats.Length) {
+          dataLocMap.Add(name, this.floatCount);
+          this.floatCount++;
+        } else {
+          Debug.LogError(
+            "Attempted to synchronize more data than the Flake can support."
+            + "Restage your Flake."
+          );
+        }
       }
 
       this.data.floats[this.dataLocMap[name]] = newData;
@@ -126,7 +135,10 @@ namespace Holojam.Components{
           dataLocMap.Add(name, this.byteCount);
           this.byteCount++;
         } else {
-          Debug.LogError("Totaly number of sync data is over the size of the staged data buffered size. Please resize your Flake package.");
+          Debug.LogError(
+            "Attempted to synchronize more data than the Flake can support."
+            + "Restage your Flake."
+          );
         }
       }
 
